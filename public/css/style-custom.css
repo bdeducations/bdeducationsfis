@@ -1,0 +1,22 @@
+/*
+* All of custom style sheet are write here
+* For United Trust MIS Module
+*/
+.content-header > h1.left-main-heading-breadcum {
+    font-size:18px;
+}
+div.head_ancestor_selection {
+    font-weight:bold;
+    color:#00a65a; 
+}
+span.input-required-asterik {
+    color:red;
+}
+input:required:invalid:focus,select:required:invalid:focus{
+    border:1px solid red;
+    outline:none;
+}
+
+.content-wrapper{
+	min-height: 730px;	
+}
