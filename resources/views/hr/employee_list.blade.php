@@ -39,7 +39,7 @@
                             <div class="col-md-8 col-md-offset-2">
                                 <div class="col-md-7">
                                     <div class="form-group">
-                                        <label for="area_row_id" class="col-md-5 control-label">Select Department <span class="input-required-asterik">*</span></label>
+                                        <label for="area_row_id" class="col-md-5 control-label">Select <span class="input-required-asterik">*</span></label>
                                         <div class="col-md-7">
                                             <select class="form-control" required name="department_row_id" id="departments">
                                                 <option value="">Select</option>
