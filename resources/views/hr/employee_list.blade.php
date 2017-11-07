@@ -91,7 +91,7 @@
                                                 <td>
                                                     {{ $row->employee_name }}
                                                 </td>
-                                                <td style="width:20%;">
+                                                <td style="width:20%; ">
                                                    @if(isset($row->employeeDepartment->department_name)&& $row->employeeDepartment->department_name) {{ $row->employeeDepartment->department_name }} @endif
                                                 </td>
 

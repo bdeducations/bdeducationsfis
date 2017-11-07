@@ -56,6 +56,7 @@ class ManageEmployeeController extends Controller
         $data['search_result'] = 0;
         $data['list_all'] = 0;
         $data['department_row_id'] = $request->department_row_id;
+        
         if ($data['department_row_id'] > 0) {
             $data['employee_list'] = $common_model->employeeList($data['department_row_id']);
         }
