@@ -36,7 +36,7 @@
                             {!! csrf_field() !!}
                             <input type="hidden" name="designation_row_id" id="designation_row_id" />
                             <div class="col-md-3">
-                                <label>Sector</label>
+                                <label>Department</label>
                                 <select class="form-control" required name="department_row_id" id="departments">
                                     <option value="">Select</option>
                                     @foreach($data['departments']  as $row)
@@ -67,7 +67,7 @@
                         <thead>
                             <tr>
                                 <th>Desgination Name</th>
-                                <th>Sector Name</th>
+                                <th>Department Name</th>
                                 <th>Sort Order</th>
                                 <th >Actions</th>
                             </tr>

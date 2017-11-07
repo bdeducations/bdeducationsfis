@@ -138,8 +138,9 @@ class HrCommon
         if($department_row_id) {
         return \App\Models\HrEmployee::with('employeeDepartment', 'employeeDesignation')
                             ->where('department_row_id',$department_row_id)
-                            ->orderBy('designation_row_id','ASC')
-                            ->get();
+                            ->get()->sortBy(function($q) { 
+                            return $q->employeeDesignation->sort_order;
+  });
         } else {            
             $output = [];
                 $allArea = $this->allAreas(1);              

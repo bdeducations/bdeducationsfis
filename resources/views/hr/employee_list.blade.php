@@ -43,12 +43,11 @@
                                         <div class="col-md-7">
                                             <select class="form-control" required name="department_row_id" id="departments">
                                                 <option value="">Select</option>
-                                                <option value="-1" @if($data['department_row_id'] == -1) selected="selected"  @endif>All</option>
+                                                <option value="-1" @if ($data['department_row_id'] == -1) selected="selected" @endif>All</option>
                                                 @foreach($data['departments']  as $row)
-                                                    <option value="{{ $row->department_row_id }}" @if($row->department_row_id == $data['department_row_id']) selected="selected"  @endif >
+                                                    <option value="{{ $row->department_row_id }}" @if ($data['department_row_id'] == $row->department_row_id) selected="selected" @endif>
                                                         {{ $row->department_name }}
                                                     </option>
-
                                                 @endforeach                                     
                                             </select>
                                         </div>
@@ -78,12 +77,11 @@
                             <table id="UT_jakat_allocation_list" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Department</th>
-                                        <th>Designation</th>
-                                        <th>email</th>
-                                        <th>Contact</th>
-                                        <th class="no-sort text-center">Actions</th>
+                                        <th style="width:20%">Name</th>
+                                        <th style="width:20%;">Department</th>
+                                        <th style="width:20%">Designation</th>
+                                        <th style="width:25%;text-align: center;">Contact</th>
+                                        <th style="width:20%" class="no-sort text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -93,17 +91,14 @@
                                                 <td>
                                                     {{ $row->employee_name }}
                                                 </td>
-                                                <td>
+                                                <td style="width:20%;">
                                                    @if(isset($row->employeeDepartment->department_name)&& $row->employeeDepartment->department_name) {{ $row->employeeDepartment->department_name }} @endif
                                                 </td>
 
                                                 <td>
                                                     @if(isset($row->employeeDesignation->designation_name)) {{ $row->employeeDesignation->designation_name }} @endif
                                                 </td>
-                                                <td>
-                                                    @if(isset($row->employee_email)) {{ $row->employee_email }} @endif
-                                                </td>
-                                                <td>
+                                                <td style="width:25%;text-align: center;">
                                                    {{ $row->contact_1 }}
                                                 </td>
                                                 <td class="text-center">
@@ -131,12 +126,10 @@
                         <table id="UT_jakat_allocation_list" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Department</th>
-                                    <th>Designation</th>
-                                    <th>email</th>
-                                    <th>Contact</th>
-                                    <th class="no-sort text-center">Actions</th>
+                                    <th style="width:30%">Name</th>
+                                    <th style="width:25%">Designation</th>
+                                    <th style="width:25%;text-align: center;">Contact</th>
+                                    <th style="width:20%" class="no-sort text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,17 +140,11 @@
                                                 {{ $row->employee_name }}
                                             </td>
                                             
-                                            <td>
-                                               @if(isset($row->employeeDepartment->department_name)&& $row->employeeDepartment->department_name) {{ $row->employeeDepartment->department_name }} @endif
-                                            </td>
 
                                             <td>
                                                 @if(isset($row->employeeDesignation->designation_name)) {{ $row->employeeDesignation->designation_name }} @endif
                                             </td>
-                                            <td>
-                                                @if(isset($row->employee_email)) {{ $row->employee_email }} @endif
-                                            </td>
-                                            <td>
+                                            <td style="width:25%;text-align: center;">
                                                {{ $row->contact_1 }}
                                             </td>
                                             <td class="text-center">

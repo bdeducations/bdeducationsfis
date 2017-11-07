@@ -52,7 +52,7 @@ class ManageEmployeeController extends Controller
 
     public function search(Request $request){
         $common_model = new HrCommon();
-        $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->get();
+        $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->orderBy('sort_order')->get();
         $data['search_result'] = 0;
         $data['list_all'] = 0;
         $data['department_row_id'] = $request->department_row_id;
@@ -61,8 +61,9 @@ class ManageEmployeeController extends Controller
         }
         else{
             $data['employee_list'] = \App\Models\HrEmployee::with('employeeDetails','employeeDepartment', 'employeeDesignation')
-                            ->orderBy('department_row_id','ASC')
-                            ->get();
+                            ->get()->sortBy(function($q) { 
+                            return $q->employeeDepartment->sort_order;
+                        });
             $data['list_all'] = 1;
         }
         
