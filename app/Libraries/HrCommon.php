@@ -140,7 +140,7 @@ class HrCommon
                             ->where('department_row_id',$department_row_id)
                             ->get()->sortBy(function($q) { 
                             return $q->employeeDesignation->sort_order;
-  });
+                        });
         } else {            
             $output = [];
                 $allArea = $this->allAreas(1);              
