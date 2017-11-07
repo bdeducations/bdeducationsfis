@@ -43,9 +43,9 @@
                                         <div class="col-md-7">
                                             <select class="form-control" required name="department_row_id" id="departments">
                                                 <option value="">Select</option>
-                                                <option value="-1" @if ($data['department_row_id'] == -1) selected="selected" @endif>All</option>
+                                                <option value="-1">All</option>
                                                 @foreach($data['departments']  as $row)
-                                                    <option value="{{ $row->department_row_id }}" @if ($data['department_row_id'] == $row->department_row_id) selected="selected" @endif>
+                                                    <option value="{{ $row->department_row_id }}">
                                                         {{ $row->department_name }}
                                                     </option>
                                                 @endforeach                                     
