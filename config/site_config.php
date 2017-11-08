@@ -24,7 +24,7 @@ return  [
     'config_bdeducms_url' =>  'http://localhost/bdeducms',
 	
 	'blood_group' => [
-		'0'=>	'Select Blood Group',
+		'0'=>	'Select',
 		'1' =>	'A+',
 		'2' =>	'A-',
 		'3' =>	'B+',
