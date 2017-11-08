@@ -194,7 +194,7 @@ class HrCommon
 
     public function designations()
     {
-      return \App\Models\HrDesignation::with('department_info')->where('is_active',1)->orderBy('department_row_id')->orderBy('sort_order')->get();
+      return \App\Models\HrDesignation::with('department_info')->where('is_active',1)->orderBy('sort_order')->get();
     }
 
     
