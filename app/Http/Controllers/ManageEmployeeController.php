@@ -47,6 +47,7 @@ class ManageEmployeeController extends Controller
         $common_model = new HrCommon();
         $data['all_areas'] = $common_model->allAreas(1);
         $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->get();
+        $data['department_row_id'] = '';
         return view($this->viewFolderPath . 'employee_list', ['data' => $data]);
     }
 
@@ -54,7 +55,7 @@ class ManageEmployeeController extends Controller
         $common_model = new HrCommon();
         $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->orderBy('sort_order')->get();
         $data['search_result'] = 0;
-        $data['list_all'] = 0;
+        $data['list_all'] = 0;        
         $data['department_row_id'] = $request->department_row_id;
         
         if ($data['department_row_id'] > 0) {
