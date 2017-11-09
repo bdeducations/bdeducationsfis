@@ -264,7 +264,11 @@
                                         for ($start_month; $start_month <= $data['to_month']; $start_month++):
                                             ?>
                                             <td style="text-align:center;padding-left:10px">
-                                                <strong>{{ number_format($data['total_area_expense_by_month'][$area_row_id_key][$start_month], 2) }}</strong>
+                                                @if(isset($data['total_area_expense_by_month'][$area_row_id_key][$start_month]))
+                                                    <strong>{{ number_format($data['total_area_expense_by_month'][$area_row_id_key][$start_month], 2) }}</strong>
+                                                @else
+                                                    <strong>0.00</strong>
+                                                @endif
                                             </td>
                                         <?php endfor; ?>
                                         <td class="text-center"><strong>{{ number_format($data['total_expense_by_area'][$area_row_id_key], 2) }}</strong></td>
@@ -311,6 +315,8 @@
                                             <td style="text-align:center;padding-left:10px">
                                                 <?php if (isset($data['grand_total_expense_by_month_all_area'][$start_month])): ?>
                                                     <strong>{{ number_format($data['grand_total_expense_by_month_all_area'][$start_month], 2) }}</strong>
+                                                <?php else: ?>
+                                                    <strong>0.00</strong>
                                                 <?php endif; ?>
                                             </td>
                                         <?php endfor; ?>
