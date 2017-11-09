@@ -57,15 +57,19 @@ class ManageEmployeeController extends Controller
         $data['search_result'] = 0;
         $data['list_all'] = 0;        
         $data['department_row_id'] = $request->department_row_id;
-        
+
         if ($data['department_row_id'] > 0) {
             $data['employee_list'] = $common_model->employeeList($data['department_row_id']);
         }
         else{
-            $data['employee_list'] = \App\Models\HrEmployee::with('employeeDetails','employeeDepartment', 'employeeDesignation')
-                            ->get()->sortBy(function($q) { 
-                            return $q->employeeDepartment->sort_order;
-                        });
+            // $data['employee_list'] = DB::table('hr_employees')->join('hr_departments', 'hr_employees.department_row_id', '=', 'hr_departments.department_row_id')->select('hr_employees.*', 'hr_departments.department_name')->join('hr_designations', 'hr_employees.designation_row_id', '=', 'hr_designations.designation_row_id')->select('hr_employees.*', 'hr_designations.designation_name')->orderBy('hr_departments.sort_order', 'asc')->orderBy('hr_designations.sort_order', 'asc')->get();
+        
+            $data['employee_list'] = \App\Models\HrEmployee::with('employeeDetails','employeeDepartment', 'employeeDesignation')                          
+                            ->get()->sortBy(function($q) {
+                            return $q->employeeDesignation->sort_order;
+                        });        
+        
+
             $data['list_all'] = 1;
         }
         

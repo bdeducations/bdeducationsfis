@@ -2351,6 +2351,9 @@ class Common {
         $selected_head_hierarchy = '';
         $head_row_detail = $this->get_head_row_info($head_row_id);
         $head_parent_list = $this->findHeadParent($head_row_id);
+        if (!count($head_parent_list)) {
+            $selected_head_hierarchy = $head_row_detail->title;
+        }
         if (isset($head_parent_list['head_parent'])) {
             $selected_head_hierarchy = $head_parent_list['head_parent']->title . " > " . $head_row_detail->title;
         }
@@ -3328,6 +3331,19 @@ class Common {
                     if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
                         $this->output[] = $head;
                     }
+                } else {
+                    $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area_row_id, $budget_year);
+                    $parent_head_total_adjustment = $this->totalFilterReceiption($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                    $parent_head_total_donation = $this->totalFilterDonation($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                    $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                    $head->parent_head_total_allocation = $parent_head_total_current_allocation;
+                    $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area_row_id, $budget_year, $start_date, $end_date);
+                    $head->parent_head_total_expense = $parent_head_total_expense;
+                    $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                    $head->parent_head_current_balance = $parent_head_current_balance;
+                    if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                        $this->output[] = $head;
+                    }
                 }
             } else {
                 /**
@@ -3346,6 +3362,19 @@ class Common {
                         $head->parent_head_current_balance = $parent_head_current_balance;
                         $head->parent_head_total_expense = $parent_head_total_expense;
                         $head->parent_head_total_allocation = $parent_head_total_current_allocation;
+                        if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                            $this->output[] = $head;
+                        }
+                    } else {
+                        $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area_row_id, $budget_year);
+                        $parent_head_total_adjustment = $this->totalFilterReceiption($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                        $parent_head_total_donation = $this->totalFilterDonation($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                        $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                        $head->parent_head_total_allocation = $parent_head_total_current_allocation;
+                        $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area_row_id, $budget_year, $start_date, $end_date);
+                        $head->parent_head_total_expense = $parent_head_total_expense;
+                        $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                        $head->parent_head_current_balance = $parent_head_current_balance;
                         if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
                             $this->output[] = $head;
                         }
@@ -3384,6 +3413,28 @@ class Common {
                                     'parent_head_total_expense' => $parent_head_total_expense
                                 );
                             }
+                        } else {
+                            $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area->area_row_id, $budget_year);
+                            $parent_head_total_adjustment = $this->totalFilterReceiption($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                            $parent_head_total_donation = $this->totalFilterDonation($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                            $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                            $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area->area_row_id, $budget_year, $start_date, $end_date);
+                            $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                            if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                $this->output[$area->title][$head->head_row_id] = array(
+                                    'head_row_id' => $head->head_row_id,
+                                    'title' => $head->title,
+                                    'sort_order' => $head->sort_order,
+                                    'parent_id' => $head->parent_id,
+                                    'has_child' => $head->has_child,
+                                    'level' => $head->level,
+                                    'area_row_id' => $area->area_row_id,
+                                    'area_name' => $area->title,
+                                    'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                    'parent_head_current_balance' => $parent_head_current_balance,
+                                    'parent_head_total_expense' => $parent_head_total_expense
+                                );
+                            }
                         }
                     }
                 }
@@ -3403,6 +3454,28 @@ class Common {
                                 $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
                                 $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
                                 $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                                $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                                if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                    $this->output[$area->title][$head->head_row_id] = array(
+                                        'head_row_id' => $head->head_row_id,
+                                        'title' => $head->title,
+                                        'sort_order' => $head->sort_order,
+                                        'parent_id' => $head->parent_id,
+                                        'has_child' => $head->has_child,
+                                        'level' => $head->level,
+                                        'area_row_id' => $area->area_row_id,
+                                        'area_name' => $area->title,
+                                        'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                        'parent_head_current_balance' => $parent_head_current_balance,
+                                        'parent_head_total_expense' => $parent_head_total_expense
+                                    );
+                                }
+                            } else {
+                                $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area->area_row_id, $budget_year);
+                                $parent_head_total_adjustment = $this->totalFilterReceiption($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                                $parent_head_total_donation = $this->totalFilterDonation($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                                $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                                $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area->area_row_id, $budget_year, $start_date, $end_date);
                                 $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
                                 if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
                                     $this->output[$area->title][$head->head_row_id] = array(
