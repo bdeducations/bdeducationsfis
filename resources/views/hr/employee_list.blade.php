@@ -48,7 +48,7 @@
                                                     <option value="{{ $row->department_row_id }}" @if ($data['department_row_id'] == $row->department_row_id) selected="selected" @endif>
                                                         {{ $row->department_name }}
                                                     </option>
-                                                @endforeach                                     
+                                                @endforeach  
                                             </select>
                                         </div>
                                     </div>
