@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html><head>
         <title>Budget Allocation Summary Report PDF</title>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -24,8 +23,7 @@
                 padding:5px !important;
             }
         </style>
-    </head>
-    <body>
+</head><body>
         <div class="pdfcontent" style="text-align:center;">
             <div style="margin-bottom:15px;">
                 <h4 style="margin:0;padding:0;">Budget Allocation Summary Report: <?php echo $data['selected_budget_year']; ?></h4>
@@ -85,5 +83,4 @@
             </table>
             @endif
         </div>
-    </body>
-</html>
+</body></html>

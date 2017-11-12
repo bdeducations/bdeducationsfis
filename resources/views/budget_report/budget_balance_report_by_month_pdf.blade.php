@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html><head>
         <title>Budget Balance Monthly  Report PDF</title>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -29,8 +28,7 @@
                 margin:5px 4px 0 4px;
             }
         </style>
-    </head>
-    <body>
+</head><body>
         <div class="pdfcontent" style="text-align:center;">
             <h1 style="margin:0;padding:0;font-size:22px !important;font-weight:bold;">Budget Balance Sheet : <?php echo $data['selected_budget_year']; ?></h1>
             @if($data['balance_report_by_month_list'])
@@ -324,5 +322,4 @@
             <?php endif; ?>
             @endif
         </div>
-    </body>
-</html>
+</body></html>

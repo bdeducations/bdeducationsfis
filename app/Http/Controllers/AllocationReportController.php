@@ -263,8 +263,8 @@ class AllocationReportController extends Controller {
             $data['total_allocation_by_area'] = $total_allocation_by_area;
             $data['account_allocation_list'] = $common_model->allocationFilterHeads(0, $area_row_id, $head_row_id, $budget_year, $from_date, $to_date);
         }
-        return view($this->viewFolderPath . 'budget_allocation_report_pdf', ['data' => $data]);
-        //$pdf = PDF::loadView($this->viewFolderPath . 'budget_allocation_report_pdf', ['data' => $data]);
+        //return view($this->viewFolderPath . 'budget_allocation_report_pdf', ['data' => $data]);
+        $pdf = PDF::loadView($this->viewFolderPath . 'budget_allocation_report_pdf', ['data' => $data]);
         return $pdf->stream('budget_allocation_report_pdf.pdf');
     }
 
