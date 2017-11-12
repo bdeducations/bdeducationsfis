@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html><head>
         <title>Budget Expense Report PDF</title>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -12,8 +11,7 @@
                 font-weight:100;
             }
         </style>
-    </head>
-    <body>
+</head><body>
         <div class="pdfcontent" style="text-align:center;">
             <div style="">
                 <div style="float:left;width:130px;margin-bottom:10px;">
@@ -84,5 +82,4 @@
                 </tbody>
             </table>
         </div>       
-    </body>
-</html>
+</body></html>
