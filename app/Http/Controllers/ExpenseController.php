@@ -69,6 +69,10 @@ class ExpenseController extends Controller {
         $common_model = new Common();
         $head_row_detail = $common_model->get_head_row_info($head_row_id);
         $head_parent_list = $common_model->findHeadParent($head_row_id);
+        $selected_head_hierarchy = '';
+        if(!count($head_parent_list)){
+            $selected_head_hierarchy = $head_row_detail->title;
+        }
         if (isset($head_parent_list['head_parent'])) {
             $selected_head_hierarchy = $head_parent_list['head_parent']->title . " > " . $head_row_detail->title;
         }
@@ -94,6 +98,10 @@ class ExpenseController extends Controller {
         $head_row_id = $expense_row_detail->head_row_id;
         $head_row_detail = $common_model->get_head_row_info($head_row_id);
         $head_parent_list = $common_model->findHeadParent($head_row_id);
+        $selected_head_hierarchy = '';
+        if(!count($head_parent_list)){
+            $selected_head_hierarchy = $head_row_detail->title;
+        }
         if (isset($head_parent_list['head_parent'])) {
             $selected_head_hierarchy = $head_parent_list['head_parent']->title . " > " . $head_row_detail->title;
         }

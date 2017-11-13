@@ -1,7 +1,6 @@
-<?php 
-    $route_name_arr = explode('.', Route::currentRouteName() ? Route::currentRouteName() : '');
-    $route_name = $route_name_arr[0];
-
+<?php
+$route_name_arr = explode('.', Route::currentRouteName() ? Route::currentRouteName() : '');
+$route_name = $route_name_arr[0];
 ?>
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
@@ -129,11 +128,11 @@
                                 <i class="fa fa-file"></i> <span>Budget Allocation</span>
                             </a>
                         </li>
-                        <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\BudgetAdjustmentController')? true:false) }}">
+                        <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BudgetAdjustmentController')? true:false) }}">
                             <a href="{{ url('/') }}/budget/adjustment">
                                 <i class="fa fa-adjust"></i> <span>Budget Adjustment</span>
                             </a>
-                        </li-->
+                        </li>
                         <li class="{{ active_class((current_controller() == 'App\Http\Controllers\ExpenseController')? true:false) }}">
                             <a href="{{ url('/') }}/budgetExpense">
                                 <i class="fa fa-file-text"></i> <span>Budget Expenditure</span>
@@ -158,7 +157,7 @@
                                         <i class="fa fa-circle-o"></i> Budget Allocation Summary
                                     </a>
                                 </li>
-                                <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationAdjustmentReportController')? true:false) }}">
+                                <li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationAdjustmentReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budget/allocation/adjustment/report">
                                         <i class="fa fa-circle-o"></i> Allocation With Adjustment
                                     </a>
@@ -167,7 +166,7 @@
                                     <a href="{{ url('/') }}/budget/adjustment/report">
                                         <i class="fa fa-circle-o"></i> Adjustment
                                     </a>
-                                </li-->
+                                </li>
                                 <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BudgetReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budgetReport/expenseExtended">
                                         <i class="fa fa-circle-o"></i>  Area and Date Wise Expense
@@ -204,7 +203,7 @@
                                         <i class="fa fa-user-secret"></i> Manage Designations
                                     </a>
                                 </li>
-                                 <li class="@if($route_name == 'hr-manage-employee') active @endif">
+                                <li class="@if($route_name == 'hr-manage-employee') active @endif">
                                     <a href="{{ url('/') }}/manage-employee">
                                         <i class="fa fa-users"></i> Manage Employee
                                     </a>
@@ -246,7 +245,7 @@
                                 </li>
                             </ul>
                         </li>
-			<!-- Manage User -->
+                        <!-- Manage User -->
                         <!--li>
                             <a href="#">
                                 <i class="fa fa-user"></i> <span>Manage User</span>
@@ -259,14 +258,14 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 @if(Session::has('success-message'))
-                <div class="alert alert-success alert-dismissible" style="margin-top: 15px;">
+                <div class="alert alert-success alert-dismissible" role="alert" style="margin-top: 15px;">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <strong>Success! </strong>{{ Session::get('success-message') }}
                 </div>
                 @endif
 
                 @if(Session::has('error-message'))
-                <div class="alert alert-danger alert-dismissable" style="margin-top: 15px;">
+                <div class="alert alert-danger alert-dismissable" role="alert" style="margin-top: 15px;">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <strong>Error! </strong>{{ Session::get('error-message') }}
                 </div>
@@ -304,5 +303,13 @@
         <script src="{{ url('/')}}/public/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
         <!-- AdminLTE for demo purposes -->
         <script src="{{ url('/')}}/public/adminlte/dist/js/demo.js"></script>@yield('page_js')
+        <script type="text/javascript">
+            $(document).ready(function () {
+                // show the alert
+                setTimeout(function () {
+                    $(".alert").alert('close');
+                }, 2000);
+            });
+        </script>
     </body>
 </html>

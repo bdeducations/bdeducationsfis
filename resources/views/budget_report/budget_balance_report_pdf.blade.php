@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html><head>
         <title>Budget Balance Report PDF</title>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -24,8 +23,7 @@
                 margin-top:10px;
             }
         </style>
-    </head>
-    <body>
+</head><body>
         <div class="pdfcontent" style="text-align:center;">
             <div style="margin-bottom:5px;">
                 <h4 style="margin:0;padding:0;">Budget Balance Sheet : <?php echo $data['selected_budget_year']; ?></h4>
@@ -203,5 +201,4 @@
                 </tbody>
             </table>
         </div>
-    </body>
-</html>
+</body></html>

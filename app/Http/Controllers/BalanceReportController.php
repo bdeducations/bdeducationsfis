@@ -51,6 +51,7 @@ class BalanceReportController extends Controller {
         $data['area_total_allocation'] = 0;
         $data['area_total_expense'] = 0;
         $data['area_total_balance'] = 0;
+        $data['total_area_expense_by_month'] = array();
         $total_expense = 0;
         $total_allocation_by_area = array();
         $total_area_expense_by_month = array();
@@ -89,8 +90,8 @@ class BalanceReportController extends Controller {
                         $area_row_detail = $common_model->get_area_row_info($area_row_id);
                         $total_allocation_by_area[$area_row_detail->area_row_id] = $common_model->getTotalAllocationWithAdjustmentByArea($area_row_id, $budget_year, 0, 0);
                         $start_month = $from_month;
-                        for ($start_month; $start_month <= $total_month; $start_month++) {
-                            $total_area_expense_by_month[$area_row_detail->area_row_id][$start_month] = $common_model->getTotalAreaExpenseByMonth($area_row_id, $budget_year, $start_month);
+                        for ($start_month; $start_month <= $to_month; $start_month++) {
+                           $total_area_expense_by_month[$area_row_detail->area_row_id][$start_month] = $common_model->getTotalAreaExpenseByMonth($area_row_id, $budget_year, $start_month);
                             $total_expense += $total_area_expense_by_month[$area_row_detail->area_row_id][$start_month];
                         }
                         $data['total_allocation_by_area'] = $total_allocation_by_area;
@@ -102,14 +103,16 @@ class BalanceReportController extends Controller {
                         $data['grand_total_allocation_all_area'] = 0;
                         $data['grand_total_expense_all_area'] = 0;
                         $data['grand_total_balance_all_area'] = 0;
-                        for ($start_month = $from_month; $start_month <= $total_month; ++$start_month) {
+                        $start_month = $from_month;
+                        for ($start_month; $start_month <= $to_month; ++$start_month) {
                             $data['grand_total_expense_by_month_all_area'][$start_month] = $common_model->getTotalAreaExpenseByMonth(-1, $budget_year, $start_month);
                         }
                         foreach ($data['all_areas'] as $area_row) {
                             $total_area_expense = 0;
+                            $start_month = $from_month;
                             $data['total_allocation_by_area'][$area_row->area_row_id] = $common_model->getTotalAllocationWithAdjustmentByArea($area_row->area_row_id, $budget_year, 0, 0);
                             $data['grand_total_allocation_all_area'] += $data['total_allocation_by_area'][$area_row->area_row_id];
-                            for ($start_month = $from_month; $start_month <= $total_month; ++$start_month) {
+                            for ($start_month; $start_month <= $to_month; ++$start_month) {
                                 $data['total_area_expense_by_month'][$area_row->area_row_id][$start_month] = $common_model->getTotalAreaExpenseByMonth($area_row->area_row_id, $budget_year, $start_month);
                                 $total_area_expense += $data['total_area_expense_by_month'][$area_row->area_row_id][$start_month];
                             }
@@ -271,7 +274,7 @@ class BalanceReportController extends Controller {
                         $area_row_detail = $common_model->get_area_row_info($area_row_id);
                         $total_allocation_by_area[$area_row_detail->area_row_id] = $common_model->getTotalAllocationWithAdjustmentByArea($area_row_id, $budget_year, 0, 0);
                         $start_month = $from_month;
-                        for ($start_month; $start_month <= $total_month; $start_month++) {
+                        for ($start_month; $start_month <= $to_month; $start_month++) {
                             $total_area_expense_by_month[$area_row_detail->area_row_id][$start_month] = $common_model->getTotalAreaExpenseByMonth($area_row_id, $budget_year, $start_month);
                             $total_expense += $total_area_expense_by_month[$area_row_detail->area_row_id][$start_month];
                         }
@@ -284,14 +287,14 @@ class BalanceReportController extends Controller {
                         $data['grand_total_allocation_all_area'] = 0;
                         $data['grand_total_expense_all_area'] = 0;
                         $data['grand_total_balance_all_area'] = 0;
-                        for ($start_month = $from_month; $start_month <= $total_month; ++$start_month) {
+                        for ($start_month = $from_month; $start_month <= $to_month; ++$start_month) {
                             $data['grand_total_expense_by_month_all_area'][$start_month] = $common_model->getTotalAreaExpenseByMonth(-1, $budget_year, $start_month);
                         }
                         foreach ($data['all_areas'] as $area_row) {
                             $total_area_expense = 0;
                             $data['total_allocation_by_area'][$area_row->area_row_id] = $common_model->getTotalAllocationWithAdjustmentByArea($area_row->area_row_id, $budget_year, 0, 0);
                             $data['grand_total_allocation_all_area'] += $data['total_allocation_by_area'][$area_row->area_row_id];
-                            for ($start_month = $from_month; $start_month <= $total_month; ++$start_month) {
+                            for ($start_month = $from_month; $start_month <= $to_month; ++$start_month) {
                                 $data['total_area_expense_by_month'][$area_row->area_row_id][$start_month] = $common_model->getTotalAreaExpenseByMonth($area_row->area_row_id, $budget_year, $start_month);
                                 $total_area_expense += $data['total_area_expense_by_month'][$area_row->area_row_id][$start_month];
                             }
@@ -419,7 +422,7 @@ class BalanceReportController extends Controller {
                         $total_allocation_by_area[$area_row_detail->area_row_id] = $common_model->getTotalAllocationWithAdjustmentByArea($area_row_id, $budget_year, 0, 0);
                         $start_month = $from_month;
                         $end_month = $to_month;
-                        for ($start_month; $start_month <= $total_month; $start_month++) {
+                        for ($start_month; $start_month <= $to_month; $start_month++) {
                             $total_area_expense_by_month[$area_row_detail->area_row_id][$start_month] = $common_model->getTotalAreaExpenseByMonth($area_row_id, $budget_year, $start_month);
                             $total_expense += $total_area_expense_by_month[$area_row_detail->area_row_id][$start_month];
                         }
@@ -430,14 +433,14 @@ class BalanceReportController extends Controller {
                         $grand_total_allocation_all_area = 0;
                         $grand_total_expense_all_area = 0;
                         $grand_total_balance_all_area = 0;
-                        for ($start_month = $from_month; $start_month <= $total_month; ++$start_month) {
+                        for ($start_month = $from_month; $start_month <= $to_month; ++$start_month) {
                             $grand_total_expense_by_month_all_area[$start_month] = $common_model->getTotalAreaExpenseByMonth(-1, $budget_year, $start_month);
                         }
                         foreach ($all_areas as $area_row) {
                             $total_area_expense = 0;
                             $total_allocation_by_area[$area_row->area_row_id] = $common_model->getTotalAllocationWithAdjustmentByArea($area_row->area_row_id, $budget_year, 0, 0);
                             $grand_total_allocation_all_area += $total_allocation_by_area[$area_row->area_row_id];
-                            for ($start_month = $from_month; $start_month <= $total_month; ++$start_month) {
+                            for ($start_month = $from_month; $start_month <= $to_month; ++$start_month) {
                                 $total_area_expense_by_month[$area_row->area_row_id][$start_month] = $common_model->getTotalAreaExpenseByMonth($area_row->area_row_id, $budget_year, $start_month);
                                 $total_area_expense += $total_area_expense_by_month[$area_row->area_row_id][$start_month];
                             }

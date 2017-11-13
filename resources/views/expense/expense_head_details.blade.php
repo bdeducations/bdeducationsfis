@@ -9,7 +9,7 @@
     <h1 class="left-main-heading-breadcum">{{  $data['head_name'] }}</h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Allocation List</li>
+        <li class="active">Expense List</li>
     </ol>
 </section>
 <!-- Main content -->

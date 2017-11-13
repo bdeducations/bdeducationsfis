@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html><head>
         <title>Budget Expense Report PDF</title>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -30,8 +29,7 @@
                 padding:5px !important;
             }
         </style>
-    </head>
-    <body>
+</head><body>
         <div class="pdfcontent" style="text-align:center;">
             <div style="margin-bottom:0;">
                 <h3 style="margin:0;padding:0;">Budget Expense Report : <?php echo $data['budget_year']; ?> </h3>
@@ -194,5 +192,4 @@
             <?php endif;?>
             @endif
         </div>
-    </body>
-</html>
+</body></html>
