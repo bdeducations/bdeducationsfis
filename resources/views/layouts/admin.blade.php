@@ -222,7 +222,7 @@
                                 <li class="@if($route_name == 'hr-calender') active @endif">
                                     <a href="{{ url('/') }}/hr/calender">
                                         <i class="fa fa-calendar"></i>Manage Year calendar
-                                    </a>
+                                    </a>z
                                 </li> 
                                 <li class="@if($route_name == 'attendance-from-device') active @endif">
                                     <a href="{{ url('/') }}/hr/attendance/attendance-from-device">
