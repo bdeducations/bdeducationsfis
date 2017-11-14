@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Attendance Report PDF</title>
+<html><head><title>Attendance Report PDF</title>
         <meta charset="UTF-8">
         <style type="text/css">
             h4{
                 font-weight: none;
             }
-        </style>           
-    </head>
-    <body style="font-size: 14px;">
+        </style>
+        </head><body style="font-size: 14px;">
         <div style="width:100%;">
             <div class="row">
                 <table>
@@ -78,6 +75,5 @@
                 </table>
             </div>
              <?php echo getPoweredBy(); ?>
-        </div>       
-    </body>
-</html>
+        </div>
+        </body></html>
