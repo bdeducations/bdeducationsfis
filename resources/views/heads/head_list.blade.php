@@ -81,7 +81,7 @@
                                             @if($row->level == 2) 
                                             &nbsp;&nbsp;&nbsp;&nbsp;
                                             <?php
-                                            echo $data['roman'][$grand_child_serial] . ".";
+											echo $data['roman'][$grand_child_serial] . ".";
                                             $grand_child_serial++;
                                             ?>&nbsp;
                                             @endif     
