@@ -54,17 +54,8 @@
                                         <select name="head_row_id" id="budget_create_allocation_head_dropdown" class="ut_budget_head_drop_down form-control" required="required">
                                             <option value="">Select Head</option>
                                             @foreach( $data['all_heads'] as $row)
-                                            <option value="{{ $row->head_row_id }}" @if($row->has_child == 1)disabled @endif >
-                                                @if($row->level == 0) <b>  @endif
-                                                @if($row->level == 1) &nbsp; - @endif
-                                                @if($row->level == 2) &nbsp; &nbsp; - - @endif
-                                                @if($row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif
-                                                @if($row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
-                                                @if($row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
-                                                @if($row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
-
-                                                {{ $row->title }}
-                                                @if($row->level == 0) </b>  @endif
+                                            <option value="{{ $row->head_row_id }}">
+                                               {{ $row->title }}
                                             </option>
                                             @endforeach
                                         </select>

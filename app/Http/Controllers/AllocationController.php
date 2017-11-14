@@ -55,7 +55,7 @@ class AllocationController extends Controller {
             $data['prev_allocation_area_row_id'] = $request->session()->get('budget_allocation_area_row_id');
         }
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0, 1);
+        $data['all_heads'] = $common_model->allMainHeads();
         $data['all_areas'] = $common_model->allAreas(1);
         return view($this->viewFolderPath . 'create_allocation', ['data' => $data]);
     }
@@ -70,8 +70,8 @@ class AllocationController extends Controller {
         $common_model = new Common();
         $head_row_detail = $common_model->get_head_row_info($head_row_id);
         $head_parent_list = $common_model->findHeadParent($head_row_id);
-        $selected_head_hierarchy = '';
-        if(!count($head_parent_list)){
+        $selected_head_hierarchy = $common_model->findHeadAncestorHierarchy($head_row_id);
+        /*if(!count($head_parent_list)){
             $selected_head_hierarchy = $head_row_detail->title;
         }
         if (isset($head_parent_list['head_parent'])) {
@@ -82,7 +82,7 @@ class AllocationController extends Controller {
         }
         if (isset($head_parent_list['head_great_grand_parent'])) {
             $selected_head_hierarchy = $head_parent_list['head_great_grand_parent']->title . " > " . $selected_head_hierarchy;
-        }
+        }*/
         $data['head_name'] = $selected_head_hierarchy;
         return view($this->viewFolderPath . 'allocation_head_details', ['data' => $data]);
     }
@@ -93,7 +93,7 @@ class AllocationController extends Controller {
      */
     public function edit($allocation_row_id) {
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
+        $data['all_heads'] = $common_model->allMainHeads();
         $data['all_areas'] = $common_model->allAreas(1);
         $allocation_row_detail = $common_model->get_allocation_row_info($allocation_row_id);
         $head_row_id = $allocation_row_detail->head_row_id;
