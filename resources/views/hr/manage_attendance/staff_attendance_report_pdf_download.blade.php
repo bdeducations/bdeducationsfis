@@ -10,20 +10,21 @@
         </style>           
     </head>
     <body style="font-size: 14px;">
-        <div style="width:100%;margin-top: -50px;">
+        <div style="width:100%;">
             <div class="row">
-            <div class="col-sm-4"  style="margin-top: 20px; float: left;">
-                <img src="{{ $data['school_logo_url'] }}" style="width: 200px">
-            </div>
-            <div class="col-sm-8">
-                <div style="text-align:center; margin-top: 50px;">
-                    <h2 style="margin:0px;">{{strtoupper(session('school_name'))}}</h2>
-                    <p style="margin:0px;">{{ $data['school_address'] }}</p>
-                    <h3 style="margin-bottom:0px;margin-top: 30px;"><u>Staff Attendance Report</u></h3>
-                    <h4 style="margin-top:-50px;margin-bottom:0px">Date :  {{ date('F j, Y', strtotime($data['attendance_date'])) }}</h4>
-                    
-                </div>
-            </div>
+                <table>
+                    <tr> 
+                       <td style="vertical-align: top">
+                            <img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px">
+                        </td>
+                        <td style="vertical-align: top;">
+                            <h2>bdeducations</h2>
+                            <p>House-7, Road-4, Gulshan -1, Dhaka.</p>
+                            <h3><u>Attendance Report</u></h3>
+                            <h4>Date :  {{ date('F j, Y', strtotime($data['attendance_date'])) }}</h4>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
@@ -61,7 +62,7 @@
                            ?> 
                         <tr>
                             <td>{{ $i }}</td>
-                            <td>{{ $row->admin_name}}</td>
+                            <td>{{ $row->employee_name}}</td>
                            <td>{{ $present ? date('H:i a', strtotime($row->first_login)) : '' }}</td> 
                             <td>
                                 {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
