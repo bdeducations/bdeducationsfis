@@ -12,10 +12,10 @@
     <body style="font-size: 14px;">
         <div style="width:100%;margin-top: -50px;">
             <div class="row">
-            <div class="col-sm-6"  style="margin-top: 20px; float: left;">
+            <div class="col-sm-4"  style="margin-top: 20px; float: left;">
                 <img src="{{ $data['school_logo_url'] }}" style="width: 200px">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <div style="text-align:center; margin-top: 50px;">
                     <h2 style="margin:0px;">{{strtoupper(session('school_name'))}}</h2>
                     <p style="margin:0px;">{{ $data['school_address'] }}</p>
@@ -33,7 +33,7 @@
                  <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"  border="1" width="100%">
                   <thead>
                         <tr>
-                            <th style="text-align: left;">Serialssss</th>
+                            <th style="text-align: left;">Serial</th>
                             <th style="text-align: left;">Name</th>
                             <th style="text-align: left;">In Time</th>
                             <th style="text-align: left;">Out Time</th>

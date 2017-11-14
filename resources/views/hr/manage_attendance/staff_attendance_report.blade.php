@@ -1,15 +1,22 @@
-@extends('backend.school_admin.layout_app')
+@extends('layouts.admin')
 
 @section('content')
-
+<section class="content-header">
+    <h1 class="left-main-heading-breadcum">Attendance Report</h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active"> Attendance</li>
+    </ol>
+</section>
+<section class="content">
     <div class="row">
         <div class="col-md-12 ">
             <!-- BEGIN SAMPLE FORM PORTLET-->
-            <div class="portlet light bordered">
+            <div class="box box-info">
                 <div class="portlet-title">
                     <div class="caption font-red-sunglo">
                         <i class="icon-settings font-red-sunglo"></i>
-                        <span class="caption-subject bold uppercase"> Staff Attendance Report  </span>
+                        <span class="caption-subject bold uppercase">&nbsp;&nbsp;Staff Attendance Report  </span>
                     </div>
                     <div class="actions">
                     </div>
@@ -21,12 +28,10 @@
                             <table class="table table-bordered  dt-responsive" width="100%">
                                 <tr>
                                     <td>Attendance Date: {{ $data['date_of_attendance'] }} </td>
-                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/schoolAdmin/attendance/staffReportGeneratePdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
+                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/schoolAdmin/attendance/all-staff-attendance-report-pdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
                                 </tr>
                             </table>
-                        </div>
-
-                                    
+                        </div> 
                         <div class="form-group">
                              <table class="table  table-bordered dt-responsive" width="100%" id="sample_1">
                                   <thead>
@@ -60,8 +65,8 @@
                                                ?> 
                                             <tr>
                                                 <td>{{ $i }}</td>
-                                                <td>{{ $row->admin_name}}</td>
-                                               <td>{{ $present ? date('H:i a', strtotime($row->first_login)) : '' }}</td> 
+                                                <td>{{ $row->employee_name}}</td>
+                                                <td>{{ $present ? date('H:i a', strtotime($row->first_login)) : '' }}</td> 
                                                 <td>
                                                     {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                                                 </td> 
@@ -83,6 +88,7 @@
             </div>
         </div>
     </div>
+</section>
 
 @endsection
 
