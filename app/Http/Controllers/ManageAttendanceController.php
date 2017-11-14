@@ -460,7 +460,7 @@ class ManageAttendanceController extends Controller {
             }
         }
         Session::flash('success-message', 'Attendance Data has been imported successfully');  
-        return redirect('schoolAdmin/dashboard'); 
+        return redirect('hr/attendance/all-staff-attendance-report-option'); 
     }
 
     //used.
