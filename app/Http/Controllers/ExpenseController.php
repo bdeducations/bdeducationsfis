@@ -69,8 +69,8 @@ class ExpenseController extends Controller {
         $common_model = new Common();
         $head_row_detail = $common_model->get_head_row_info($head_row_id);
         $head_parent_list = $common_model->findHeadParent($head_row_id);
-        $selected_head_hierarchy = '';
-        if(!count($head_parent_list)){
+        $selected_head_hierarchy = $common_model->findHeadAncestorHierarchy($head_row_id);
+        /*if (!count($head_parent_list)) {
             $selected_head_hierarchy = $head_row_detail->title;
         }
         if (isset($head_parent_list['head_parent'])) {
@@ -81,7 +81,7 @@ class ExpenseController extends Controller {
         }
         if (isset($head_parent_list['head_great_grand_parent'])) {
             $selected_head_hierarchy = $head_parent_list['head_great_grand_parent']->title . " > " . $selected_head_hierarchy;
-        }
+        }*/
         $data['head_name'] = $selected_head_hierarchy;
         return view($this->viewFolderPath . 'expense_head_details', ['data' => $data]);
     }
@@ -99,7 +99,7 @@ class ExpenseController extends Controller {
         $head_row_detail = $common_model->get_head_row_info($head_row_id);
         $head_parent_list = $common_model->findHeadParent($head_row_id);
         $selected_head_hierarchy = '';
-        if(!count($head_parent_list)){
+        if (!count($head_parent_list)) {
             $selected_head_hierarchy = $head_row_detail->title;
         }
         if (isset($head_parent_list['head_parent'])) {
@@ -150,7 +150,7 @@ class ExpenseController extends Controller {
                 $expense_model->head_row_id = $head_row_id;
                 $expense_model->budget_year = $budget_year;
                 $expense_model->amount = $expense;
-                $expense_model->remarks = !empty($expense_remarks[$key]) ? $expense_remarks[$key] : 0;
+                $expense_model->remarks = !empty($expense_remarks[$key]) ? $expense_remarks[$key] : '';
                 $expense_model->created_by = Auth::user()->id;
                 $expense_model->updated_by = Auth::user()->id;
                 $expense_model->expense_at = date('Y-m-d', strtotime($request->expense_at[$key]));
@@ -181,14 +181,13 @@ class ExpenseController extends Controller {
         ]);
         $common_model = new Common();
         $expense = $common_model->get_expense_row_info($expense_row_id);
-        $expense_row_detail = $expense;
+        $updated_expense_amount = $expense->amount;
         $area_row_id = $request->area_row_id;
         $head_row_id = $request->head_row_id;
         $budget_year = $request->budget_year;
         $expense_amount = $request->amount;
-        $head_total_allocation_amount = $common_model->totalAllcations($head_row_id, $area_row_id, $budget_year);
-        $head_total_expense_amount = $common_model->totalExpense($head_row_id, $area_row_id, $budget_year);
-        $current_balance = $head_total_allocation_amount - $head_total_expense_amount;
+        $current_balance = $common_model->getHeadCurrentBalance($area_row_id, $head_row_id, $budget_year);
+        $current_balance = $current_balance + $updated_expense_amount;
         $expense->area_row_id = $area_row_id;
         $expense->head_row_id = $head_row_id;
         $expense->budget_year = $budget_year;
@@ -207,15 +206,6 @@ class ExpenseController extends Controller {
         } else {
             Session::flash('error-message', 'You Already Exced Allocation Amount !');
             return redirect::back()->withInput($request->all());
-            /* $data['all_heads'] = $common_model->allHeads(0, 0, 1);
-              $data['all_areas'] = $common_model->allAreas(1);
-              $data['area_row_id'] = $area_row_id;
-              $data['head_row_id'] = $head_row_id;
-              $data['budget_year'] = $budget_year;
-              $data['remarks'] = $request->remarks;
-              $data['expense_at'] = $request->expense_at;
-              $data['amount'] = $expense_amount;
-              return view($this->viewFolderPath . 'edit_expense', ['expense_row_detail' => $expense_row_detail, 'data' => $data]); */
         }
     }
 

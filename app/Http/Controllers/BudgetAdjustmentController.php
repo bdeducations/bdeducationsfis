@@ -38,7 +38,7 @@ class BudgetAdjustmentController extends Controller {
         $data['grand_total_adjustment_reciption'] = 0;
         $budget_year = date('Y');
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
+        $data['all_heads'] = $common_model->allMainHeads();
         $data['all_areas'] = $common_model->allAreas(1);
         $data['alphabets'] = $common_model->alphabet_array;
         $data['roman'] = $common_model->roman_array;
@@ -63,7 +63,7 @@ class BudgetAdjustmentController extends Controller {
             $common_model = new Common();
             $area_list = $common_model->allAreaList(0);
             $head_row_detail = $common_model->get_head_row_info($head_row_id);
-            $data['head_name'] = $common_model->getHeadAncestorHierarchy($head_row_id);
+            $data['head_name'] = $common_model->findHeadAncestorHierarchy($head_row_id);
             $data['area_list'] = $area_list;
             $data['allocation_adjustment_list'] = DB::table('allocations')->join('areas', 'allocations.area_row_id', '=', 'areas.area_row_id')->select('allocations.*', 'areas.*')->where([['allocations.is_adjustment', '=', 1], ['allocations.budget_year', '=', $budget_year], ['allocations.head_row_id', '=', $head_row_id]])->orderBy('allocations.allocation_at', 'desc')->orderBy('areas.sort_order', 'asc')->get();
             //$data['allocation_adjustment_list'] = DB::table('allocations')->select('allocations.*')->where([['allocations.is_adjustment','=', 1],['allocations.budget_year','=', $budget_year],['allocations.head_row_id','=', $head_row_id]])->orderBy('allocations.allocation_row_id', 'desc')->get();
@@ -78,7 +78,7 @@ class BudgetAdjustmentController extends Controller {
     public function edit($allocation_row_id) {
         $data[] = '';
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
+        $data['all_heads'] = $common_model->allMainHeads();
         $data['all_areas'] = $common_model->allAreas(1);
         $allocation_row_detail = $common_model->get_allocation_row_info($allocation_row_id);
         $head_row_id = $allocation_row_detail->head_row_id;

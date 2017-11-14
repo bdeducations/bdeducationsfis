@@ -33,11 +33,9 @@ class HeadsController extends Controller {
     public function index() {
         $data[] = '';
         $common_model = new Common();
-        //$data['all_heads'] = $common_model->allHeads(0, 0);
         $data['all_heads'] = $common_model->budgetAllHeadListWithProject(0);
         $data['alphabets'] = $common_model->alphabet_array;
         $data['roman'] = $common_model->roman_array;
-        //dd($data['alphabets']);
         return view($this->viewFolderPath . 'head_list', ['data' => $data]);
     }
 
@@ -46,6 +44,7 @@ class HeadsController extends Controller {
         $head_drop_down = $common_model->getBudgetHeadList($selected_budget_year, 1, $selected_head_row_id);
         echo $head_drop_down;
     }
+
     public function getHeadListByYearForReport($selected_budget_year = 0, $selected_head_row_id = null) {
         $common_model = new Common();
         $head_drop_down = $common_model->getBudgetHeadListForReport($selected_budget_year, 1, $selected_head_row_id);
@@ -207,8 +206,10 @@ class HeadsController extends Controller {
             $common_model = new Common();
             $head_row_detail = $common_model->get_head_row_info($head_row_id);
             $head_parent_list = $common_model->findHeadParent($head_row_id);
-            //echo "<pre>";
-            //print_r($head_parent_list);
+            $selected_head_hierarchy = '';
+            if (!count($head_parent_list)) {
+                $selected_head_hierarchy = $head_row_detail->title;
+            }
             if (isset($head_parent_list['head_parent'])) {
                 $selected_head_hierarchy = $head_parent_list['head_parent']->title . " > " . $head_row_detail->title;
             }

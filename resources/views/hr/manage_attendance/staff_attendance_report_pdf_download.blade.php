@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html><head><title>Attendance Report PDF</title>
+<html>
+    <head>
+        <title>Attendance Report PDF</title>
         <meta charset="UTF-8">
         <style type="text/css">
             h2,h4{
                 font-weight: none;
 
             }
-        </style>
-        </head><body style="font-size: 14px;">
-        <div style="width:100%;">
+        </style>           
+    </head>
+    <body style="font-size: 14px;">
+        <div style="width:100%;margin-top: -50px;">
             <div class="row">
                <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"   width="100%">
                     <tr> 
@@ -20,6 +23,8 @@
                         
                     </tr>
                 </table>
+
+
             </div>
         </div>
 
@@ -57,7 +62,7 @@
                            ?> 
                         <tr>
                             <td>{{ $i }}</td>
-                            <td>{{ $row->employee_name}}</td>
+                            <td>{{ $row->admin_name}}</td>
                            <td>{{ $present ? date('H:i a', strtotime($row->first_login)) : '' }}</td> 
                             <td>
                                 {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
@@ -73,5 +78,6 @@
                 </table>
             </div>
              <?php echo getPoweredBy(); ?>
-        </div>
-        </body></html>
+        </div>       
+    </body>
+</html>

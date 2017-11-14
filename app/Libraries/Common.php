@@ -11,6 +11,8 @@ class Common {
 
     public $output = array();
     public $head_child_list = array();
+    public $parent_head_row_id = 0;
+    public $head_ancestor_hierarchy = "";
     public $head_parent_list = array();
     public $all_area_single_head_info_list = array();
     public $all_area_all_head_info_list = array();
@@ -735,30 +737,22 @@ class Common {
         $result = $this->budgetAllHeadListWithProject($budget_year, $status);
         foreach ($result as $head) {
             if ($head->parent_id == 0) {
-                $head->total_allocation = $this->totalAllcations($head->head_row_id, 0, $budget_year);
+                $head->parent_head_total_allocation = $this->totalAllcations($head->head_row_id, 0, $budget_year);
+                if ($showAdjustment) {
+                    $head->parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, 0, $budget_year);
+                }
                 if ($head->has_child) {
                     $this->output[] = $head;
                     $this->setChildren($result, $head->head_row_id, $budget_year, $showAllocation, $showExpense, $showAdjustment);
                     $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
                     $parent_head_child_number = $this->findHeadChildrenNumber($head->head_row_id);
-                    $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, 0, $budget_year);
                     $head->parent_head_child_number = $parent_head_child_number;
-                    $head->parent_head_total_allocation = $parent_head_total_allocation;
-                    if ($showAdjustment) {
-                        $head->parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, 0, $budget_year);
-                    }
                     if ($showExpense) {
                         $head->parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, 0, $budget_year, 0, 0);
                     }
                 } else {
-                    if ($showAllocation) {
-                        $head->total_allocation = $this->totalAllcations($head->head_row_id, 0, $budget_year);
-                    }
                     if ($showExpense) {
                         $head->total_expense = $this->totalExpense($head->head_row_id, 0, $budget_year);
-                    }
-                    if ($showAdjustment) {
-                        $head->total_adjustment = $this->totalAdjustment($head->head_row_id, 0, $budget_year);
                     }
                     $this->output[] = $head;
                 }
@@ -786,22 +780,12 @@ class Common {
                         $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
                         $parent_head_child_number = $this->findHeadChildrenNumber($head->head_row_id);
                         $head->parent_head_child_number = $parent_head_child_number;
-                        $head->parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, 0, $budget_year);
-                        if ($showAdjustment) {
-                            $head->parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, 0, $budget_year);
-                        }
                         if ($showExpense) {
                             $head->parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, 0, $budget_year, 0, 0);
                         }
                     } else {
-                        if ($showAllocation) {
-                            $head->total_allocation = $this->totalAllcations($head->head_row_id, 0, $budget_year);
-                        }
                         if ($showExpense) {
                             $head->total_expense = $this->totalExpense($head->head_row_id, 0, $budget_year);
-                        }
-                        if ($showAdjustment) {
-                            $head->total_adjustment = $this->totalAdjustment($head->head_row_id, 0, $budget_year);
                         }
                         $this->output[] = $head;
                     }
@@ -1841,19 +1825,19 @@ class Common {
      * @param type $budget_year
      * @return type
      */
-    public function totalParentHeadAdjustment($parent_head_child_list, $area_row_id = 0, $budget_year = 0, $start_date = 0, $end_date = 0) {
+    public function totalParentHeadAdjustment($parent_head_row_id, $area_row_id = 0, $budget_year = 0, $start_date = 0, $end_date = 0) {
         $budget_year = !empty($budget_year) ? $budget_year : date('Y');
         if (!empty($start_date) && !empty($end_date)) {
             if ($area_row_id > 0) {
-                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['area_row_id', '=', $area_row_id], ['budget_year', '=', $budget_year]])->whereIn('head_row_id', $parent_head_child_list)->whereBetween('allocation_at', [$start_date, $end_date])->sum('amount');
+                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['area_row_id', '=', $area_row_id], ['budget_year', '=', $budget_year], ['head_row_id', '=', $parent_head_row_id]])->whereBetween('allocation_at', [$start_date, $end_date])->sum('amount');
             } else {
-                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['budget_year', '=', $budget_year]])->whereIn('head_row_id', $parent_head_child_list)->whereBetween('allocation_at', [$start_date, $end_date])->sum('amount');
+                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['budget_year', '=', $budget_year], ['head_row_id', '=', $parent_head_row_id]])->whereBetween('allocation_at', [$start_date, $end_date])->sum('amount');
             }
         } else {
             if ($area_row_id > 0) {
-                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['area_row_id', '=', $area_row_id], ['budget_year', '=', $budget_year]])->whereIn('head_row_id', $parent_head_child_list)->sum('amount');
+                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['area_row_id', '=', $area_row_id], ['budget_year', '=', $budget_year], ['head_row_id', '=', $parent_head_row_id]])->sum('amount');
             } else {
-                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['budget_year', '=', $budget_year]])->whereIn('head_row_id', $parent_head_child_list)->sum('amount');
+                return \App\Models\Allocation::where([['is_adjustment', '=', 1], ['budget_year', '=', $budget_year], ['head_row_id', '=', $parent_head_row_id]])->sum('amount');
             }
         }
     }
@@ -2129,6 +2113,35 @@ class Common {
      * @param int $parent_head_row_id
      * @return child list array with head_row_id
      */
+    public function findMainHeadChildList($parent_head_row_id) {
+        $childrenList = \App\Models\Head::where('parent_id', $parent_head_row_id)->get();
+        if (count($childrenList)) {
+            foreach ($childrenList as $children) {
+                if ($children->has_child) {
+                    $this->setHeadChildrenList($children->head_row_id);
+                } else {
+                    $this->head_child_list[] = $children->head_row_id;
+                }
+            }
+        }
+        $output = $this->head_child_list;
+        $this->head_child_list = array();
+        return $output;
+    }
+
+    public function setHeadChildrenList($head_row_id) {
+        $childrenList = \App\Models\Head::where('parent_id', $head_row_id)->get();
+        if (count($childrenList)) {
+            foreach ($childrenList as $children) {
+                if ($children->has_child) {
+                    $this->setHeadChildrenList($children->head_row_id);
+                } else {
+                    $this->head_child_list[] = $children->head_row_id;
+                }
+            }
+        }
+    }
+
     public function findHeadChildrenList($parent_head_row_id) {
         $childrenList = \App\Models\Head::where('parent_id', $parent_head_row_id)->get();
         if (count($childrenList)) {
@@ -2222,15 +2235,38 @@ class Common {
         return $this->head_parent_list;
     }
 
+    public function findMainParentHead($head_row_id) {
+        $head_row_info = $this->get_head_row_info($head_row_id);
+        if (isset($head_row_info) && ($head_row_info->parent_id == 0)) {
+            $this->parent_head_row_id = $head_row_info->head_row_id;
+        } else {
+            $this->findMainParentHead($head_row_info->parent_id);
+        }
+        return $this->parent_head_row_id;
+    }
+
+    public function findHeadAncestorHierarchy($head_row_id) {
+        $head_row_info = $this->get_head_row_info($head_row_id);
+        if (isset($head_row_info) && ($head_row_info->parent_id != 0)) {
+            $this->head_ancestor_hierarchy = " > " . $head_row_info->title . $this->head_ancestor_hierarchy;
+            $this->findHeadAncestorHierarchy($head_row_info->parent_id);
+        } else {
+            $this->head_ancestor_hierarchy = $head_row_info->title . $this->head_ancestor_hierarchy;
+        }
+        return $this->head_ancestor_hierarchy;
+    }
+
     /**
      * Get the head current balance amount for which has_child ~ 0
-     * @param type $source_area_row_id
-     * @param type $source_head_row_id
+     * @param type $area_row_id
+     * @param type $head_row_id
      * @param type $budget_year
      */
-    public function getHeadCurrentBalance($source_area_row_id = 0, $source_head_row_id = 0, $budget_year = 0, $start_date = 0, $end_date = 0) {
+    public function getHeadCurrentBalance($area_row_id = 0, $head_row_id = 0, $budget_year = 0, $start_date = 0, $end_date = 0) {
         $budget_year = !empty($budget_year) ? $budget_year : date('Y');
-        $head_row_info = $this->get_head_row_info($source_head_row_id);
+        $head_row_info = $this->get_head_row_info($head_row_id);
+        $main_parent_head_row_id = $this->findMainParentHead($head_row_id);
+        $head_child_list = $this->findMainHeadChildList($main_parent_head_row_id);
         /* Find head total adjustment */
         $head_total_adjustment = 0;
         $head_total_allocation = 0;
@@ -2238,15 +2274,15 @@ class Common {
         /**
          * Get Head total allocation
          */
-        $head_total_allocation = $this->totalAllcations($source_head_row_id, $source_area_row_id, $budget_year);
+        $head_total_allocation = $this->totalAllcations($main_parent_head_row_id, $area_row_id, $budget_year);
         /**
          * Get Head total donation
          */
-        $head_total_adjustment = $this->totalFilterDonation($source_area_row_id, $source_head_row_id, $budget_year, $start_date, $end_date);
+        $head_total_adjustment = $this->totalFilterDonation($area_row_id, $main_parent_head_row_id, $budget_year, $start_date, $end_date);
         /**
          * Get Head total receiption
          */
-        $head_total_receiption = $this->totalFilterReceiption($source_area_row_id, $source_head_row_id, $budget_year, $start_date, $end_date);
+        $head_total_receiption = $this->totalFilterReceiption($area_row_id, $main_parent_head_row_id, $budget_year, $start_date, $end_date);
         /**
          * Check selected head is unforeseen or not
          */
@@ -2255,7 +2291,7 @@ class Common {
             $head_current_balance = ($head_total_allocation + $head_total_receiption) - $head_total_adjustment;
         } else {
             /* Find total adjustment and expense */
-            $head_total_expense = $this->totalExpense($source_head_row_id, $source_area_row_id, $budget_year);
+            $head_total_expense = $this->totalParentHeadExpense($head_child_list, $area_row_id, $budget_year, 0, 0);
             $head_current_balance = ($head_total_allocation + $head_total_receiption) - ($head_total_expense + $head_total_adjustment);
         }
         return $head_current_balance;

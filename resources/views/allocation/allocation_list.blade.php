@@ -39,118 +39,32 @@
                             @if($data['all_heads'])
                             <?php
                             $parent_serial = 1;
-                            $grand_parent_child_number = 0;
-                            $grand_parent_child_counter = 0;
-                            $grand_parent_total_allocation = 0;
-                            $parent_child_number = 0;
-                            $parent_child_counter = 0;
                             $parent_total_allocation = 0;
                             ?>
                             @foreach($data['all_heads'] as $row)
-                            <?php
-                            if (isset($child_serial) && $child_serial > 26):
-                                $child_serial = 1;
-                            endif;
-                            if (isset($grand_child_serial) && $grand_child_serial > 26):
-                                $grand_child_serial = 1;
-                            endif;
-                            ?>
+                            @if($row->parent_id == 0)
                             <tr>
                                 <td style="text-align:left;padding-left:10px">
-                                    @if($row->level == 0)
                                     <strong style="font-size:15px !important;">
-                                        <?php
-                                        $grand_parent_child_counter = 0;
-                                        $child_serial = 1;
-                                        if ($row->has_child == 1):
-                                            $parent_child_number = $row->parent_head_child_number;
-                                            $parent_total_allocation = $row->parent_head_total_allocation;
-                                            $grand_parent_child_number = $row->parent_head_child_number;
-                                            $grand_parent_total_allocation = $row->parent_head_total_allocation;
-                                            $parent_child_counter = 0;
-                                        endif;
-                                        ?>
                                         <span>{{ $parent_serial }}&nbsp;.&nbsp;</span>
                                         <?php $parent_serial++; ?>
-                                        @endif
-                                        @if($row->level == 1)
-                                        &nbsp;
-                                        @if($row->has_child == 1)
-                                            <strong>
-                                        @endif
-                                        <?php
-                                        $grand_child_serial = 1;
-                                        echo $data['alphabets'][$child_serial] . ".";
-                                        $child_serial++;
-                                        if ($row->has_child == 1):
-                                            $parent_child_number = $row->parent_head_child_number;
-                                            $parent_child_counter = 0;
-                                            $parent_total_allocation = $row->parent_head_total_allocation;
-                                            $grand_parent_child_counter++;
-                                        else:
-                                            $parent_child_counter++;
-                                        endif;
-                                        ?>
-                                        &nbsp;
-                                        @endif
-                                        @if($row->level == 2)
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <?php
-                                        echo $data['roman'][$grand_child_serial] . ".";
-                                        $grand_child_serial++;
-                                        $parent_child_counter++;
-                                        ?>&nbsp;
-                                        @endif
-                                        @if($row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif
-                                        @if($row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
-                                        @if($row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
-                                        @if($row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
                                         {{ $row->title }}
-                                        @if($row->level == 0) </strong>  @endif
-                                        @if($row->level == 1)
-                                            @if($row->has_child == 1) </strong> @endif
-                                        @endif
+                                    </strong>
                                 </td>
                                 <td class="text-center">
-                                    @if(isset($row->total_allocation) && ($row->total_allocation != 0) && ($row->has_child == 0))
-                                    {{ number_format($row->total_allocation, 2) }}
-                                    @elseif(empty($row->total_allocation) && ($row->has_child == 0))
+                                    @if(isset($row->parent_head_total_allocation) && ($row->parent_head_total_allocation != 0))
+                                    {{ number_format($row->parent_head_total_allocation, 2) }}
+                                    @else
                                     0.00
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @if(isset($row->total_allocation) && ($row->total_allocation != 0) && ($row->has_child == 0))
+                                    @if(isset($row->parent_head_total_allocation) && ($row->parent_head_total_allocation != 0))
                                     <a href="{{ url('/') }}/allocationDetails/{{ $row->head_row_id }} "> Details </a>
                                     @endif
                                 </td>
                             </tr>
-                            <?php if (($parent_child_number == $parent_child_counter) && ($row->level == 1) && ($row->has_child == 0) && ($parent_total_allocation != 0)): ?>
-                                <tr>
-                                    <td>
-                                        <strong>&nbsp;&nbsp;&nbsp;Total: </strong>
-                                    </td>
-                                    <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
-                                    <td></td>
-                                </tr>
-                            <?php endif; ?>
-                            <?php if (($parent_child_number == $parent_child_counter) && ($row->level == 2) && ($row->has_child == 0) && ($parent_total_allocation != 0)): ?>
-                                <tr>
-                                    <td>
-                                        <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total: </strong>
-                                    </td>
-                                    <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
-                                    <td></td>
-                                </tr>
-                            <?php endif; ?>
-                            <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($row->level == 2) && ($row->has_child == 0) && ($grand_parent_total_allocation != 0)): ?>
-                                <tr>
-                                    <td>
-                                        <strong>&nbsp;Total: </strong>
-                                    </td>
-                                    <td class="text-center"><strong>{{ number_format($grand_parent_total_allocation, 2) }}</strong></td>
-                                    <td></td>
-                                </tr>
-                            <?php endif; ?>
+                            @endif
                             @endforeach
                             <tr>
                                 <td>

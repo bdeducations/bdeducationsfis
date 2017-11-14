@@ -42,17 +42,9 @@
                                         <select name="source_head_row_id" class="ut_budget_from_head_drop_down form-control" required="required">
                                             <option value="">Select From Head</option>
                                             @foreach( $data['all_heads'] as $adjustment_row)
-                                            <option value="{{ $adjustment_row->head_row_id }}" @if($adjustment_row->has_child == 1)disabled @endif @if($adjustment_row->head_row_id == old('source_head_row_id')) selected="selected"  @endif>
-                                                    @if($adjustment_row->level == 0) <b>  @endif 
-                                                    @if($adjustment_row->level == 1) &nbsp; - @endif   
-                                                    @if($adjustment_row->level == 2) &nbsp; &nbsp; - - @endif     
-                                                    @if($adjustment_row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif       
-                                                    @if($adjustment_row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif       
-                                                    @if($adjustment_row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif       
-                                                    @if($adjustment_row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
+                                            <option value="{{ $adjustment_row->head_row_id }}" @if($adjustment_row->head_row_id == old('source_head_row_id')) selected="selected"  @endif>
                                                     {{ $adjustment_row->title }} 
-                                                    @if($adjustment_row->level == 0) </b>  @endif  
-                                                </option>
+                                            </option>
                                                 @endforeach                                                    
                                         </select>
                                     </div>
@@ -80,18 +72,10 @@
                                         <select name="head_row_id" class="ut_budget_to_head_drop_down form-control" required="required">
                                             <option value="">Select To Head</option>
                                             @foreach( $data['all_heads'] as $adjustment_row)
-                                            <option value="{{ $adjustment_row->head_row_id }}" @if($adjustment_row->has_child == 1)disabled @endif @if($adjustment_row->head_row_id == old('head_row_id')) selected="selected"  @endif>
-                                                    @if($adjustment_row->level == 0) <b>  @endif 
-                                                    @if($adjustment_row->level == 1) &nbsp; - @endif   
-                                                    @if($adjustment_row->level == 2) &nbsp; &nbsp; - - @endif     
-                                                    @if($adjustment_row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif       
-                                                    @if($adjustment_row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif       
-                                                    @if($adjustment_row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif       
-                                                    @if($adjustment_row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
+                                            <option value="{{ $adjustment_row->head_row_id }}" @if($adjustment_row->head_row_id == old('head_row_id')) selected="selected"  @endif>
                                                     {{ $adjustment_row->title }} 
-                                                    @if($adjustment_row->level == 0) </b>  @endif  
-                                                </option>
-                                                @endforeach                                                    
+                                            </option>
+                                            @endforeach                                                    
                                         </select>
                                     </div>
                                 </div> 
@@ -165,120 +149,31 @@
                             @if($data['account_adjustment_list'])
                             <?php
                             $parent_serial = 1;
-                            $grand_parent_child_number = 0;
-                            $grand_parent_child_counter = 0;
-                            $grand_parent_total_allocation = 0;
-                            $parent_child_number = 0;
-                            $parent_child_counter = 0;
-                            $parent_total_allocation = 0;
                             ?>
                             @foreach($data['account_adjustment_list'] as $adjustment_row)
-                            <?php
-                            if (isset($child_serial) && $child_serial > 26):
-                                $child_serial = 1;
-                            endif;
-                            if (isset($grand_child_serial) && $grand_child_serial > 26):
-                                $grand_child_serial = 1;
-                            endif;
-                            ?>
-                            <tr>            
-                                <td style="text-align:left;padding-left:10px">
-                                    @if($adjustment_row->level == 0)
-                                    <strong style="font-size:15px !important;">
-                                        <?php
-                                        $grand_parent_child_counter = 0;
-                                        $child_serial = 1;
-                                        if ($adjustment_row->has_child == 1):
-                                            $parent_child_number = $adjustment_row->parent_head_child_number;
-                                            $parent_total_allocation = $adjustment_row->parent_head_total_adjustment;
-                                            $grand_parent_child_number = $adjustment_row->parent_head_child_number;
-                                            $grand_parent_total_allocation = $adjustment_row->parent_head_total_adjustment;
-                                            $parent_child_counter = 0;
-                                        endif;
-                                        ?>
-                                        <span>{{ $parent_serial }}&nbsp;.&nbsp;</span>
-                                        <?php $parent_serial++; ?>
-                                        @endif 
-                                        @if($adjustment_row->level == 1)
-                                        &nbsp;
-                                        @if($adjustment_row->has_child == 1)
-                                        <strong>
-                                            @endif
-                                            <?php
-                                            $grand_child_serial = 1;
-                                            echo $data['alphabets'][$child_serial] . ".";
-                                            $child_serial++;
-                                            if ($adjustment_row->has_child == 1):
-                                                $parent_child_number = $adjustment_row->parent_head_child_number;
-                                                $parent_child_counter = 0;
-                                                $parent_total_allocation = $adjustment_row->parent_head_total_adjustment;
-                                                $grand_parent_child_counter++;
-                                            else:
-                                                $parent_child_counter++;
-                                            endif;
-                                            ?>
-                                            &nbsp;
-                                            @endif   
-                                            @if($adjustment_row->level == 2)
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <?php
-                                            echo $data['roman'][$grand_child_serial] . ".";
-                                            $grand_child_serial++;
-                                            $parent_child_counter++;
-                                            ?>&nbsp;
-                                            @endif     
-                                            @if($adjustment_row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif       
-                                            @if($adjustment_row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif       
-                                            @if($adjustment_row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif       
-                                            @if($adjustment_row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif 
-                                            {{ $adjustment_row->title }} 
-                                            @if($adjustment_row->level == 0) </strong>  @endif
-                                        @if($adjustment_row->level == 1)
-                                        @if($adjustment_row->has_child == 1)
-                                    </strong>
-                                    @endif
-                                    @endif
-                                </td> 
-                                <td style="text-align:center;padding-left:10px">
-                                    @if(isset($adjustment_row->total_adjustment) && ($adjustment_row->total_adjustment != 0) && ($adjustment_row->has_child == 0))
-                                    {{ number_format($adjustment_row->total_adjustment, 2) }}
-                                    @elseif(empty($adjustment_row->total_adjustment) && ($adjustment_row->has_child == 0))
-                                    0.00
-                                    @endif
-                                </td> 
-                                <td style="text-align:center;padding-left:10px"> 
-                                    @if(isset($adjustment_row->total_adjustment) && ($adjustment_row->has_child == 0))
-                                    <a href="{{ url('/') }}/budget/adjustment/details/{{ $adjustment_row->head_row_id }}">Details</a>
-                                    @endif
-                                </td> 
-                            </tr>
-                            <?php if (($parent_child_number == $parent_child_counter) && ($adjustment_row->level == 1) && ($adjustment_row->has_child == 0) && ($parent_total_allocation != 0)): ?>
-                                <tr>
-                                    <td>
-                                        <strong>&nbsp;&nbsp;&nbsp;Total: </strong>
-                                    </td>
-                                    <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
-                                    <td></td>
+                            @if($adjustment_row->parent_id == 0)
+                                <tr>            
+                                    <td style="text-align:left;padding-left:10px">
+                                        <strong style="font-size:15px !important;">
+                                            <span>{{ $parent_serial }}&nbsp;.&nbsp;</span>
+                                            <?php $parent_serial++; ?>
+                                                {{ $adjustment_row->title }} 
+                                        </strong>
+                                    </td> 
+                                    <td style="text-align:center;padding-left:10px">
+                                        @if(isset($adjustment_row->parent_head_total_adjustment) && ($adjustment_row->parent_head_total_adjustment != 0))
+                                        {{ number_format($adjustment_row->parent_head_total_adjustment, 2) }}
+                                        @else
+                                        0.00
+                                        @endif
+                                    </td> 
+                                    <td style="text-align:center;padding-left:10px"> 
+                                        @if(isset($adjustment_row->parent_head_total_adjustment))
+                                        <a href="{{ url('/') }}/budget/adjustment/details/{{ $adjustment_row->head_row_id }}">Details</a>
+                                        @endif
+                                    </td> 
                                 </tr>
-                            <?php endif; ?>
-                            <?php if (($parent_child_number == $parent_child_counter) && ($adjustment_row->level == 2) && ($adjustment_row->has_child == 0) && ($parent_total_allocation != 0)): ?>
-                                <tr>
-                                    <td>
-                                        <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total: </strong>
-                                    </td>
-                                    <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
-                                    <td></td>
-                                </tr>
-                            <?php endif; ?>
-                            <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($adjustment_row->level == 2) && ($adjustment_row->has_child == 0) && ($grand_parent_total_allocation != 0)): ?>
-                                <tr>
-                                    <td>
-                                        <strong>&nbsp;Total: </strong>
-                                    </td>
-                                    <td class="text-center"><strong>{{ number_format($grand_parent_total_allocation, 2) }}</strong></td>
-                                    <td></td>
-                                </tr>
-                            <?php endif; ?>
+                            @endif
                             @endforeach
                             <tr>
                                 <td>
