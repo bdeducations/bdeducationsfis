@@ -238,3 +238,7 @@ function getMenuListByRole($role_row_id) {
     $menu_list = (object) $menu_list;
     return $menu_list;
 }
+
+function getPoweredBy () {
+     return  '<div class="footer-pdf" style="border-top: 2px solid #000; text-align:right; margin-top:0px; font-style: italic; opacity:0.5">Powered By: bdeducations.org</div>';
+}

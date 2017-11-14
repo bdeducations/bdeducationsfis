@@ -221,7 +221,7 @@ $route_name = $route_name_arr[0];
                                 <li class="@if($route_name == 'hr-calender') active @endif">
                                     <a href="{{ url('/') }}/hr/calender">
                                         <i class="fa fa-calendar"></i>Manage Year calendar
-                                    </a>z
+                                    </a>
                                 </li> 
                                 <li class="@if($route_name == 'attendance-from-device') active @endif">
                                     <a href="{{ url('/') }}/hr/attendance/attendance-from-device">
@@ -232,7 +232,17 @@ $route_name = $route_name_arr[0];
                                     <a href="{{ url('/') }}/hr/attendance/manual-attendance">
                                         <i class="fa fa-circle-o"></i>  Manual Attendance
                                     </a>
-                                </li>                             
+                                </li>
+                                <li class="@if($route_name == 'all-staff-attendance-report-option') active @endif">
+                                    <a href="{{ url('/') }}/hr/attendance/all-staff-attendance-report-option">
+                                        <i class="fa fa-circle-o"></i> Attendance (All Employee)
+                                    </a>
+                                </li>       
+                                <li class="@if($route_name == 'individual-staff-attendance-report') active @endif">
+                                    <a href="{{ url('/') }}/hr/attendance/individual-staff-attendance-report">
+                                        <i class="fa fa-circle-o"></i> Individual Attendance
+                                    </a>
+                                </li>                      
                                 <li class="@if($route_name == 'hr-manage-leave') active @endif">
                                     <a href="{{ url('/') }}/hr/employee-leave">
                                         <i class="fa fa-medkit" aria-hidden="true"></i> Leave Management

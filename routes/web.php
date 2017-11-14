@@ -476,12 +476,20 @@ Route::post('/hr/salary-sheet-view-with-leave-record', 'ManageEmployeeController
 
 /* .......... Attendance Routes.......................  */
 
-//report
-
+//get attendance from device csv.
 Route::get('hr/attendance/attendance-from-device', 'ManageAttendanceController@sinkAttendanceRecordsFromCsvOption')->name('attendance-from-device');
 Route::post('hr/attendance/sinkAttendanceRecordsFromCsv', 'ManageAttendanceController@sinkAttendanceRecordsFromCsv');
+
+//get attendance manualy
 Route::any('hr/attendance/manual-attendance', 'ManageAttendanceController@manualAttendanceForm')->name('manual-attendance');
 Route::any('hr/attendance/store-attendance', 'ManageAttendanceController@storeStaffAttendance')->name('manual-attendance');
+
+//staff attendance report 
+Route::get('hr/attendance/all-staff-attendance-report-option', 'ManageAttendanceController@allStaffAttendanceReportOption')->name('all-staff-attendance-report');
+Route::post('hr/attendance/all-staff-attendance-report-show', 'ManageAttendanceController@allStaffAttendanceReportShow');
+
+Route::get('schoolAdmin/attendance/all-staff-attendance-report-pdf/{date}', 'ManageAttendanceController@allStaffAttendanceReportPdf');
+
 
 Route::post('schoolAdmin/attendance/staffList', 'ManageAttendanceController@staffList');
 Route::post('schoolAdmin/staffAttendance/storeStaffAttendance', 'ManageAttendanceController@storeStaffAttendance');
