@@ -3,8 +3,7 @@ $route_name_arr = explode('.', Route::currentRouteName() ? Route::currentRouteNa
 $route_name = $route_name_arr[0];
 ?>
 <!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
-    <head>
+<html lang="{{ config('app.locale') }}"><head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Tell the browser to be responsive to screen width -->
@@ -38,8 +37,7 @@ $route_name = $route_name_arr[0];
             ]) !!}
             ;
         </script>
-    </head>
-    <body class="hold-transition sidebar-mini skin-purple-light">
+    </head><body class="hold-transition sidebar-mini skin-purple-light">
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
@@ -321,5 +319,4 @@ $route_name = $route_name_arr[0];
                 }, 2000);
             });
         </script>
-    </body>
-</html>
+    </body></html>
