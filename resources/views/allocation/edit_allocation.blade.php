@@ -59,16 +59,8 @@
                                             <option <?php
                                             if ($row->head_row_id == $allocation_row_detail->head_row_id): echo "selected='selected'";
                                             endif;
-                                            ?> value="{{ $row->head_row_id }}" @if($row->has_child == 1)disabled @endif >
-                                                    @if($row->level == 0) <b>  @endif
-                                                    @if($row->level == 1) &nbsp; - @endif
-                                                    @if($row->level == 2) &nbsp; &nbsp; - - @endif
-                                                    @if($row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif
-                                                    @if($row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
-                                                    @if($row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
-                                                    @if($row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
+                                            ?> value="{{ $row->head_row_id }}">
                                                     {{ $row->title }}
-                                                    @if($row->level == 0) </b>  @endif
                                                 </option>
                                                 @endforeach
                                         </select>

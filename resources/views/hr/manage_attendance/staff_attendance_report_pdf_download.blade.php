@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html><head><title>Attendance Report PDF</title>
+<html><head>
+        <title>Attendance Report PDF</title>
         <meta charset="UTF-8">
         <style type="text/css">
-            h4{
+            h2,h4{
                 font-weight: none;
             }
-        </style>
-        </head><body style="font-size: 14px;">
-        <div style="width:100%;">
+        </style>           
+</head><body style="font-size: 14px;">
+        <div style="width:100%;margin-top: -50px;">
             <div class="row">
-                <table>
+               <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"   width="100%">
                     <tr> 
-                       <td style="vertical-align: top">
-                            <img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px">
+                        <td><img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px;margin:0px 10px 0px 0px;"></td>
+                        <td style="vertical-align: center;width: 60%">
+                            <h2 style="margin-bottom: 0px;"><u>   Attendance Report</u></h2>
+                            <h4 style="margin-top: 0px;">&nbsp;Date :  {{ date('j F, Y', strtotime($data['attendance_date'])) }}</h4>
                         </td>
-                        <td style="vertical-align: top;">
-                            <h2>bdeducations</h2>
-                            <p>House-7, Road-4, Gulshan -1, Dhaka.</p>
-                            <h3><u>Attendance Report</u></h3>
-                            <h4>Date :  {{ date('F j, Y', strtotime($data['attendance_date'])) }}</h4>
-                        </td>
+                        
                     </tr>
                 </table>
+
+
             </div>
         </div>
 
@@ -31,11 +31,11 @@
                  <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"  border="1" width="100%">
                   <thead>
                         <tr>
-                            <th style="text-align: left;">Serial</th>
-                            <th style="text-align: left;">Name</th>
-                            <th style="text-align: left;">In Time</th>
-                            <th style="text-align: left;">Out Time</th>
-                            <th style="text-align: left;"> Status</th>
+                            <th style="text-align: left;height: 30px">Serial</th>
+                            <th style="text-align: left;height: 30px">Name</th>
+                            <th style="text-align: left;height: 30px">In Time</th>
+                            <th style="text-align: left;height: 30px">Out Time</th>
+                            <th style="text-align: left;height: 30px"> Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,13 +59,13 @@
                            ?> 
                         <tr>
                             <td>{{ $i }}</td>
-                            <td>{{ $row->employee_name}}</td>
+                            <td>{{ $row->employee_name }}</td>
                            <td>{{ $present ? date('H:i a', strtotime($row->first_login)) : '' }}</td> 
                             <td>
                                 {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                             </td> 
                             <td>
-                                {!! $present ? 'Present' : '<div style="color:red">Absent</div>' !!}
+                                {!! $present ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
                             </td>
                         </tr>
                          @php $i++; @endphp
@@ -75,5 +75,5 @@
                 </table>
             </div>
              <?php echo getPoweredBy(); ?>
-        </div>
-        </body></html>
+        </div>       
+</body></html>
