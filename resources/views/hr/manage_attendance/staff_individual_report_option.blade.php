@@ -1,103 +1,110 @@
-@extends('backend.school_admin.layout_app')
+@extends('layouts.admin')
+@section('page_css')
+<!-- bootstrap datepicker -->
+<link rel="stylesheet" href="{{ url('/')}}/public/adminlte/plugins/datepicker/datepicker3.css">
+@endsection
 
 @section('content')
-
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 class="left-main-heading-breadcum">Attendance Report</h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Report Attendance</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
     <div class="row">
-        <div class="col-md-12 ">
-            <!-- BEGIN SAMPLE FORM PORTLET-->
-            <div class="portlet light bordered">
-                <div class="portlet-title">
-                    <div class="caption font-red-sunglo">
-                        <i class="icon-settings font-red-sunglo"></i>
-                        <span class="caption-subject bold uppercase">Staff Attendance Report</span>
-                    </div>
-                    <div class="actions">
-                    </div>
-                </div>
-                <div class="portlet-body form">
-                    <form role="form" method="post" action="{{ url('/') }}/schoolAdmin/attendance/staffIndividualReportGenerate" >
-                        {!! csrf_field() !!}
-                        <div class="form-body">
-                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">Select</label>
-                                        <div class="input-group input-medium col-md-9" data-date-format="yyyy-mm-dd">
-                                            <select class="form-control" name="admin_id" required>
-                                            <option value="">Select</option>
-                                            @foreach($data['all_staffs'] as $staff)
-                                            <option value="{{ $staff->admin_id }}">{{ $staff->admin_name }}</option>
-                                            @endforeach
-                                             </select>
-                                        </div>
-                                    </div>                                    
-                                </div>
-                                <div class="col-md-6">
-                                    
-                                </div>
-                            </div>
-                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">From Date</label>
-                                        <div class="input-group input-medium  date date-picker col-md-9" data-date-format="yyyy-mm-dd">
-                                                <input required id="datepicker" type="text" class="form-control" name="date_from_attendance" >
-                                                <span class="input-group-btn">
-                                                    <button class="btn default" type="button">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                        </div>
-                                    </div>                                    
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">To Date</label>
-                                        <div class="input-group input-medium  date date-picker col-md-9" data-date-format="yyyy-mm-dd">
-                                                <input required id="datepicker" type="text" class="form-control" name="date_to_attendance" >
-                                                <span class="input-group-btn">
-                                                    <button class="btn default" type="button">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                        </div>
-                                    </div> 
-                                </div>
-                            </div>
-
-                           
-                        </div>
-
-
+        <div class="col-md-12">
+            <div class="box box-info">
+                <!-- form start -->
+                <form role="form" method="post" action="{{ url('/') }}/hr/attendance/individual-staff-attendance-report-show" >
+                    {!! csrf_field() !!}
+                    <div class="box-body">
                         <div class="row">
-                                
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn blue submit_btn">Generate Report</button>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="area_name" class="col-md-3 control-label">To Date <span class="input-required-asterik">*</span></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-medium  date date-picker col-md-9" data-date-format="yyyy-mm-dd" style="padding: 0 0 0 12px">
+                                            <select class="form-control" name="employee_row_id" required="required">
+                                            <option value="-1">Select</option>
+                                            @foreach($data['all_staffs'] as $row)
+                                                <option value="{{ $row->employee_row_id }}">
+                                                    {{ $row->employee_name }}
+                                                </option>
+                                            @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                    </form>
-
-                  
-                </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="area_name" class="col-md-3 control-label">From Date <span class="input-required-asterik">*</span></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-medium  date date-picker col-md-9" data-date-format="yyyy-mm-dd" style="padding: 0 0 0 12px">
+                                            <input type="text" name="date_from_attendance" class="form-control" id="datepicker" required="required" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="area_name" class="col-md-3 control-label">To Date <span class="input-required-asterik">*</span></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-medium  date date-picker col-md-9" data-date-format="yyyy-mm-dd" style="padding: 0 0 0 12px">
+                                            <input type="text" name="date_to_attendance" class="form-control" id="datepicker2" required="required" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    
+                                    <div class="col-md-9 col-md-offset-3">
+                                         <button type="submit" class="btn btn-primary" style="">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
             </div>
         </div>
     </div>
-   
+</section>
+@endsection
 
-    <link href="{{ asset('/public')}}/metronic/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('/public')}}/metronic/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('/public')}}/metronic/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('/public')}}/metronic/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
-    <script src="{{ asset('/public')}}/metronic/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
-    <script src="{{ asset('/public')}}/metronic/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
-    <script src="{{ asset('/public')}}/metronic/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-    <script src="{{ asset('/public')}}/metronic/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
-    <script src="{{ asset('/public')}}/metronic/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js" type="text/javascript"></script>
-    <script src="{{ asset('/public')}}/metronic/pages/scripts/form-wizard.js" type="text/javascript"></script>
-    <script src="{{ asset('/public')}}/metronic/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-    <script src="{{ asset('/public')}}/metronic/pages/scripts/form-validation.js" type="text/javascript"></script>
+
+@section('page_js')
+<!-- page script -->
+<!-- bootstrap datepicker -->
+<script src="{{ url('/')}}/public/adminlte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#datepicker').datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+        });
+
+        $('#datepicker2').datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+        });
+    });
+</script>
 @endsection

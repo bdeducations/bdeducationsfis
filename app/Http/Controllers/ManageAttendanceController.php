@@ -362,8 +362,6 @@ class ManageAttendanceController extends Controller {
         $sql = "SELECT bdedu_students.`student_name`, bdedu_students.`student_id`, bdedu_students.`current_rollnumber` , (SELECT first_login FROM bdedu_students_attendance_records WHERE bdedu_students.`student_id` = bdedu_students_attendance_records.card_id AND bdedu_students_attendance_records.`attendance_date` = '$request->date_of_attendance' LIMIT 1) AS first_login, (SELECT last_logout FROM bdedu_students_attendance_records WHERE bdedu_students.`student_id` = bdedu_students_attendance_records.card_id AND bdedu_students_attendance_records.`attendance_date` = '$request->date_of_attendance' LIMIT 1) AS last_logout FROM bdedu_students WHERE bdedu_students.current_class=$request->academic_class";
 
     $data['students_list'] =  DB::select($sql);
-    
-
     $data['show_student_list_section']  = true;
     return view($this->viewFolderPath .  'report', ['data'=>$data] );
     }
@@ -395,11 +393,7 @@ class ManageAttendanceController extends Controller {
         return $pdf->stream($data['class_name'].'_'.$data['section_name'].'_'.$data['date_of_attendance'].'_attendance_report.pdf');
 
         // return view($this->viewFolderPath .'attendance_report_pdf_download', ['data'=>$data] );
-        }   
-
-    
-   
-
+        }  
     
     //used
     public function  sinkAttendanceRecordsFromCsvOption() {
@@ -498,7 +492,32 @@ class ManageAttendanceController extends Controller {
         return $pdf->stream($data['attendance_date'].'_staff_attendance_report.pdf');
         
         }
+    //used
+    public function  individualStaffAttendanceReportOption() {
 
+        $data = array();
+        $hr_obj = new \App\Libraries\HrCommon();
+        $data['all_staffs'] = $hr_obj->employeeList();       
+        return view($this->viewFolderPath .  'staff_individual_report_option', ['data'=>$data] );
+    }
+
+    public function individualStaffAttendanceReportShow(Request $request) {
+        $hr_obj = new \App\Libraries\HrCommon();
+        $data['person_info'] = $hr_obj->singleEmployeeInfo($request->employee_row_id);
+        $data['date_from_attendance'] = $request->date_from_attendance;
+        $data['date_to_attendance'] = $request->date_to_attendance;
+        $data['card_id'] = $request->employee_row_id;
+
+        $commonLib = new  \App\Libraries\Common();
+        $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($request->employee_row_id, $request->date_from_attendance, $request->date_to_attendance);
+
+        return view($this->viewFolderPath .  'staff_individual_report_view', ['data'=>$data] );
+        
+    }
+
+    
+
+        
     public function updateAttendanceRecordsFromLog() {
 
         $sql = 'SELECT distinct(EventDate) FROM bdedu_log';

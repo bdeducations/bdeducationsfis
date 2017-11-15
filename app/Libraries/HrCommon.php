@@ -134,6 +134,16 @@ class HrCommon
     
     public function employeeList($department_row_id=0)
     {
+        return \App\Models\HrEmployee::with('employeeDesignation')
+                            ->orderBy('sort_order')
+                            ->get();
+
+        /* return \App\Models\HrEmployee::with('employeeDepartment', 'employeeDesignation')
+                            ->where('department_row_id',$department_row_id)
+                            ->get()->sortBy(function($q) { 
+                            return $q->employeeDesignation->sort_order;
+                        });
+
 
         if($department_row_id) {
         return \App\Models\HrEmployee::with('employeeDepartment', 'employeeDesignation')
@@ -153,7 +163,7 @@ class HrCommon
                     }
                 }
             return  $output;
-        }
+        }*/
       
     }
 
@@ -339,6 +349,44 @@ class HrCommon
             }
         }
        return  $arr;
+    }
+
+    function getAttendancesByIdWithDateRange($admin_id, $date_from_attendance, $date_to_attendance) {
+        $records = [];
+        $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();
+
+        if($attendace_records) :
+        $date1 = $date_from_attendance;
+        $date2 = $date_to_attendance;
+        $diff = abs(strtotime($date2) - strtotime($date1));
+        $days = floor($diff / (60*60*24));
+        // 2017-10-20 and 2017-10-21 show difference 1, but calculation should be for 2, so we should add 1 day manually.
+        $daysDiff = (int) ($days + 1);
+        /* it is to keep status, if he is not present not for a single day
+         then in report we will not show all date, we will simply show that he was not present even for a signle date */
+        $present_at_least_one_day_withing_date_range = 0 ; 
+
+        // for 2017-10-05 to 2017-10-28, we should traverse from date 5 to date 28
+        for($startDay = 0; $startDay< $daysDiff; $startDay++) {
+            // get 1 day increased each time.        
+            $currentDate = date( 'Y-m-d', (strtotime($date1) + (86400*$startDay)) );
+            foreach($attendace_records as $row) {              
+                $arr = [];
+                // check whether attendance record exist in this date. if exist then break out of foreach, go to next day.
+                if($currentDate == $row->attendance_date) {                   
+                    $arr['attendance_date'] =  $row->attendance_date;
+                    $arr['first_login'] =  $row->first_login;
+                    $arr['last_logout'] =  $row->last_logout;
+                    $arr['attendance_record_exits'] = 1;
+                    $present_at_least_one_day_withing_date_range = 1; 
+                    break;
+                }
+            }
+            $records[$currentDate ] = $arr;
+        }
+        endif;
+
+        return $records;
     }
 
 }
