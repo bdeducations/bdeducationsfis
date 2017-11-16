@@ -419,9 +419,10 @@ class ManageAttendanceController extends Controller {
                     $last_logout = $attendance_date . ' ' . $value->last_out_time . ':' . '00';
 
                     if(DB::table('staff_attendance_records')->where( [ ['card_id', $id], ['attendance_date', $attendance_date] ] )->count() ) {                          
-                            // update last_logout field only  
+                            
                             if($value->first_in_time == 0)
-                                continue; // no need to update as he did not punch card for exit.
+                                continue; /* no need to update, may be still he did not came office
+                               or you are uploading previous csv of this day when he did not came*/
 
                             DB::table('staff_attendance_records')->where([ ['card_id', $id], ['attendance_date', $attendance_date] ])->update(['first_login' =>$first_login,'last_logout' =>$last_logout, 'updated_by'=>$admin_row_id]);   
 
