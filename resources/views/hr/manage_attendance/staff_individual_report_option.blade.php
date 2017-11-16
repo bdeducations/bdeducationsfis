@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="area_name" class="col-md-3 control-label">To Date <span class="input-required-asterik">*</span></label>
+                                    <label for="area_name" class="col-md-3 control-label">Select<span class="input-required-asterik">*</span></label>
                                     <div class="col-md-9">
                                         <div class="input-group input-medium  date date-picker col-md-9" data-date-format="yyyy-mm-dd" style="padding: 0 0 0 12px">
                                             <select class="form-control" name="employee_row_id" required="required">

@@ -134,7 +134,9 @@ class HrCommon
     
     public function employeeList($department_row_id=0)
     {
+
         return \App\Models\HrEmployee::with('employeeDesignation')
+                            ->where('show_attendance_report', 1)
                             ->orderBy('sort_order')
                             ->get();
 
