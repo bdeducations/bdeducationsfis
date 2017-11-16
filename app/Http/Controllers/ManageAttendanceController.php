@@ -420,7 +420,7 @@ class ManageAttendanceController extends Controller {
 
                     if(DB::table('staff_attendance_records')->where( [ ['card_id', $id], ['attendance_date', $attendance_date] ] )->count() ) {                          
                             // update last_logout field only  
-                            if($value->last_out_time == 0)
+                            if($value->first_in_time == 0)
                                 continue; // no need to update as he did not punch card for exit.
 
                             DB::table('staff_attendance_records')->where([ ['card_id', $id], ['attendance_date', $attendance_date] ])->update(['first_login' =>$first_login,'last_logout' =>$last_logout, 'updated_by'=>$admin_row_id]);   
