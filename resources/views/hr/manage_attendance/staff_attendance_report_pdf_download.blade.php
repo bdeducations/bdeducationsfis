@@ -33,13 +33,13 @@
                         <tr>
                             <th style="text-align: left;height: 30px">Serial</th>
                             <th style="text-align: left;height: 30px">Name</th>
-                            <th style="text-align: left;height: 30px">In Time</th>
-                            <th style="text-align: left;height: 30px">Out Time</th>
+                            <th style="text-align: left;height: 30px;">In Time</th>
+                            <th style="text-align: left;height: 30px;">Out Time</th>
                             <th style="text-align: left;height: 30px"> Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php $i = 1 @endphp
+                        @php $i = 1; $countPresent = 0; $countAbsent = 0; @endphp
                         @foreach($data['staff_attendance_info']  as $row)
                         <?php 
                             $login =  date( 'H:i', strtotime($row->first_login) );
@@ -47,6 +47,9 @@
                             if($login == '00:00')
                             {
                                 $present = 0;
+                                $countAbsent++;                                
+                            } else {
+                                $countPresent++;
                             }
                             
                             $logout =  date( 'H:i', strtotime($row->last_logout) );
@@ -70,9 +73,13 @@
                         </tr>
                          @php $i++; @endphp
                     @endforeach
-                   
                     </tbody>
                 </table>
+                <div style="text-align: left;padding-top:20px;font-size: 16px;">
+                    <span style="color:green !important;">Total Present: {{ $countPresent }} persons, </span>  
+                    <span style="color:red !important;">Total Absent: {{ $countAbsent }} persons </span>              
+                </div>
+               
             </div>
              <?php echo getPoweredBy(); ?>
         </div>       
