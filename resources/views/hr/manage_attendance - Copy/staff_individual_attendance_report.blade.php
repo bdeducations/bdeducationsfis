@@ -1,22 +1,15 @@
-@extends('layouts.admin')
+@extends('backend.school_admin.layout_app')
 
 @section('content')
-<section class="content-header">
-    <h1 class="left-main-heading-breadcum">Attendance Report</h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active"> Attendance</li>
-    </ol>
-</section>
-<section class="content">
+
     <div class="row">
         <div class="col-md-12 ">
             <!-- BEGIN SAMPLE FORM PORTLET-->
-            <div class="box box-info">
+            <div class="portlet light bordered">
                 <div class="portlet-title">
                     <div class="caption font-red-sunglo">
                         <i class="icon-settings font-red-sunglo"></i>
-                        <span class="caption-subject bold uppercase">&nbsp;&nbsp;Staff Attendance Report  </span>
+                        <span class="caption-subject bold uppercase"> Staff Attendance Report  </span>
                     </div>
                     <div class="actions">
                     </div>
@@ -27,17 +20,17 @@
                         <div class="form-group">                            
                             <table class="table table-bordered  dt-responsive" width="100%">
                                 <tr>
-                                    <td>Attendance Date: {{ $data['date_of_attendance'] }} </td>
-                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/hr/attendance/all-staff-attendance-report-pdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
+                                    <td>Attendance Date: {{ $data['date_from_attendance'] }} {{ $data['date_to_attendance'] }} </td>
+                                    
                                 </tr>
                             </table>
-                        </div> 
+                        </div>
+                                    
                         <div class="form-group">
                              <table class="table  table-bordered dt-responsive" width="100%" id="sample_1">
                                   <thead>
                                         <tr>
-                                            <th class="min-phone-l">Serial</th>
-                                            <th class="min-phone-l">Name</th>
+                                            <th class="min-phone-l">Date</th>
                                             <th class="min-phone-l">In Time</th>
                                             <th class="min-phone-l">Out Time</th>
                                             <th class="min-phone-l">Attendance Status</th>
@@ -46,7 +39,7 @@
                                     <tbody>
                                         <div class="checkbox_wrapper">
                                             @php $i = 1 @endphp
-                                            @foreach($data['staff_list']  as $row)
+                                            @foreach($data['attendance_list']  as $row)
                                             <?php 
                                                 $login =  date( 'H:i', strtotime($row->first_login) );
                                                 $present = 1;
@@ -65,8 +58,8 @@
                                                ?> 
                                             <tr>
                                                 <td>{{ $i }}</td>
-                                                <td>{{ $row->employee_name}}</td>
-                                                <td>{{ $present ? date('h:i a', strtotime($row->first_login)) : '' }}</td> 
+                                                
+                                               <td>{{ $present ? date('H:i a', strtotime($row->first_login)) : '' }}</td> 
                                                 <td>
                                                     {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                                                 </td> 
@@ -88,7 +81,6 @@
             </div>
         </div>
     </div>
-</section>
 
 @endsection
 

@@ -1,31 +1,38 @@
-<!DOCTYPE html><html><head><title>Attendance Report PDF</title>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Attendance Report PDF</title>
         <meta charset="UTF-8">
         <style type="text/css">
             h4{
                 font-weight: none;
             }
-        </style>
-        </head><body>
+        </style>           
+    </head>
+    <body>
         <div style="width:100%;margin-top: -50px;">
             <div class="row">
-               <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"   width="100%">
-                    <tr>
-                        <td><img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px;margin:0px 10px 0px 0px;"></td>
-                        <td style="vertical-align: center;width: 60%">
-                            <h2 style="margin-bottom: 0px;"><u>Attendance Report</u></h2>
-                            <h4 style="margin-top: 0px;">&nbsp; From Date :  {{ date('j F, Y', strtotime($data['date_from_attendance'])) }} To Date :  {{ date('j F, Y', strtotime($data['date_to_attendance'])) }}</h4>
-                        </td>
-                        
-                    </tr>
-                </table>
+            <div class="col-sm-4"  style="margin-top: 20px; float: left;">
+                <img src="{{ $data['school_logo_url'] }}" style="width: 200px">
+            </div>
+            <div class="col-sm-8">
+                <div style="text-align:center; margin-top: 20px;">
+                    <h2 style="margin:0px;">{{strtoupper(session('school_name'))}}</h2>
+                    <p style="margin:0px;">{{ $data['school_address'] }}</p>
+                    <h3 style="margin-bottom:0px;margin-top: 10px"><u>Attendance Report</u></h3>
+                    <div>Name: {{ $data['person_info']->admin_name  }} </div>
+                    <div>ID: {{ $data['person_info']->employee_id }} </div>
+                    <div>Date: {{ date('F j, Y', strtotime( $data['date_from_attendance'])) }} &nbsp;To&nbsp; {{ date('F j, Y', strtotime( $data['date_to_attendance'])) }}</div>
+                </div>
+            </div>
             </div>
         </div>
-        
+
         <div class="pdfcontent" style="text-align:center;">
-            <div class="main" style="padding: 30px 15px 20px 15px;">
+            <div class="main" style="padding: 10px 15px 20px 15px;">
                 <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"  border="1" width="100%">
                     <thead>
-                        <tr style="height:50px">
+                        <tr>
                             <th style="text-align:left;width:20%;"> Date </th> 
                             <th style="text-align:left;width:20%;"> Day </th>                             
                             <th style="text-align:left;width:20%;"> In Time</th>
@@ -80,5 +87,6 @@
                 </div>
             </div>
             <div class="clear" style="margin-top:20px; "><?php echo getPoweredBy(); ?></div>
-        </div>
-        </body></html>
+        </div>       
+    </body>
+</html>

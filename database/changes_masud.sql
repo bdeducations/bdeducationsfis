@@ -1,0 +1,1 @@
+ALTER TABLE `ut_hr_employees` ADD `employee_id` VARCHAR(50) NOT NULL AFTER `employee_row_id`;

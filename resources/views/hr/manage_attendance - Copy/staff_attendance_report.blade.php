@@ -28,7 +28,7 @@
                             <table class="table table-bordered  dt-responsive" width="100%">
                                 <tr>
                                     <td>Attendance Date: {{ $data['date_of_attendance'] }} </td>
-                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/hr/attendance/all-staff-attendance-report-pdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
+                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/schoolAdmin/attendance/all-staff-attendance-report-pdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
                                 </tr>
                             </table>
                         </div> 

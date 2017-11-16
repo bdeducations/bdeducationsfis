@@ -354,6 +354,7 @@ class HrCommon
     function getAttendancesByIdWithDateRange($admin_id, $date_from_attendance, $date_to_attendance) {
         $records = [];
         $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();
+        
 
         if($attendace_records) :
         $date1 = $date_from_attendance;

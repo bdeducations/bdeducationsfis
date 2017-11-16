@@ -1,22 +1,15 @@
 @extends('layouts.admin')
 
 @section('content')
-<section class="content-header">
-    <h1 class="left-main-heading-breadcum">Attendance Report</h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active"> Attendance</li>
-    </ol>
-</section>
-<section class="content">
+
     <div class="row">
         <div class="col-md-12 ">
             <!-- BEGIN SAMPLE FORM PORTLET-->
-            <div class="box box-info">
+            <div class="portlet light bordered">
                 <div class="portlet-title">
                     <div class="caption font-red-sunglo">
                         <i class="icon-settings font-red-sunglo"></i>
-                        <span class="caption-subject bold uppercase">&nbsp;&nbsp;Staff Attendance Report  </span>
+                        <span class="caption-subject bold uppercase"> Personal Attendance Report</span>
                     </div>
                     <div class="actions">
                     </div>
@@ -27,17 +20,28 @@
                         <div class="form-group">                            
                             <table class="table table-bordered  dt-responsive" width="100%">
                                 <tr>
-                                    <td>Attendance Date: {{ $data['date_of_attendance'] }} </td>
-                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/hr/attendance/all-staff-attendance-report-pdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
+                                    <td>
+                                        <div style="font-weight: bold">
+                                            Name: {{ $data['person_info']->admin_name }}
+                                        </div>
+                                        <div>
+                                             ID: {{ $data['person_info']->employee_id }}
+                                        </div>
+                                        <div>
+                                            Attendance - From: <strong> {{ $data['date_from_attendance'] }}</strong>  To: <strong> {{ $data['date_to_attendance'] }}  </strong>
+                                        </div>
+                                    </td>
+                                     <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/schoolAdmin/attendance/staffIndividualReportPdf/{{$data['card_id']}}/{{ $data['date_from_attendance'] }}/{{ $data['date_to_attendance'] }}" target="_blank">Genarate PDF</a></td>
                                 </tr>
                             </table>
-                        </div> 
+                        </div>
+                                    
                         <div class="form-group">
                              <table class="table  table-bordered dt-responsive" width="100%" id="sample_1">
                                   <thead>
                                         <tr>
-                                            <th class="min-phone-l">Serial</th>
-                                            <th class="min-phone-l">Name</th>
+                                            <th class="min-phone-l">Dates</th>
+                                            <th class="min-phone-l">Day</th>
                                             <th class="min-phone-l">In Time</th>
                                             <th class="min-phone-l">Out Time</th>
                                             <th class="min-phone-l">Attendance Status</th>
@@ -45,40 +49,50 @@
                                     </thead>
                                     <tbody>
                                         <div class="checkbox_wrapper">
-                                            @php $i = 1 @endphp
-                                            @foreach($data['staff_list']  as $row)
-                                            <?php 
-                                                $login =  date( 'H:i', strtotime($row->first_login) );
-                                                $present = 1;
-                                                if($login == '00:00')
-                                                {
-                                                    $present = 0;
-                                                }
-                                                
-                                                $logout =  date( 'H:i', strtotime($row->last_logout) );
-                                                
-                                                if($logout == '00:00')
-                                                {
+                                            @php $i = 1; $count_absent = 0; @endphp
+                                            @foreach($data['attendance_list']  as  $key=>$row)
+                                                <?php
+                                                 $login = 0;
+                                                 $absent = 0;
+
+                                                 if(!isset($row['first_login']))
+                                                    $login = 0;
+                                                 else
+                                                 {
+                                                    $login =  strtotime($row['first_login']);
+                                                 }
+                                                if(!isset($row['last_logout']))
                                                     $logout = 0;
+                                                else {
+                                                    $logout =  strtotime($row['last_logout']) ;
                                                 }
 
-                                               ?> 
-                                            <tr>
-                                                <td>{{ $i }}</td>
-                                                <td>{{ $row->employee_name}}</td>
-                                                <td>{{ $present ? date('h:i a', strtotime($row->first_login)) : '' }}</td> 
-                                                <td>
-                                                    {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
-                                                </td> 
-                                                <td>
-                                                    {{ $present ? 'Present' : 'Absent' }}
-                                                </td>
-                                            </tr>
-                                             @php $i++; @endphp
+                                                if(!$login && !$logout && !( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) )
+                                                 {
+                                                    $absent = 1;
+                                                    $count_absent ++;
+                                                 } 
+                                                ?>
+
+                                                <tr <?php echo $absent ? 'style="background-color:red"' : ''; ?>>
+                                                    <td>{{ $key }}</td>
+                                                    <td>{{ date( 'l', strtotime($key) ) }}</td>
+                                                    <td>{{ $login ? date('h:i a', $login) : '' }} </td> 
+                                                    <td>
+                                                    <?php 
+                                                     echo ( ($login == $logout) ||  !$logout ) ? '' : date('h:i a', $logout);
+                                                    // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
+                                                    </td> 
+                                                    <td>{{ $login ? 'Present' : ($absent ? 'Absent' : '') }}</td>
+                                                  
+                                                </tr>
+
+                                            @php $i++; @endphp
                                         @endforeach
                                         </div>
                                     </tbody>
                                 </table>
+                                <div>Total Absent: {{ $count_absent ? $count_absent . ' days' : 'Nil' }} </div>
                         </div> 
                                                     
                     </div>
@@ -88,7 +102,6 @@
             </div>
         </div>
     </div>
-</section>
 
 @endsection
 
