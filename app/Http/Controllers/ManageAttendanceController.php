@@ -418,41 +418,26 @@ class ManageAttendanceController extends Controller {
                     $first_login = $attendance_date . ' ' . $value->first_in_time . ':' . '00';
                     $last_logout = $attendance_date . ' ' . $value->last_out_time . ':' . '00';
 
-                    if($id <  1000) {                        
-                        if(DB::table('staff_attendance_records')->where( [ ['card_id', $id], ['attendance_date', $attendance_date] ] )->count() ) {
+                    if(DB::table('staff_attendance_records')->where( [ ['card_id', $id], ['attendance_date', $attendance_date] ] )->count() ) {                          
                             // update last_logout field only  
-                            if($value->last_out_time == '0:00')
+                            if($value->last_out_time == 0)
                                 continue; // no need to update as he did not punch card for exit.
-                            DB::table('staff_attendance_records')->where([ ['card_id', $id], ['attendance_date', $attendance_date] ])->update(['last_logout' =>$last_logout, 'updated_by'=>$admin_row_id]);   
+
+                            DB::table('staff_attendance_records')->where([ ['card_id', $id], ['attendance_date', $attendance_date] ])->update(['first_login' =>$first_login,'last_logout' =>$last_logout, 'updated_by'=>$admin_row_id]);   
 
                         } else {
                              $insertStaffRecords[] = ['card_id' => $id, 'attendance_date'=>$attendance_date, 'first_login' => $first_login, 'last_logout' =>$last_logout, 'created_by'=>$admin_row_id];
                         }
                        
-                    } else {
-
-                        if(DB::table('students_attendance_records')->where( [ ['card_id', $id], ['attendance_date', $attendance_date] ] )->count() ) {
-                            //// update last_logout field only 
-                            if($value->last_out_time == '0:00')
-                                continue; // no need to update as he did not punch card for exit.
-                            DB::table('students_attendance_records')->where([ ['card_id', $id], ['attendance_date', $attendance_date] ])->update(['last_logout' =>$last_logout, 'updated_by'=>$admin_row_id]);  
-                        } else {
-                            $insertStudentRecords[] = ['card_id' => $id, 'attendance_date'=>$attendance_date, 'first_login' => $first_login, 'last_logout' =>$last_logout, 'created_by'=>$admin_row_id];
-                        }
-                        
-                    }
-                    
-                }
+                    } 
+               
                 if(!empty($insertStaffRecords)){
 
                     DB::table('staff_attendance_records')->insert($insertStaffRecords);                    
                 }
-
-                if(!empty($insertStudentRecords)){
-                    DB::table('students_attendance_records')->insert($insertStudentRecords);                    
-                }
             }
         }
+        
         Session::flash('success-message', 'Attendance Data has been imported successfully');  
         return redirect('hr/attendance/all-staff-attendance-report-option'); 
     }
@@ -494,6 +479,7 @@ class ManageAttendanceController extends Controller {
         }
     //used
     public function  individualStaffAttendanceReportOption() {
+        
 
         $data = array();
         $hr_obj = new \App\Libraries\HrCommon();
@@ -506,13 +492,11 @@ class ManageAttendanceController extends Controller {
         $data['person_info'] = $hr_obj->singleEmployeeInfo($request->employee_row_id);
         $data['date_from_attendance'] = $request->date_from_attendance;
         $data['date_to_attendance'] = $request->date_to_attendance;
-        $data['card_id'] = $request->employee_row_id;
+        $data['card_id'] = $request->employee_row_id;        
+        //up to this done 11-15-2017.
 
-        $commonLib = new  \App\Libraries\Common();
         $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($request->employee_row_id, $request->date_from_attendance, $request->date_to_attendance);
-
         return view($this->viewFolderPath .  'staff_individual_report_view', ['data'=>$data] );
-        
     }
 
     
