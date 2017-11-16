@@ -52,7 +52,7 @@ class AllocationAdjustmentReportController extends Controller {
         $data['total_donation_by_area'] = '';
         $data['total_current_allocation_by_area'] = '';
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
+        $data['all_heads'] = $common_model->allMainHeads();
         $data['all_areas'] = $common_model->allAreas(1);
         $data['alphabets'] = $common_model->alphabet_array;
         $data['roman'] = $common_model->roman_array;
@@ -141,7 +141,7 @@ class AllocationAdjustmentReportController extends Controller {
         $data['total_donation_by_area'] = '';
         $data['total_current_allocation_by_area'] = '';
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
+        $data['all_heads'] = $common_model->allMainHeads();
         $data['all_areas'] = $common_model->allAreas(1);
         $data['alphabets'] = $common_model->alphabet_array;
         $data['roman'] = $common_model->roman_array;
@@ -273,120 +273,35 @@ class AllocationAdjustmentReportController extends Controller {
             }
             $account_allocation_list = $common_model->allocationFilterHeadsWithAdjustment(1, $area_row_id, $head_row_id, $budget_year, $from_date, $to_date);
             if ($account_allocation_list) {
-                $child_serial = 1;
                 $parent_serial = 1;
-                $grand_child_serial = 1;
-                $grand_parent_child_number = 0;
-                $grand_parent_child_counter = 0;
-                $grand_parent_total_allocation = 0;
-                $grand_parent_total_donation = 0;
-                $grand_parent_head_total_adjustment = 0;
-                $grand_parent_head_current_total_allocation = 0;
-                $parent_child_number = 0;
-                $parent_child_counter = 0;
-                $parent_total_allocation = 0;
-                $parent_head_total_donation = 0;
-                $parent_head_total_adjustment = 0;
-                $parent_head_current_total_allocation = 0;
                 foreach ($account_allocation_list as $area_row_id_key => $area_allocation_row) {
-                    if (isset($child_serial) && $child_serial > 26):
-                        $child_serial = 1;
-                    endif;
-                    if (isset($grand_child_serial) && $grand_child_serial > 26):
-                        $grand_child_serial = 1;
-                    endif;
                     foreach ($area_allocation_row as $allocation_row) {
                         $a = array();
-                        if ($allocation_row['level'] == 0) {
-                            $child_serial = 1;
-                            $head_serial_number = $parent_serial . ". ";
-                            $parent_serial++;
-                            $grand_parent_child_counter = 0;
-                            if ($allocation_row['has_child'] == 1) {
-                                $parent_child_number = $allocation_row['parent_head_child_number'];
-                                $parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                $grand_parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                $grand_parent_total_donation = $allocation_row['parent_head_total_donation'];
-                                $parent_head_total_donation = $allocation_row['parent_head_total_donation'];
-                                $grand_parent_head_total_adjustment = $allocation_row['parent_head_total_adjustment'];
-                                $parent_head_total_adjustment = $allocation_row['parent_head_total_adjustment'];
-                                $grand_parent_head_current_total_allocation = $allocation_row['parent_head_current_total_allocation'];
-                                $parent_head_current_total_allocation = $allocation_row['parent_head_current_total_allocation'];
-                                $grand_parent_child_number = $allocation_row['parent_head_child_number'];
-                                $parent_child_counter = 0;
-                            }
-                        }
-                        if ($allocation_row['level'] == 1) {
-                            $grand_child_serial = 1;
-                            $head_serial_number = "   " . $alphabets[$child_serial] . ". ";
-                            $child_serial++;
-                            if ($allocation_row['has_child'] == 1):
-                                $parent_child_number = $allocation_row['parent_head_child_number'];
-                                $parent_child_counter = 0;
-                                $parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                $parent_head_total_donation = $allocation_row['parent_head_total_donation'];
-                                $parent_head_total_adjustment = $allocation_row['parent_head_total_adjustment'];
-                                $parent_head_current_total_allocation = $allocation_row['parent_head_current_total_allocation'];
-                                $grand_parent_child_counter++;
-                            else:
-                                $parent_child_counter++;
-                            endif;
-                        }
-                        if ($allocation_row['level'] == 2) {
-                            $head_serial_number = "     " . $roman[$grand_child_serial] . ". ";
-                            $grand_child_serial++;
-                            $parent_child_counter++;
-                        }
+                        $head_serial_number = $parent_serial . ". ";
+                        $parent_serial++;
                         $a['Head Name'] = $head_serial_number . $allocation_row['title'];
                         $a['Area Name'] = $area_row_id_key;
-                        if (isset($allocation_row['head_total_allocation']) && !empty($allocation_row['head_total_allocation']) && ($allocation_row['has_child'] == 0)) {
+                        if (isset($allocation_row['head_total_allocation']) && !empty($allocation_row['head_total_allocation'])) {
                             $a['Allocation(original)'] = number_format($allocation_row['head_total_allocation'], 2);
                         } else {
                             $a['Allocation(original)'] = 0.00;
                         }
-                        if (isset($allocation_row['head_total_donation']) && !empty($allocation_row['head_total_donation']) && ($allocation_row['has_child'] == 0)) {
+                        if (isset($allocation_row['head_total_donation']) && !empty($allocation_row['head_total_donation'])) {
                             $a['Donate)'] = number_format($allocation_row['head_total_donation'], 2);
                         } else {
                             $a['Donate'] = 0.00;
                         }
-                        if (isset($allocation_row['head_total_adjustment']) && !empty($allocation_row['head_total_adjustment']) && ($allocation_row['has_child'] == 0)) {
+                        if (isset($allocation_row['head_total_adjustment']) && !empty($allocation_row['head_total_adjustment'])) {
                             $a['Receive)'] = number_format($allocation_row['head_total_adjustment'], 2);
                         } else {
                             $a['Receive'] = 0.00;
                         }
-                        if (isset($allocation_row['head_current_total_allocation']) && !empty($allocation_row['head_current_total_allocation']) && ($allocation_row['has_child'] == 0)) {
+                        if (isset($allocation_row['head_current_total_allocation']) && !empty($allocation_row['head_current_total_allocation'])) {
                             $a['Allocation(Current))'] = number_format($allocation_row['head_current_total_allocation'], 2);
                         } else {
                             $a['Allocation(Current)'] = 0.00;
                         }
                         $data[] = (array) $a;
-                        if (($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 1) && ($allocation_row['has_child'] == 0)):
-                            $parent_total['Head Name'] = "Total";
-                            $parent_total['Area Name'] = '';
-                            $parent_total['Allocation(original)'] = number_format($parent_total_allocation, 2);
-                            $parent_total['Donate'] = number_format($parent_head_total_donation, 2);
-                            $parent_total['Receive'] = number_format($parent_head_total_adjustment, 2);
-                            $parent_total['Allocation(Current)'] = number_format($parent_head_current_total_allocation, 2);
-                            $data[] = (array) $parent_total;
-                        endif;
-                        if (($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 2) && ($allocation_row['has_child'] == 0)):
-                            $parent_child_total['Head Name'] = "    Total";
-                            $parent_child_total['Area Name'] = '';
-                            $parent_child_total['Allocation(original)'] = number_format($parent_total_allocation, 2);
-                            $parent_child_total['Donate'] = number_format($parent_head_total_donation, 2);
-                            $parent_child_total['Receive'] = number_format($parent_head_total_adjustment, 2);
-                            $parent_child_total['Allocation(Current)'] = number_format($parent_head_current_total_allocation, 2);
-                            $data[] = (array) $parent_child_total;
-                        endif;
-                        if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 2) && ($allocation_row['has_child'] == 0)):
-                            $grand_parent_total['Head Name'] = "Total";
-                            $grand_parent_total['Area Name'] = '';
-                            $grand_parent_total['Allocation(original)'] = number_format($grand_parent_total_allocation, 2);
-                            $grand_parent_total['Donate'] = number_format($grand_parent_total_donation, 2);
-                            $grand_parent_total['Receive'] = number_format($grand_parent_head_total_adjustment, 2);
-                            $grand_parent_total['Allocation(Current)'] = number_format($grand_parent_head_current_total_allocation, 2);
-                            $data[] = (array) $grand_parent_total;
-                        endif;
                     }
                     if ($head_row_id == -1):
                         $area_total['Head Name'] = "Total( " . $area_row_id_key . " )";
@@ -416,10 +331,6 @@ class AllocationAdjustmentReportController extends Controller {
                 $area_name = "All_Area_" . $budget_year;
             endif;
             $data['allocation_list'] = $data;
-           /* echo "<pre>";
-            print_r($data['allocation_list']);
-            die;
-            echo "</pre>";*/
             $this->exportAllocationReportToCsv($data['allocation_list'], $area_name);
         }
     }

@@ -38,15 +38,7 @@
             <?php
             $area_counter = 1;
             $data_area_number_count = count($data['account_allocation_list']);
-            $child_serial = 1;
             $parent_serial = 1;
-            $grand_child_serial = 1;
-            $grand_parent_child_number = 0;
-            $grand_parent_child_counter = 0;
-            $grand_parent_total_allocation = 0;
-            $parent_child_number = 0;
-            $parent_child_counter = 0;
-            $parent_total_allocation = 0;
             ?>
             @foreach($data['account_allocation_list'] as $area_row_id_key => $area_allocation_row)
             <?php
@@ -67,97 +59,22 @@
                 </thead>
                 <tbody>
                     @foreach($area_allocation_row as $allocation_row)
-
                     <tr>
                         <td style="text-align:left;padding-left:10px">
-                            @if($allocation_row['level'] == 0)
-                            <strong>
-                                <?php
-                                $grand_parent_child_counter = 0;
-                                $child_serial = 1;
-                                if ($allocation_row['has_child'] == 1):
-                                    $parent_child_number = $allocation_row['parent_head_child_number'];
-                                    $parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                    $grand_parent_child_number = $allocation_row['parent_head_child_number'];
-                                    $grand_parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                    $parent_child_counter = 0;
-                                endif;
-                                ?>
+                           <strong>
                                 <span>{{ $parent_serial }}&nbsp;.&nbsp;</span>
                                 <?php $parent_serial++; ?>
-                                @endif
-                                @if($allocation_row['level'] == 1)
-                                &nbsp;
-                                @if($allocation_row['has_child'] == 1)
-                                <strong>
-                                    @endif
-                                    <?php
-                                    $grand_child_serial = 1;
-                                    echo $data['alphabets'][$child_serial] . ".";
-                                    $child_serial++;
-                                    if ($allocation_row['has_child'] == 1):
-                                        $parent_child_number = $allocation_row['parent_head_child_number'];
-                                        $parent_child_counter = 0;
-                                        $parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                        $grand_parent_child_counter++;
-                                    else:
-                                        $parent_child_counter++;
-                                    endif;
-                                    ?>
-                                    &nbsp;
-                                    @endif
-                                    @if($allocation_row['level'] == 2)
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <?php
-                                    echo $data['roman'][$grand_child_serial] . ".";
-                                    $grand_child_serial++;
-                                    $parent_child_counter++;
-                                    ?>&nbsp;
-                                    @endif
-                                    @if($allocation_row['level'] == 3) &nbsp; &nbsp; &nbsp; - - - @endif
-                                    @if($allocation_row['level'] == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
-                                    @if($allocation_row['level'] == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
-                                    @if($allocation_row['level'] > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
-                                    {{ $allocation_row['title'] }}
-                                    @if($allocation_row['level'] == 0) </strong>  @endif
-                                @if($allocation_row['level'] == 1)
-                                @if($allocation_row['has_child'] == 1)
+                                {{ $allocation_row['title'] }}
                             </strong>
-                            @endif
-                            @endif
                         </td>
                         <td style="text-align:center;padding-left:10px">
-                            @if(isset($allocation_row['head_total_allocation']) && ($allocation_row['head_total_allocation'] != 0) && ($allocation_row['has_child'] == 0))
+                            @if(isset($allocation_row['head_total_allocation']) && ($allocation_row['head_total_allocation'] != 0))
                             {{ number_format($allocation_row['head_total_allocation'], 2) }}
-                            @elseif(isset($allocation_row['head_total_allocation']) && ($allocation_row['head_total_allocation'] == 0) && ($allocation_row['has_child'] == 0))
+                            @else
                             0.00
                             @endif
                         </td>
                     </tr>
-                    <?php if (($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 1) && ($allocation_row['has_child'] == 0)): ?>
-                        <tr>
-                            <td>
-                                <strong>&nbsp;&nbsp;&nbsp;Total: </strong>
-                            </td>
-                            <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
-                        </tr>
-                    <?php endif; ?>
-                    <?php if (($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 2) && ($allocation_row['has_child'] == 0)): ?>
-                        <tr>
-                            <td>
-                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total: </strong>
-                            </td>
-                            <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
-                        </tr>
-                    <?php endif; ?>
-                    <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 2) && ($allocation_row['has_child'] == 0)): ?>
-                        <tr>
-                            <td>
-                                <strong>&nbsp;Total: </strong>
-                            </td>
-                            <td class="text-center"><strong>{{ number_format($grand_parent_total_allocation, 2) }}</strong></td>
-                        </tr>
-                    <?php endif; ?>
                     @endforeach
                     <?php if ($data['selected_head_row_id'] == -1): ?>
                         <tr>

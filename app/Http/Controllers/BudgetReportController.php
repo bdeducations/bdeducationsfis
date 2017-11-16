@@ -315,6 +315,7 @@ class BudgetReportController extends Controller {
                     $area_row_detail = $common_model->get_area_row_info($area_row_id);
                     $data['area_row_title'] = $area_row_detail->title;
                     $expenseFilterHead = $common_model->expenseFilterHeads(true, true, false, $area_row_id, $head_row_id, $budget_year, $from_date, $to_date);
+                    dd($expenseFilterHead);
                     $data['account_expense_list'] = $expenseFilterHead;
                     return view($this->viewFolderPath . 'budget_expense_report_extended', ['data' => $data]);
                 } else {

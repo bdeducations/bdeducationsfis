@@ -150,11 +150,11 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-circle-o"></i> Budget Allocation
                                     </a>
                                 </li>
-                                <li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationSummaryReportController')? true:false) }}">
+                                <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationSummaryReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budget/allocation/summary/report">
                                         <i class="fa fa-circle-o"></i> Budget Allocation Summary
                                     </a>
-                                </li>
+                                </li-->
                                 <li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationAdjustmentReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budget/allocation/adjustment/report">
                                         <i class="fa fa-circle-o"></i> Allocation With Adjustment
