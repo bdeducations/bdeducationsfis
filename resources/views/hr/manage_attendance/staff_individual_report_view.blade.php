@@ -22,7 +22,6 @@
                                 <tr>
                                     <td>Attendance - Date From: <strong> {{ $data['date_from_attendance'] }}</strong>
                                                     Date To: <strong> {{ $data['date_to_attendance'] }}  </strong>
-
                                     </td>
                                      <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/schoolAdmin/attendance/staffIndividualReportPdf/{{$data['card_id']}}/{{ $data['date_from_attendance'] }}/{{ $data['date_to_attendance'] }}" target="_blank">Genarate PDF</a></td>
                                 </tr>

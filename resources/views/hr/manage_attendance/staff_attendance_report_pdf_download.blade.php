@@ -60,7 +60,7 @@
                         <tr>
                             <td>{{ $i }}</td>
                             <td>{{ $row->employee_name }}</td>
-                           <td>{{ $present ? date('H:i a', strtotime($row->first_login)) : '' }}</td> 
+                           <td>{{ $present ? date('h:i a', strtotime($row->first_login)) : '' }}</td> 
                             <td>
                                 {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                             </td> 
