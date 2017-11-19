@@ -6,3 +6,8 @@ UPDATE `ut_hr_employees` SET `show_attendance_report` = '0' WHERE `ut_hr_employe
 UPDATE `ut_hr_employees` SET `show_attendance_report` = '0' WHERE `ut_hr_employees`.`employee_row_id` = 130;
 UPDATE `ut_hr_employees` SET `show_attendance_report` = '0' WHERE `ut_hr_employees`.`employee_row_id` = 131;
 UPDATE `ut_hr_employees` SET `show_attendance_report` = '0' WHERE `ut_hr_employees`.`employee_row_id` = 132;
+
+--
+-- 
+--
+ALTER TABLE `ut_hr_employees` ADD `offday` VARCHAR(255) NOT NULL DEFAULT 'Friday,Saturday' AFTER `employee_name`;

@@ -15,7 +15,7 @@
                         <td><img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px;margin:0px 10px 0px 0px;"></td>
                         <td style="vertical-align: center;width: 60%">
                             <h2 style="margin-bottom: 0px;"><u>   Attendance Report</u></h2>
-                            <h4 style="margin-top: 0px;">&nbsp;Date :  {{ date('j F, Y', strtotime($data['attendance_date'])) }}</h4>
+                            <h4 style="margin-top: 0px;">{{ date('j M (l), Y', strtotime($data['attendance_date'])) }}</h4>
                         </td>
                         
                     </tr>
@@ -42,6 +42,10 @@
                         @php $i = 1; $countPresent = 0; $countAbsent = 0; @endphp
                         @foreach($data['staff_attendance_info']  as $row)
                         <?php 
+                            $presentmsg = 'Present'; $absentmsg = 'Absent';
+                            $presentcolor = 'color:green !important;';
+                            $absentcolor = 'color:red !important;';
+
                             $login =  date( 'H:i', strtotime($row->first_login) );
                             $present = 1;
                             if($login == '00:00')
@@ -58,7 +62,12 @@
                             {
                                 $logout = 0;
                             }
-
+                            $is_offday = isEmployeeHoliday($row->employee_row_id, $data['attendance_date']);
+                            if($is_offday) {
+                                $absentmsg = 'not scheduled day';
+                                $absentcolor = '';
+                            }
+                            
                            ?> 
                         <tr>
                             <td>{{ $i }}</td>
@@ -67,8 +76,8 @@
                             <td>
                                 {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                             </td> 
-                            <td>
-                                {!! $present ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
+                            <td>                             
+                                <?php echo $present ? '<div style="' . $presentcolor. '">' .$presentmsg . '</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
                             </td>
                         </tr>
                          @php $i++; @endphp
