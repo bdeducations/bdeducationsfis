@@ -150,7 +150,6 @@ class ManageAttendanceController extends Controller {
         
         $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($employee_row_id, $date_from_attendance,
             $date_to_attendance);
-       
         $pdf = PDF::loadView($this->viewFolderPath . 'staff_individual_report_pdf', ['data' => $data]);
         return $pdf->stream($data['person_info']->employee_name . 'staff_individual_report.pdf');
 

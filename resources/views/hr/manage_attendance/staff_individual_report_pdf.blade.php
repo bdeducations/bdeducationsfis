@@ -1,23 +1,27 @@
 <!DOCTYPE html><html><head><title>Attendance Report PDF</title>
         <meta charset="UTF-8">
         <style type="text/css">
-            h4{
+            h2,h3,h4{
                 font-weight: none;
             }
         </style>
-        </head><body>
+        </head><body style="font-size: 14px;">
         <div style="width:100%;margin-top: -50px;">
             <div class="row">
                <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"   width="100%">
-                    <tr>
+                    <tr> 
                         <td><img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px;margin:0px 10px 0px 0px;"></td>
                         <td style="vertical-align: center;width: 60%">
                             <h2 style="margin-bottom: 0px;"><u>Attendance Report</u></h2>
-                            <h4 style="margin-top: 0px;">&nbsp; From Date :  {{ date('j F, Y', strtotime($data['date_from_attendance'])) }} To Date :  {{ date('j F, Y', strtotime($data['date_to_attendance'])) }}</h4>
+                            <h4 style="margin-top: 3px;margin-bottom:3px;">Name : {{ $data['person_info']->employee_name }}</h4>
+                            <h4 style="margin-top: 0px;">Date :  {{ date('j-m-Y', strtotime($data['date_from_attendance'])) }}  To {{ date('j-m-Y', strtotime($data['date_to_attendance'])) }}</h4>
+                            
                         </td>
                         
                     </tr>
                 </table>
+
+
             </div>
         </div>
         
@@ -25,11 +29,11 @@
             <div class="main" style="padding: 30px 15px 20px 15px;">
                 <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"  border="1" width="100%">
                     <thead>
-                        <tr style="height:50px">
-                            <th style="text-align:left;width:20%;"> Date </th> 
-                            <th style="text-align:left;width:20%;"> Day </th>                             
-                            <th style="text-align:left;width:20%;"> In Time</th>
-                            <th style="text-align:left;width:20%;">Out Time</th>
+                        <tr>
+                            <th style="text-align:left;width:20%;height: 20px"> Date </th> 
+                            <th style="text-align:left;width:20%;"> Day </th>        
+                            <th style="text-align: center;width:20%;"> In Time</th>
+                            <th style="text-align: center; width:20%;">Out Time</th>
                             <th style="text-align:left;width:20%;">Status</th>
                         </tr>
                     </thead>
@@ -58,17 +62,27 @@
                                 $count_absent ++;
                              } 
                             ?>
-                            <tr style="font-size:12px; <?php echo $absent ? 'background-color:red' : ''; ?> ">
+                            <tr style="font-size:12px; <?php echo $absent ?  : ''; ?> ">
                                 <td>{{ $key }}</td>
                                 <td>{{ date( 'l', strtotime($key) ) }}</td>
-                                <td>{{ $login ? date('h:i a', $login) : '' }} </td> 
-                                <td>
+                                <?php
+                                    if(!$login && !$logout && ( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) )
+                                    {
+                                        echo '<td colspan="3" style="padding-left:120px;color:green" >Weekend</td>';
+                                    } 
+                                    else { ?>
+
+                                <td style="text-align: center;">{{ $login ? date('h:i a', $login) : '' }} </td> 
+                                <td style="text-align: center;">
                                 <?php 
                                  echo ( ($login == $logout) ||  !$logout ) ? '' : date('h:i a', $logout);
                                 // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
                                 </td> 
-                                <td>{{ $login ? 'Present' : ($absent ? 'Absent' : '') }}</td>
-                              
+                                
+                                <td>
+                                    {!! $login ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
+                                </td>
+                              <?php } ?>
                             </tr>
                              @php $i++; @endphp                                        
                         @endforeach

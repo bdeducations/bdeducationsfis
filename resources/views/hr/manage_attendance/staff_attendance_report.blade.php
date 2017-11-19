@@ -70,8 +70,8 @@
                                                 <td>
                                                     {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                                                 </td> 
-                                                <td>
-                                                    {{ $present ? 'Present' : 'Absent' }}
+                                                 <td>
+                                                    {!! $present ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
                                                 </td>
                                             </tr>
                                              @php $i++; @endphp

@@ -82,7 +82,7 @@
                                                  } 
                                                 ?>
 
-                                                <tr <?php echo $absent ? 'style="background-color:red"' : ''; ?>>
+                                                <tr <?php echo $absent ?  : ''; ?>>
                                                     <td>{{ $key }}</td>
                                                     <td>{{ date( 'l', strtotime($key) ) }}</td>
                                                     <td>{{ $login ? date('h:i a', $login) : '' }} </td> 
@@ -91,7 +91,9 @@
                                                      echo ( ($login == $logout) ||  !$logout ) ? '' : date('h:i a', $logout);
                                                     // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
                                                     </td> 
-                                                    <td>{{ $login ? 'Present' : ($absent ? 'Absent' : '') }}</td>
+                                                    <td>
+                                                        {!! $login ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
+                                                    </td>
                                                   
                                                 </tr>
 
