@@ -60,6 +60,10 @@
                                             @php $i = 1; $count_absent = 0; @endphp
                                             @foreach($data['attendance_list']  as  $key=>$row)
                                                 <?php
+                                                $presentmsg = 'Present'; $absentmsg = 'Absent';
+                                                $presentcolor = 'color:green !important;';
+                                                $absentcolor = 'color:red !important;';
+
                                                  $login = 0;
                                                  $absent = 0;
 
@@ -74,8 +78,13 @@
                                                 else {
                                                     $logout =  strtotime($row['last_logout']) ;
                                                 }
+                                                $is_offday = isEmployeeHoliday($data['card_id'], $key);
+                                                if($is_offday) {
+                                                    $absentmsg = 'Not scheduled day';
+                                                    $absentcolor = '';
+                                                }
 
-                                                if(!$login && !$logout && !( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) )
+                                                if(!$login && !$logout && !( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) && !$is_offday)
                                                  {
                                                     $absent = 1;
                                                     $count_absent ++;
@@ -85,6 +94,11 @@
                                                 <tr <?php echo $absent ?  : ''; ?>>
                                                     <td>{{ $key }}</td>
                                                     <td>{{ date( 'l', strtotime($key) ) }}</td>
+                                                    
+                                                    <?php if(!$login && !$logout && ( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) ) {
+                                                         echo '<td colspan="3" style="padding-left:120px;color:green" >Weekend</td>';
+                                                    } else { ?>
+
                                                     <td>{{ $login ? date('h:i a', $login) : '' }} </td> 
                                                     <td>
                                                     <?php 
@@ -92,8 +106,9 @@
                                                     // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
                                                     </td> 
                                                     <td>
-                                                        {!! $login ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
+                                                        <?php echo $login ? '<div style="' . $presentcolor.'">' . $presentmsg  .'</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
                                                     </td>
+                                                    <?php } ?>
                                                   
                                                 </tr>
 

@@ -64,7 +64,7 @@
                             }
                             $is_offday = isEmployeeHoliday($row->employee_row_id, $data['attendance_date']);
                             if($is_offday) {
-                                $absentmsg = 'not scheduled day';
+                                $absentmsg = 'Not scheduled day';
                                 $absentcolor = '';
                             }
                             
