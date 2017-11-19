@@ -242,3 +242,36 @@ function getMenuListByRole($role_row_id) {
 function getPoweredBy () {
      return  '<div class="footer-pdf" style="border-top: 2px solid #000; text-align:right; margin-top:0px; font-style: italic; opacity:0.5">Powered By: bdeducations.org</div>';
 }
+
+function isEmployeeHoliday($emloyee_row_id, $date_of_attendance) {
+    //Raiyan
+    if($emloyee_row_id == 117) {
+        
+        if( date('l', strtotime($date_of_attendance)) == 'Sunday' || date('l', strtotime($date_of_attendance)) == 'Tuesday' || date('l', strtotime($date_of_attendance)) == 'Thursday' ) {
+            return true;
+        }
+        
+    }
+
+    // Arif Hossain Bhuiyan
+    if($emloyee_row_id == 119) {
+        
+        if( date('l', strtotime($date_of_attendance)) == 'Monday' || date('l', strtotime($date_of_attendance)) == 'Wednesday' || date('l', strtotime($date_of_attendance)) == 'Thursday' ) {
+            return true;
+        }
+        
+    }
+
+    //Sadi
+    if($emloyee_row_id == 120) {
+        
+        if( date('l', strtotime($date_of_attendance)) == 'Sunday' || date('l', strtotime($date_of_attendance)) == 'Wednesday' || date('l', strtotime($date_of_attendance)) == 'Thursday' ) {
+            return true;
+        }
+        
+    }
+
+
+    return false;
+
+}

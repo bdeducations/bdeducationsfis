@@ -45,10 +45,13 @@
                                     </thead>
                                     <tbody>
                                         <div class="checkbox_wrapper">
-                                            @php $i = 1 @endphp
+                                            @php $i = 1; @endphp
+
                                             @foreach($data['staff_list']  as $row)
                                             <?php 
+                                                $presentmsg = 'Present'; $absentmsg = 'Absent';
                                                 $login =  date( 'H:i', strtotime($row->first_login) );
+
                                                 $present = 1;
                                                 if($login == '00:00')
                                                 {
@@ -62,6 +65,12 @@
                                                     $logout = 0;
                                                 }
 
+                                                $is_offday = isEmployeeHoliday($row->employee_row_id, $data['date_of_attendance']);
+
+                                                if($is_offday) {
+                                                    $absentmsg = 'Not scheduled day';
+                                                }
+
                                                ?> 
                                             <tr>
                                                 <td>{{ $i }}</td>
@@ -72,6 +81,7 @@
                                                 </td> 
                                                  <td>
                                                     {!! $present ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
+
                                                 </td>
                                             </tr>
                                              @php $i++; @endphp
