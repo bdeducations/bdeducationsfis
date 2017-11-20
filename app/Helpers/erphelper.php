@@ -246,29 +246,23 @@ function getPoweredBy () {
 function isEmployeeHoliday($emloyee_row_id, $date_of_attendance) {
     //Raiyan
     if($emloyee_row_id == 117) {
-        
-        if( date('l', strtotime($date_of_attendance)) == 'Sunday' || date('l', strtotime($date_of_attendance)) == 'Tuesday' || date('l', strtotime($date_of_attendance)) == 'Thursday' ) {
+        if( date('l', strtotime($date_of_attendance)) == 'Monday' || date('l', strtotime($date_of_attendance)) == 'Wednesday' ) {
             return true;
         }
-        
     }
 
     // Arif Hossain Bhuiyan
     if($emloyee_row_id == 119) {
-        
-        if( date('l', strtotime($date_of_attendance)) == 'Monday' || date('l', strtotime($date_of_attendance)) == 'Wednesday' || date('l', strtotime($date_of_attendance)) == 'Thursday' ) {
+        if( date('l', strtotime($date_of_attendance)) == 'Sunday' || date('l', strtotime($date_of_attendance)) == 'Tuesday' ) {
             return true;
         }
-        
     }
 
     //Sadi
-    if($emloyee_row_id == 120) {
-        
-        if( date('l', strtotime($date_of_attendance)) == 'Sunday' || date('l', strtotime($date_of_attendance)) == 'Wednesday' || date('l', strtotime($date_of_attendance)) == 'Thursday' ) {
+    if($emloyee_row_id == 120) { 
+        if( date('l', strtotime($date_of_attendance)) == 'Monday' || date('l', strtotime($date_of_attendance)) == 'Tuesday') {
             return true;
         }
-        
     }
 
 

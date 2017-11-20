@@ -50,6 +50,9 @@
                                             @foreach($data['staff_list']  as $row)
                                             <?php 
                                                 $presentmsg = 'Present'; $absentmsg = 'Absent';
+                                                $presentcolor = 'color:green !important;';
+                                                $absentcolor = 'color:red !important;';
+
                                                 $login =  date( 'H:i', strtotime($row->first_login) );
 
                                                 $present = 1;
@@ -69,6 +72,7 @@
 
                                                 if($is_offday) {
                                                     $absentmsg = 'Not scheduled day';
+                                                    $absentcolor = '';
                                                 }
 
                                                ?> 
@@ -80,7 +84,7 @@
                                                     {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                                                 </td> 
                                                  <td>
-                                                    {!! $present ? '<div style="color:green !important;">Present</div>' : '<div style="color:red !important;">Absent</div>' !!}
+                                                    <?php echo $present ? '<div style="' . $presentcolor . '">' . $presentmsg . '</div>' : '<div style="' . $absentcolor . '">' . $absentmsg . '</div>';?>
 
                                                 </td>
                                             </tr>
