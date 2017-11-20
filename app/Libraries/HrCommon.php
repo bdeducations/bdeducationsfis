@@ -355,6 +355,7 @@ class HrCommon
 
     function getAttendancesByIdWithDateRange($admin_id, $date_from_attendance, $date_to_attendance) {
         $records = [];
+        $arr = [];
         $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();
         
 
@@ -373,10 +374,16 @@ class HrCommon
         for($startDay = 0; $startDay< $daysDiff; $startDay++) {
             // get 1 day increased each time.        
             $currentDate = date( 'Y-m-d', (strtotime($date1) + (86400*$startDay)) );
-            foreach($attendace_records as $row) {              
+            foreach($attendace_records as $row) {          
                 $arr = [];
                 // check whether attendance record exist in this date. if exist then break out of foreach, go to next day.
-                if($currentDate == $row->attendance_date) {                   
+                if($currentDate == $row->attendance_date) {  
+                    
+                    // if first login is suppose 2017-11-20 00:00:00, it means he is not present.
+                    $first_login_arr =  explode(' ', $row->first_login);                    
+                    if( !isset($first_login_arr[1]) || $first_login_arr[1] == '00:00:00' )
+                    continue;                 
+
                     $arr['attendance_date'] =  $row->attendance_date;
                     $arr['first_login'] =  $row->first_login;
                     $arr['last_logout'] =  $row->last_logout;
@@ -385,6 +392,7 @@ class HrCommon
                     break;
                 }
             }
+
             $records[$currentDate ] = $arr;
         }
         endif;

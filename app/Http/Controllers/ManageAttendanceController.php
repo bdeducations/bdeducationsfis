@@ -137,6 +137,7 @@ class ManageAttendanceController extends Controller {
         $data['card_id'] = $request->employee_row_id;        
         //up to this done 11-15-2017.
         $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($request->employee_row_id, $request->date_from_attendance, $request->date_to_attendance);
+        
 
         return view($this->viewFolderPath .  'staff_individual_report_view', ['data'=>$data] );
     }
