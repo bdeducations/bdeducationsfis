@@ -30,7 +30,7 @@
     <body class="hold-transition login-page">
         <div class="login-box">
             <div class="login-logo">
-                <a href="{{ url('/')}}"><b>bdeducations</b> FIS</a>
+                <a href="{{ url('/')}}"><b>bdeducation</b> FIS</a>
             </div>
             @yield('content')
         </div>

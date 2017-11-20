@@ -1,0 +1,35 @@
+Date,ID,User Name,Department,Shift,Daily Schedule,First-In Time,Last-Out Time,Result,First-In,Last-Out,All night(Sample),Early duty(Sample),New Time Category(1)
+15-11-17,96,Santanu Das,,,,09:24,18:02,Non Working day,,,00:00,00:00,00:00
+15-11-17,98,Masuduzzaman,,,,00:00,00:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,99,Asif Ahmed,,,,09:25,18:02,Non Working day,,,00:00,00:00,00:00
+15-11-17,100,Md. Sakoat Hossen,,,,08:48,17:50,Non Working day,,,00:00,00:00,00:00
+15-11-17,101,Md. Shahidul Islam Swapan,,,,07:53,17:24,Non Working day,,,00:00,00:00,00:00
+15-11-17,102,kamrun Nahar,,,,09:01,17:34,Non Working day,,,00:00,00:00,00:00
+15-11-17,103,Md. Shahedul Islam,,,,08:47,19:44,Non Working day,,,00:00,00:00,00:00
+15-11-17,104,Sayeem Mohammad Shahria,,,,09:32,17:03,Non Working day,,,00:00,00:00,00:00
+15-11-17,105,Tuhin Khan,,,,07:59,17:03,Non Working day,,,00:00,00:00,00:00
+15-11-17,106,Manik Deb Nath,,,,08:19,14:07,Non Working day,,,00:00,00:00,00:00
+15-11-17,107,Al Maruf Hassan,,,,11:51,18:49,Non Working day,,,00:00,00:00,00:00
+15-11-17,108,Mohammad Ali,,,,00:00,00:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,109,Yasin Arafat Riad,,,,09:24,09:25,Non Working day,,,00:00,00:00,00:00
+15-11-17,110,Md. Saidul Islam,,,,08:57,17:50,Non Working day,,,00:00,00:00,00:00
+15-11-17,112,Rafsun Uddin,,,,09:45,18:32,Non Working day,,,00:00,00:00,00:00
+15-11-17,113,Md. Ebadur Rahman,,,,10:59,17:34,Non Working day,,,00:00,00:00,00:00
+15-11-17,115,Mohammad Sabit Hossain,,,,09:17,16:47,Non Working day,,,00:00,00:00,00:00
+15-11-17,116,Mehrab Imtiaz,,,,09:31,16:44,Non Working day,,,00:00,00:00,00:00
+15-11-17,117,Raiyan Islam,,,,00:00,00:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,118,Amana Iftekhar,,,,10:36,13:47,Non Working day,,,00:00,00:00,00:00
+15-11-17,119,Md. Arif Hossain Bhuyia,,,,08:46,17:10,Non Working day,,,00:00,00:00,00:00
+15-11-17,121,Fazlul Momen,,,,08:57,18:30,Non Working day,,,00:00,00:00,00:00
+15-11-17,122,Farid,,,,00:00,00:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,123,Raisa Tabassum,,,,09:45,18:36,Non Working day,,,00:00,00:00,00:00
+15-11-17,124,Indragit Kumar Paul,,,,00:00,00:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,125,Shaiful Islam,,,,15:13,18:31,Non Working day,,,00:00,00:00,00:00
+15-11-17,126,Md. Khaled Hasan,,,,08:55,17:03,Non Working day,,,00:00,00:00,00:00
+15-11-17,128,Jannatul Fardush Boby,,,,07:53,17:23,Non Working day,,,00:00,00:00,00:00
+15-11-17,130,Suman Ahmmed,,,,15:21,17:45,Non Working day,,,00:00,00:00,00:00
+15-11-17,131,Jashodhan Saha,,,,00:00,00:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,132,Sharmin Yusuf,,,,00:00,00:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,133,Abdul Khaleque Mia,,,,07:54,19:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,134,Shorif Hossain,,,,07:53,19:00,Non Working day,,,00:00,00:00,00:00
+15-11-17,135,Ashiqur Rahman Mallik,,,,09:24,16:38,Non Working day,,,00:00,00:00,00:00

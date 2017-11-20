@@ -447,10 +447,17 @@ Route::any('hr/attendance/manual-attendance', 'ManageAttendanceController@manual
 Route::any('hr/attendance/store-attendance', 'ManageAttendanceController@storeStaffAttendance')->name('manual-attendance');
 
 //staff attendance report 
-Route::get('hr/attendance/all-staff-attendance-report-option', 'ManageAttendanceController@allStaffAttendanceReportOption')->name('all-staff-attendance-report');
+Route::get('hr/attendance/all-staff-attendance-report-option', 'ManageAttendanceController@allStaffAttendanceReportOption')->name('all-staff-attendance-report-option');
 Route::post('hr/attendance/all-staff-attendance-report-show', 'ManageAttendanceController@allStaffAttendanceReportShow');
+Route::get('hr/attendance/individual-staff-attendance-report-option', 'ManageAttendanceController@individualStaffAttendanceReportOption')->name('hr/attendance/individual-staff-attendance-report-option');
+Route::post('hr/attendance/individual-staff-attendance-report-show', 'ManageAttendanceController@individualStaffAttendanceReportShow');
+Route::get('hr/attendance/all-staff-attendance-report-pdf/{date}', 'ManageAttendanceController@allStaffAttendanceReportPdf');
+Route::get('hr/attendance/staff-individual-report-pdf/{id}/{fromDate}/{toDate}', 'ManageAttendanceController@staffIndividualReportPdf');
 
-Route::get('schoolAdmin/attendance/all-staff-attendance-report-pdf/{date}', 'ManageAttendanceController@allStaffAttendanceReportPdf');
+
+
+
+
 
 
 Route::post('schoolAdmin/attendance/staffList', 'ManageAttendanceController@staffList');

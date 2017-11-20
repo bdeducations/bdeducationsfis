@@ -246,8 +246,7 @@
   'StdHW' => '44',
   'StdVW' => '139',
   'StartCharMetrics' => '317',
-  
-    32 => 250,
+   32 => 250,
     160 => 250,
     33 => 333,
     34 => 555,
@@ -564,7 +563,7 @@
     185 => 300,
     'imacron' => 278,
     128 => 500,
-  ),
+
   'CIDtoGID_Compressed' => true,
   'CIDtoGID' => 'eJwDAAAAAAE=',
   '_version_' => 6,

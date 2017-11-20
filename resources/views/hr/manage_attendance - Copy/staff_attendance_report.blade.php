@@ -28,7 +28,7 @@
                             <table class="table table-bordered  dt-responsive" width="100%">
                                 <tr>
                                     <td>Attendance Date: {{ $data['date_of_attendance'] }} </td>
-                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/hr/attendance/all-staff-attendance-report-pdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
+                                    <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/schoolAdmin/attendance/all-staff-attendance-report-pdf/{{ $data['date_of_attendance'] }}" target="_blank">Genarate PDF</a></td>
                                 </tr>
                             </table>
                         </div> 
@@ -45,16 +45,10 @@
                                     </thead>
                                     <tbody>
                                         <div class="checkbox_wrapper">
-                                            @php $i = 1; @endphp
-
+                                            @php $i = 1 @endphp
                                             @foreach($data['staff_list']  as $row)
                                             <?php 
-                                                $presentmsg = 'Present'; $absentmsg = 'Absent';
-                                                $presentcolor = 'color:green !important;';
-                                                $absentcolor = 'color:red !important;';
-
                                                 $login =  date( 'H:i', strtotime($row->first_login) );
-
                                                 $present = 1;
                                                 if($login == '00:00')
                                                 {
@@ -68,13 +62,6 @@
                                                     $logout = 0;
                                                 }
 
-                                                $is_offday = isEmployeeHoliday($row->employee_row_id, $data['date_of_attendance']);
-
-                                                if($is_offday) {
-                                                    $absentmsg = 'Not scheduled day';
-                                                    $absentcolor = '';
-                                                }
-
                                                ?> 
                                             <tr>
                                                 <td>{{ $i }}</td>
@@ -83,9 +70,8 @@
                                                 <td>
                                                     {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                                                 </td> 
-                                                 <td>
-                                                    <?php echo $present ? '<div style="' . $presentcolor . '">' . $presentmsg . '</div>' : '<div style="' . $absentcolor . '">' . $absentmsg . '</div>';?>
-
+                                                <td>
+                                                    {{ $present ? 'Present' : 'Absent' }}
                                                 </td>
                                             </tr>
                                              @php $i++; @endphp
