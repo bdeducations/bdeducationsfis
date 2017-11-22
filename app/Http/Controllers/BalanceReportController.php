@@ -62,6 +62,7 @@ class BalanceReportController extends Controller {
         $selected_list_head_total_allocation = array();
         $selected_list_head_total_expense = array();
         $selected_list_head_total_balance = array();
+        $selected_list_head_total_expense_by_month = array();
         $common_model = new Common();
         $data['all_heads'] = $common_model->allHeads(0, 0);
         $all_area_list = $common_model->allAreaList(1);
@@ -129,6 +130,60 @@ class BalanceReportController extends Controller {
                             $data['grand_total_balance_all_area'] += $data['total_balance_by_area'][$area_row->area_row_id];
                         }
                         //dd($data['total_area_expense_by_month']);
+                    }
+                } else {
+                    /* List of Head Selected */
+                    if (count($head_row_id) > 0) {
+                        $this->selected_main_head_list = array();
+                        foreach ($head_row_id as $head_id) {
+                            $selected_head_list = $this->selected_head_list;
+                            $this->selected_head_list = array();
+                            $head = \App\Models\Head::find($head_id);
+                            $this->selected_main_head_list[] = $common_model->findMainParentHead($head->head_row_id);
+                            if ($head->has_child) {
+                                $this->selected_head_list = $common_model->findHeadChildrenList($head->head_row_id);
+                            } else {
+                                array_push($this->selected_head_list, $head->head_row_id);
+                            }
+                            $this->selected_main_head_list = array_unique($this->selected_main_head_list);
+                            $this->selected_head_list = array_merge($selected_head_list, $this->selected_head_list);
+                        }
+                        $selected_head_list_total_area_expense = 0;
+                        if ($area_row_id > 0) {
+                            $selected_list_head_total_allocation[$area_row_id] = $common_model->getTotalAbsoluteAllocation($this->selected_main_head_list, $area_row_id, $budget_year);
+                            for ($start_month = $from_month; $start_month <= $to_month; ++$start_month) {
+                                $selected_list_head_total_expense_by_month[$area_row_id][$start_month] = $common_model->totalParentHeadExpenseByMonth($this->selected_head_list, $area_row_id, $budget_year, $start_month);
+                                $selected_head_list_total_area_expense += $data['selected_head_total_area_expense_by_month'][$area_row_id][$start_month];
+                            }
+                            $selected_list_head_total_expense[$area_row_id] = $selected_head_list_total_area_expense;
+                            $selected_list_head_total_balance[$area_row_id] = $selected_list_head_total_allocation[$area_row_id] - $selected_head_list_total_area_expense;
+                            $data['selected_list_head_total_expense'] = $selected_list_head_total_expense;
+                            $data['selected_list_head_total_balance'] = $selected_list_head_total_balance;
+                        } else {
+                            $area_list = $common_model->allAreas(1);
+                            $data['grand_total_expense_all_area'] = 0;
+                            $data['grand_total_balance_all_area'] = 0;
+                            foreach ($area_list as $area) {
+                                $total_area_expense = 0;
+                                $selected_list_head_total_allocation[$area->area_row_id] = $common_model->getTotalAbsoluteAllocation($this->selected_main_head_list, $area->area_row_id, $budget_year);
+                                for ($start_month = $from_month; $start_month <= $to_month; ++$start_month) {
+                                    $selected_list_head_total_expense_by_month[$area->area_row_id][$start_month] = $common_model->totalParentHeadExpenseByMonth($this->selected_head_list, $area->area_row_id, $budget_year, $start_month);
+                                    $total_area_expense += $selected_list_head_total_expense_by_month[$area->area_row_id][$start_month];
+                                }
+                                $selected_list_head_total_expense[$area->area_row_id] = $total_area_expense;
+                                $data['grand_total_expense_all_area'] += $selected_list_head_total_expense[$area->area_row_id];
+                                $selected_list_head_total_balance[$area->area_row_id] = $selected_list_head_total_allocation[$area->area_row_id] - $selected_list_head_total_expense[$area->area_row_id];
+                                $data['grand_total_balance_all_area'] += $selected_list_head_total_balance[$area->area_row_id];
+                            }
+                            for ($start_month = $from_month; $start_month <= $to_month; ++$start_month) {
+                                $data['grand_total_expense_by_month_all_area'][$start_month] = $common_model->totalParentHeadExpenseByMonth($this->selected_head_list, -1, $budget_year, $start_month);
+                            }
+                            $data['grand_total_allocation_all_area'] = $common_model->getTotalAbsoluteAllocation($this->selected_main_head_list, -1, $budget_year);
+                        }
+                        $data['selected_list_head_total_allocation'] = $selected_list_head_total_allocation;
+                        $data['selected_list_head_total_expense_by_month'] = $selected_list_head_total_expense_by_month;
+                        $data['selected_list_head_total_expense'] = $selected_list_head_total_expense;
+                        $data['selected_list_head_total_balance'] = $selected_list_head_total_balance;
                     }
                 }
                 return view($this->viewFolderPath . 'budget_balance_report_by_month', ['data' => $data]);

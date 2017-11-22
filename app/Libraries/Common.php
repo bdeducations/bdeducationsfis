@@ -1814,7 +1814,7 @@ class Common {
                                 if ($head->has_child) {
                                     $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
                                     $parent_head_child_number = $this->findHeadChildrenNumber($head->head_row_id);
-                                    $parent_head_total_allocation = $this->$this->totalAllcations($main_parent_head_row_id, $area->area_row_id, $budget_year);
+                                    $parent_head_total_allocation = $this->totalAllcations($main_parent_head_row_id, $area->area_row_id, $budget_year);
                                     $parent_head_total_adjustment = $this->totalParentHeadAdjustment($main_parent_head_row_id, $area->area_row_id, $budget_year, 0, 0);
                                     $parent_head_total_donation = $this->totalParentHeadDonation($main_parent_head_row_id, $area->area_row_id, $budget_year, 0, 0);
                                     $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
@@ -2273,7 +2273,11 @@ class Common {
     }
 
     public function totalParentHeadExpenseByMonth($parent_head_child_list, $area_row_id = 0, $budget_year, $month = 0) {
-        return \App\Models\Expense::where([['area_row_id', '=', $area_row_id], ['budget_year', '=', $budget_year]])->whereIn('head_row_id', $parent_head_child_list)->whereMonth('expense_at', $month)->sum('amount');
+        if ($area_row_id > 0) {
+            return \App\Models\Expense::where([['area_row_id', '=', $area_row_id], ['budget_year', '=', $budget_year]])->whereIn('head_row_id', $parent_head_child_list)->whereMonth('expense_at', $month)->sum('amount');
+        } else {
+            return \App\Models\Expense::where([['budget_year', '=', $budget_year]])->whereIn('head_row_id', $parent_head_child_list)->whereMonth('expense_at', $month)->sum('amount');
+        }
     }
 
     /**
