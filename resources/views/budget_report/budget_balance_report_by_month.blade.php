@@ -57,12 +57,11 @@
                                 <div class="form-group">
                                     <label for="head_row_id" class="col-md-3 control-label">Select Head <span class="input-required-asterik">*</span></label>
                                     <div class="col-md-9">
-                                        <select name="head_row_id" class="ut_budget_head_drop_down form-control" required="required">
+                                        <select name="head_row_id[]" multiple="multiple" class="ut_budget_head_drop_down form-control" required="required">
                                             <option value="">Select Head</option>
-                                            <option value="-1" @if($data['selected_head_row_id'] == -1) selected="selected"  @endif>All Head</option>
+                                            <option value="-1">All Head</option>
                                             @foreach( $data['all_heads'] as $row)
-                                            <option value="{{ $row->head_row_id }}" @if($row->head_row_id == $data['selected_head_row_id']) selected="selected"  @endif>
-                                                    @if($row->level == 0) <b>  @endif
+                                            <option value="{{ $row->head_row_id }}">
                                                     @if($row->level == 1) &nbsp; - @endif
                                                     @if($row->level == 2) &nbsp; &nbsp; - - @endif
                                                     @if($row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif
@@ -70,9 +69,8 @@
                                                     @if($row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
                                                     @if($row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
                                                     {{ $row->title }}
-                                                    @if($row->level == 0) </b>  @endif
-                                                </option>
-                                                @endforeach
+                                             </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -161,6 +159,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="report_title" class="col-md-3 control-label">Report Heading</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="report_title" class="form-control" placeholder="Report Heading Title" id="report_title" value="<?php echo isset($data['report_title']) ? $data['report_title'] : ''; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
@@ -182,11 +191,20 @@
                 if ($data['to_month']):
                     $pdf_date_qstring .= "&to_month=" . $data['to_month'];
                 endif;
+                if (is_array($data['selected_head_row_id'])):
+                    if (in_array('-1', $data['selected_head_row_id'])):
+                        $head_row_list = -1;
+                    else:
+                        $head_row_list = implode('-', $data['selected_head_row_id']);
+                    endif;
+                else:
+                    $head_row_list = -1;
+                endif;
                 ?>
                 @if($data['balance_report_by_month_list'])
                 <div class="box-header">
-                    <a target="_blank" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportDownload?head_row_id={{ $data['selected_head_row_id'] }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report PDF</strong></a>
-                    <a target="_blank" style="margin-left:10px;" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportCSVDownload?head_row_id={{ $data['selected_head_row_id'] }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report CSV</strong></a>
+                    <a target="_blank" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportDownload?head_row_id={{ $head_row_list }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report PDF</strong></a>
+                    <a target="_blank" style="margin-left:10px;" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportCSVDownload?head_row_id={{ $head_row_list }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report CSV</strong></a>
                 </div>
                 @endif
                 <div class="box-body">
@@ -219,8 +237,8 @@
                     ?>
                     <h3 style="text-transform:uppercase;text-align:center;text-decoration:underline;">
                         <?php
-                        if (isset($data['all_area_list'][$area_row_id_key])):
-                            echo $data['all_area_list'][$area_row_id_key];
+                        if (isset($data['report_title'])):
+                            echo $data['report_title'];
                         endif;
                         ?>
                     </h3>
@@ -292,6 +310,7 @@
                                                 endforeach;
                                             else:
                                                 $parent_child_counter++;
+                                                $grand_parent_child_counter++;
                                             endif;
                                             ?>
                                             &nbsp;
@@ -317,9 +336,9 @@
                                             @endif
                                     </td>
                                     <td style="text-align:center;padding-left:10px">
-                                        @if(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] != 0) && ($area_balance_row['has_child'] == 0))
+                                        @if(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] != 0) && ($area_balance_row['parent_id'] == 0))
                                         {{ number_format($area_balance_row['head_total_allocation'], 2) }}
-                                        @elseif(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] == 0) && ($area_balance_row['has_child'] == 0))
+                                        @elseif(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] == 0) && ($area_balance_row['parent_id'] == 0))
                                         0.00
                                         @endif
                                     </td>
@@ -345,9 +364,9 @@
                                         @endif
                                     </td>
                                     <td style="text-align:center;padding-left:10px">
-                                        @if(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] != 0) && ($area_balance_row['has_child'] == 0))
+                                        @if(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] != 0) && ($area_balance_row['parent_id'] == 0))
                                         {{ number_format($area_balance_row['head_current_balance'], 2) }}
-                                        @elseif(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] == 0) && ($area_balance_row['has_child'] == 0))
+                                        @elseif(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] == 0) && ($area_balance_row['parent_id'] == 0))
                                         0.00
                                         @endif
                                     </td>
@@ -372,14 +391,14 @@
                                         <td>
                                             <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total: </strong>
                                         </td>
-                                        <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
+                                        <td class="text-center"></td>
                                         @foreach($parent_head_total_expense_by_month as $month_key => $monthly_expense_row)
                                         <td style="text-align:center;padding-left:10px">
                                             <strong>{{ number_format($monthly_expense_row, 2) }}</strong>
                                         </td>
                                         @endforeach
                                         <td class="text-center"><strong>{{ number_format($parent_total_expense, 2) }}</strong></td>
-                                        <td class="text-center"><strong>{{ number_format($parent_total_balance, 2) }}</strong></td>
+                                        <td class="text-center"></strong></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($area_balance_row['level'] == 2) && ($area_balance_row['has_child'] == 0)): ?>
@@ -398,10 +417,10 @@
                                     </tr>
                                 <?php endif; ?>
                                 @endforeach
-                                <?php if (($data['selected_head_row_id'] == -1)): ?>
+                                <?php if ((in_array('-1', $data['selected_head_row_id']))): ?>
                                     <tr>
                                         <td width="40%">
-                                            <strong>&nbsp;Total&nbsp;({{$data['all_area_list'][$area_row_id_key]}}):</strong>
+                                            <strong>&nbsp;Area Total&nbsp;:</strong>
                                         </td>
                                         <td class="text-center"><strong>{{ number_format($data['total_allocation_by_area'][$area_row_id_key], 2) }}</strong></td>
                                        <?php
@@ -425,7 +444,7 @@
                     </div>
                     <?php $parent_serial = 1;?>
                     @endforeach
-                    <?php if (($data['selected_head_row_id'] == -1) && ($data['selected_area_row_id'] == -1)): ?>
+                    <?php if ((in_array('-1', $data['selected_head_row_id'])) && ($data['selected_area_row_id'] == -1)): ?>
                     <div class="table-responsive">
                         <table style="margin-top:10px;" class="table table-striped table-bordered table-hover table-checkable order-column">
                             <thead>
@@ -566,5 +585,9 @@ $(document).ready(function () {
             }
         });
     });
+</script>
+<script type='text/javascript'>
+    var head_row_id_list = <?php echo json_encode($data['selected_head_row_id']); ?>;
+    $('.ut_budget_head_drop_down').val(head_row_id_list);
 </script>
 @endsection

@@ -43,7 +43,7 @@
                                     <div class="col-md-7">
                                         <select name="budget_year" class="ut_budget_year form-control" required="required">
                                             <?php
-                                                $year_array = budget_year_list();
+                                            $year_array = budget_year_list();
                                             ?>
                                             <option value="">Select Year</option>
                                             <?php foreach ($year_array as $key => $value): ?>
@@ -57,22 +57,22 @@
                                 <div class="form-group">
                                     <label for="head_row_id" class="col-md-3 control-label">Select Head <span class="input-required-asterik">*</span></label>
                                     <div class="col-md-9">
-                                        <select name="head_row_id" class="ut_budget_head_drop_down form-control" required="required">
+                                        <select name="head_row_id[]" multiple="multiple" class="ut_budget_head_drop_down form-control" required="required">
                                             <option value="">Select Head</option>
-                                            <option value="-1" @if($data['selected_head_row_id'] == -1) selected="selected"  @endif>All Head</option>
+                                            <option value="-1">All Head</option>
                                             @foreach( $data['all_heads'] as $row)
-                                            <option value="{{ $row->head_row_id }}" @if($row->head_row_id == $data['selected_head_row_id']) selected="selected"  @endif>
-                                                    @if($row->level == 0) <b>  @endif
-                                                    @if($row->level == 1) &nbsp; - @endif
-                                                    @if($row->level == 2) &nbsp; &nbsp; - - @endif
-                                                    @if($row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif
-                                                    @if($row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
-                                                    @if($row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
-                                                    @if($row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
-                                                    {{ $row->title }}
-                                                    @if($row->level == 0) </b>  @endif
-                                                </option>
-                                                @endforeach
+                                            <option value="{{ $row->head_row_id }}">
+                                                @if($row->level == 0) <b>  @endif
+                                                @if($row->level == 1) &nbsp; - @endif
+                                                @if($row->level == 2) &nbsp; &nbsp; - - @endif
+                                                @if($row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif
+                                                @if($row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
+                                                @if($row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
+                                                @if($row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
+                                                {{ $row->title }}
+                                                @if($row->level == 0) </b>  @endif
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -161,6 +161,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="report_title" class="col-md-3 control-label">Report Heading</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="report_title" class="form-control" placeholder="Report Heading Title" id="report_title" value="<?php echo isset($data['report_title']) ? $data['report_title'] : ''; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
@@ -182,16 +193,50 @@
                 if ($data['to_date']):
                     $pdf_date_qstring .= "&to_date=" . $data['to_date'];
                 endif;
+                if (is_array($data['selected_head_row_id'])):
+                    if (in_array('-1', $data['selected_head_row_id'])):
+                        $head_row_list = -1;
+                    else:
+                        $head_row_list = implode('-', $data['selected_head_row_id']);
+                    endif;
+                else:
+                    $head_row_list = -1;
+                endif;
                 ?>
                 @if($data['account_expense_list'])
                 <div class="box-header">
-                    <a target="_blank" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportDownload?head_row_id={{ $data['selected_head_row_id'] }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report PDF</strong></a>
-                    <a target="_blank" style="margin-left:10px;" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportCSVDownload?head_row_id={{ $data['selected_head_row_id'] }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report CSV</strong></a>
+                    <a target="_blank" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportDownload?head_row_id={{ $head_row_list }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report PDF</strong></a>
+                    <a target="_blank" style="margin-left:10px;" class="btn btn-default" href="{{ url('/') }}/budgetReport/balanceReportCSVDownload?head_row_id={{ $head_row_list }}@if($pdf_area_qstring){{ $pdf_area_qstring }}@endif @if($pdf_date_qstring){{ $pdf_date_qstring }}@endif"><i class="fa fa-download"></i><strong> Download Report CSV</strong></a>
                 </div>
                 @endif
                 <div class="box-body">
-                    <h3 style="text-transform:uppercase;text-align:center;"> {{ $data['area_name'] }}</h3>
-                    <table class="table table-striped table-bordered table-hover table-checkable order-column" id="UT_budget_report_balance_extended">
+                    @if($data['account_expense_list'])
+                    <?php
+                    $child_serial = 1;
+                    $parent_serial = 1;
+                    $grand_child_serial = 1;
+                    $grand_parent_child_number = 0;
+                    $grand_parent_child_counter = 0;
+                    $grand_parent_total_allocation = 0;
+                    $grand_parent_total_expense = 0;
+                    $grand_parent_total_balance = 0;
+                    $parent_child_number = 0;
+                    $parent_child_counter = 0;
+                    $parent_total_allocation = 0;
+                    $parent_total_expense = 0;
+                    $parent_total_balance = 0;
+                    ?>
+                    @foreach($data['account_expense_list'] as $area_row_id_key => $expense_row)
+                    <?php
+                    if (isset($child_serial) && $child_serial > 26):
+                        $child_serial = 1;
+                    endif;
+                    if (isset($grand_child_serial) && $grand_child_serial > 26):
+                        $grand_child_serial = 1;
+                    endif;
+                    ?>
+                    <h3 style="text-transform:uppercase;text-align:center;">{{ $data['report_title'] }}</h3>
+                    <table class="table table-striped table-bordered table-hover table-checkable order-column">
                         <thead>
                             <tr>
                                 <th width="55%" style="text-align:left;padding-left:10px">Head Name</th>
@@ -201,118 +246,96 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($data['account_expense_list'])
-                            <?php
-                            $child_serial = 1;
-                            $parent_serial = 1;
-                            $grand_child_serial = 1;
-                            $grand_parent_child_number = 0;
-                            $grand_parent_child_counter = 0;
-                            $grand_parent_total_allocation = 0;
-                            $grand_parent_total_expense = 0;
-                            $grand_parent_total_balance = 0;
-                            $parent_child_number = 0;
-                            $parent_child_counter = 0;
-                            $parent_total_allocation = 0;
-                            $parent_total_expense = 0;
-                            $parent_total_balance = 0;
-                            ?>
-                            @foreach($data['account_expense_list'] as $expense_row)
-                            <?php
-                            if (isset($child_serial) && $child_serial > 26):
-                                $child_serial = 1;
-                            endif;
-                            if (isset($grand_child_serial) && $grand_child_serial > 26):
-                                $grand_child_serial = 1;
-                            endif;
-                            ?>
+                            @foreach($expense_row as $area_expense_row)
+
                             <tr>
                                 <td style="text-align:left;padding-left:10px">
-                                    @if($expense_row->level == 0)
+                                    @if($area_expense_row['level'] == 0)
                                     <strong>
                                         <?php
                                         $grand_parent_child_counter = 0;
                                         $child_serial = 1;
-                                        if ($expense_row->has_child == 1):
-                                            $parent_child_number = $expense_row->parent_head_child_number;
-                                            $parent_total_allocation = $expense_row->parent_head_total_allocation;
-                                            $parent_total_expense = $expense_row->parent_head_total_expense;
-                                            $parent_total_balance = $expense_row->parent_head_current_balance;
-                                            $grand_parent_child_number = $expense_row->parent_head_child_number;
-                                            $grand_parent_total_allocation = $expense_row->parent_head_total_allocation;
-                                            $grand_parent_total_expense = $expense_row->parent_head_total_expense;
-                                            $grand_parent_total_balance = $expense_row->parent_head_current_balance;
+                                        if ($area_expense_row['has_child'] == 1):
+                                            $parent_child_number = $area_expense_row['parent_head_child_number'];
+                                            $parent_total_allocation = $area_expense_row['parent_head_total_allocation'];
+                                            $parent_total_expense = $area_expense_row['parent_head_total_expense'];
+                                            $parent_total_balance = $area_expense_row['parent_head_current_balance'];
+                                            $grand_parent_child_number = $area_expense_row['parent_head_child_number'];
+                                            $grand_parent_total_allocation = $area_expense_row['parent_head_total_allocation'];
+                                            $grand_parent_total_expense = $area_expense_row['parent_head_total_expense'];
+                                            $grand_parent_total_balance = $area_expense_row['parent_head_current_balance'];
                                             $parent_child_counter = 0;
                                         endif;
                                         ?>
                                         <span>{{ $parent_serial }}&nbsp;.&nbsp;</span>
                                         <?php $parent_serial++; ?>
                                         @endif
-                                        @if($expense_row->level == 1)
+                                        @if($area_expense_row['level'] == 1)
                                         &nbsp;
-                                        @if($expense_row->has_child == 1)
-                                            <strong>
-                                        @endif
-                                        <?php
-                                        $grand_child_serial = 1;
-                                        echo $data['alphabets'][$child_serial] . ".";
-                                        $child_serial++;
-                                        if ($expense_row->has_child == 1):
-                                            $parent_child_number = $expense_row->parent_head_child_number;
-                                            $parent_total_allocation = $expense_row->parent_head_total_allocation;
-                                            $parent_total_expense = $expense_row->parent_head_total_expense;
-                                            $parent_total_balance = $expense_row->parent_head_current_balance;
-                                            $parent_child_counter = 0;
-                                            $grand_parent_child_counter++;
-                                        else:
-                                            $parent_child_counter++;
-                                        endif;
-                                        ?>
-                                        &nbsp;
-                                        @endif
-                                        @if($expense_row->level == 2)
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <?php
-                                        echo $data['roman'][$grand_child_serial] . ".";
-                                        $grand_child_serial++;
-                                        $parent_child_counter++;
-                                        ?>&nbsp;
-                                        @endif
-                                        @if($expense_row->level == 3) &nbsp; &nbsp; &nbsp; - - - @endif
-                                        @if($expense_row->level == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
-                                        @if($expense_row->level == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
-                                        @if($expense_row->level > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
-                                        {{ $expense_row->title }}
-                                        @if($expense_row->level == 0) </strong>  @endif
-                                        @if($expense_row->level == 1)
-                                            @if($expense_row->has_child == 1)
-                                                </strong>
+                                        @if($area_expense_row['has_child'] == 1)
+                                        <strong>
                                             @endif
-                                        @endif
+                                            <?php
+                                            $grand_child_serial = 1;
+                                            echo $data['alphabets'][$child_serial] . ".";
+                                            $child_serial++;
+                                            if ($area_expense_row['has_child'] == 1):
+                                                $parent_child_number = $area_expense_row['parent_head_child_number'];
+                                                $parent_total_allocation = $area_expense_row['parent_head_total_allocation'];
+                                                $parent_total_expense = $area_expense_row['parent_head_total_expense'];
+                                                $parent_total_balance = $area_expense_row['parent_head_current_balance'];
+                                                $parent_child_counter = 0;
+                                                $grand_parent_child_counter++;
+                                            else:
+                                                $parent_child_counter++;
+                                                $grand_parent_child_counter++;
+                                            endif;
+                                            ?>
+                                            &nbsp;
+                                            @endif
+                                            @if($area_expense_row['level'] == 2)
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <?php
+                                            echo $data['roman'][$grand_child_serial] . ".";
+                                            $grand_child_serial++;
+                                            $parent_child_counter++;
+                                            ?>&nbsp;
+                                            @endif
+                                            @if($area_expense_row['level'] == 3) &nbsp; &nbsp; &nbsp; - - - @endif
+                                            @if($area_expense_row['level'] == 4) &nbsp; &nbsp; &nbsp; &nbsp; - - - - @endif
+                                            @if($area_expense_row['level'] == 5) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  - - - - - @endif
+                                            @if($area_expense_row['level'] > 5)  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - - - @endif
+                                            {{ $area_expense_row['title'] }}
+                                            @if($area_expense_row['level'] == 0) </strong>  @endif
+                                        @if($area_expense_row['level'] == 1)
+                                        @if($area_expense_row['has_child'] == 1)
+                                    </strong>
+                                    @endif
+                                    @endif
                                 </td>
                                 <td style="text-align:center;padding-left:10px">
-                                    @if(isset($expense_row->total_allocation) && ($expense_row->total_allocation != 0) && ($expense_row->has_child == 0))
-                                    {{ number_format($expense_row->total_allocation, 2) }}
-                                    @elseif(isset($expense_row->total_allocation) && ($expense_row->total_allocation == 0) && ($expense_row->has_child == 0))
+                                    @if(isset($area_expense_row['total_allocation']) && ($area_expense_row['total_allocation'] != 0) && ($area_expense_row['parent_id'] == 0))
+                                    {{ number_format($area_expense_row['total_allocation'], 2) }}
+                                    @elseif(isset($area_expense_row['total_allocation']) && ($area_expense_row['total_allocation'] == 0) && ($area_expense_row['parent_id'] == 0))
                                     0.00
                                     @endif
                                 </td>
                                 <td style="text-align:center;padding-left:10px">
-                                    @if(isset($expense_row->total_expense) && ($expense_row->total_expense != 0) && ($expense_row->has_child == 0))
-                                    {{ number_format($expense_row->total_expense, 2) }}
-                                    @elseif(isset($expense_row->total_expense) && ($expense_row->total_expense == 0) && ($expense_row->has_child == 0))
+                                    @if(isset($area_expense_row['total_expense']) && ($area_expense_row['total_expense'] != 0) && ($area_expense_row['has_child'] == 0))
+                                    {{ number_format($area_expense_row['total_expense'], 2) }}
+                                    @elseif(isset($area_expense_row['total_expense']) && ($area_expense_row['total_expense'] == 0) && ($area_expense_row['has_child'] == 0))
                                     0.00
                                     @endif
                                 </td>
                                 <td style="text-align:center;padding-left:10px">
-                                    @if(isset($expense_row->head_current_balance) && ($expense_row->head_current_balance != 0) && ($expense_row->has_child == 0))
-                                    {{ number_format($expense_row->head_current_balance, 2) }}
-                                    @elseif(isset($expense_row->head_current_balance) && ($expense_row->head_current_balance == 0) && ($expense_row->has_child == 0))
+                                    @if(isset($area_expense_row['head_current_balance']) && ($area_expense_row['head_current_balance'] != 0) && ($area_expense_row['parent_id'] == 0))
+                                    {{ number_format($area_expense_row['head_current_balance'], 2) }}
+                                    @elseif(isset($area_expense_row['head_current_balance']) && ($area_expense_row['head_current_balance'] == 0) && ($area_expense_row['parent_id'] == 0))
                                     0.00
                                     @endif
                                 </td>
                             </tr>
-                            <?php if (($parent_child_number == $parent_child_counter) && ($expense_row->level == 1) && ($expense_row->has_child == 0)): ?>
+                            <?php if (($parent_child_number == $parent_child_counter) && ($area_expense_row['level'] == 1) && ($area_expense_row['has_child'] == 0)): ?>
                                 <tr>
                                     <td>
                                         <strong>&nbsp;&nbsp;&nbsp;Total: </strong>
@@ -322,17 +345,17 @@
                                     <td class="text-center"><strong>{{ number_format($parent_total_balance, 2) }}</strong></td>
                                 </tr>
                             <?php endif; ?>
-                            <?php if (($parent_child_number == $parent_child_counter) && ($expense_row->level == 2) && ($expense_row->has_child == 0)): ?>
+                            <?php if (($parent_child_number == $parent_child_counter) && ($area_expense_row['level'] == 2) && ($area_expense_row['has_child'] == 0)): ?>
                                 <tr>
                                     <td>
                                         <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total: </strong>
                                     </td>
-                                    <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
+                                    <td class="text-center"></strong></td>
                                     <td class="text-center"><strong>{{ number_format($parent_total_expense, 2) }}</strong></td>
-                                    <td class="text-center"><strong>{{ number_format($parent_total_balance, 2) }}</strong></td>
+                                    <td class="text-center"><strong></strong></td>
                                 </tr>
                             <?php endif; ?>
-                            <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($expense_row->level == 2) && ($expense_row->has_child == 0)): ?>
+                            <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($area_expense_row['level'] == 2) && ($area_expense_row['has_child'] == 0)): ?>
                                 <tr>
                                     <td>
                                         <strong>&nbsp;Total: </strong>
@@ -340,32 +363,99 @@
                                     <td class="text-center"><strong>{{ number_format($grand_parent_total_allocation, 2) }}</strong></td>
                                     <td class="text-center"><strong>{{ number_format($grand_parent_total_expense, 2) }}</strong></td>
                                     <td class="text-center"><strong>{{ number_format($grand_parent_total_balance, 2) }}</strong></td>
-                                 </tr>
+                                </tr>
                             <?php endif; ?>
                             @endforeach
-                            <?php if ($data['selected_head_row_id'] == -1): ?>
+                            <?php if ((in_array('-1', $data['selected_head_row_id']))): ?>
                                 <tr>
                                     <td>
-                                        <strong>&nbsp;Total&nbsp;( {{ $data['area_name'] }} ) </strong>
+                                        <strong>&nbsp;Area Total&nbsp;</strong>
                                     </td>
                                     <td class="text-center">
-                                        <strong>{{ number_format($data['area_total_allocation'], 2) }}</strong>
+                                        <?php if (isset($data['total_allocation_by_area'][$area_row_id_key])): ?>
+                                            <strong>{{ number_format($data['total_allocation_by_area'][$area_row_id_key], 2) }}</strong>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="text-center">
-                                        <strong>{{ number_format($data['area_total_expense'], 2) }}</strong>
+                                        <?php if (isset($data['total_expense_by_area'][$area_row_id_key])): ?>
+                                            <strong>{{ number_format($data['total_expense_by_area'][$area_row_id_key], 2) }}</strong>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="text-center">
-                                        <strong>{{ number_format($data['area_total_balance'], 2) }}</strong>
+                                        <?php if (isset($data['total_balance_by_area'][$area_row_id_key])): ?>
+                                            <strong>{{ number_format($data['total_balance_by_area'][$area_row_id_key], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <tr>
+                                    <td>
+                                        <strong>&nbsp;Area Total&nbsp;</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['selected_list_head_total_allocation'][$area_row_id_key])): ?>
+                                            <strong>{{ number_format($data['selected_list_head_total_allocation'][$area_row_id_key], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['selected_list_head_total_expense'][$area_row_id_key])): ?>
+                                            <strong>{{ number_format($data['selected_list_head_total_expense'][$area_row_id_key], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['selected_list_head_total_balance'][$area_row_id_key])): ?>
+                                            <strong>{{ number_format($data['selected_list_head_total_balance'][$area_row_id_key], 2) }}</strong>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
-                            @else
+                        </tbody>
+                    </table>
+                    <?php $parent_serial = 1; ?>
+                    @endforeach
+                    <?php if ((in_array('-1', $data['selected_head_row_id'])) && ($data['selected_area_row_id'] == -1)): ?>
+                        <table style="margin-top:10px;" class="table table-striped table-bordered table-hover table-checkable order-column">
+                            <tbody>
+                                <tr>
+                                    <td width="55%">
+                                        <strong>&nbsp;Grand Total&nbsp;( All Areas ) </strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['grand_total_allocation'])): ?>
+                                            <strong>{{ number_format($data['grand_total_allocation'], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['grand_total_expense'])): ?>
+                                            <strong>{{ number_format($data['grand_total_expense'], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['grand_total_balance'])): ?>
+                                            <strong>{{ number_format($data['grand_total_balance'], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            </tbody>                        
+                        </table>
+                    <?php endif; ?>
+                    @else
+                    <table class="table table-striped table-bordered table-hover table-checkable order-column">
+                        <thead>
+                            <tr>
+                                <th width="55%" style="text-align:left;padding-left:10px">Head Name</th>
+                                <th width="15%" style="text-align:center;padding-left:10px">Allocation</th>
+                                <th width="15%" style="text-align:center;padding-left:10px">Expense</th>
+                                <th width="15%" style="text-align:center;padding-left:10px">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <tr>
                                 <td colspan="4" style="text-align:center;"><strong>No Record Found</strong></td>
                             </tr>
-                            @endif
                         </tbody>
                     </table>
+                    @endif
                 </div>
             </div>
         </div>
@@ -383,18 +473,18 @@ $(document).ready(function () {
         format: 'yyyy-mm-dd',
         todayHighlight: true
     });
-    $(".ut_budget_year").change(function(){
-            $('.ut_budget_head_drop_down').empty();
-            var selected_head_row_id = null;
-            var selected_budget_year = $(this).val();
-            $.ajax({
-                url: "{{ url('/budget/report/heads/dropdown') }}" + '/' + selected_budget_year + '/' + selected_head_row_id,
-                type: "GET",
-                dataType: "html",
-                success: function(data){
-                    $('.ut_budget_head_drop_down').append(data);
-                }
-            });
+    $(".ut_budget_year").change(function () {
+        $('.ut_budget_head_drop_down').empty();
+        var selected_head_row_id = null;
+        var selected_budget_year = $(this).val();
+        $.ajax({
+            url: "{{ url('/budget/report/heads/dropdown') }}" + '/' + selected_budget_year + '/' + selected_head_row_id,
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+                $('.ut_budget_head_drop_down').append(data);
+            }
+        });
     });
 });
 </script>
@@ -411,7 +501,7 @@ $(document).ready(function () {
             $('.balance_report_month_range').hide();
             $('.balance_report_date_range').hide();
         }
-       $("#budget_balance_report_date_type").change(function () {
+        $("#budget_balance_report_date_type").change(function () {
             $('.balance_report_month_range').hide();
             $('.balance_report_date_range').hide();
             var selected_date_type = $(this).val();
@@ -427,5 +517,9 @@ $(document).ready(function () {
             }
         });
     });
+</script>
+<script type='text/javascript'>
+    var head_row_id_list = <?php echo json_encode($data['selected_head_row_id']); ?>;
+    $('.ut_budget_head_drop_down').val(head_row_id_list);
 </script>
 @endsection
