@@ -35,6 +35,7 @@
                             <th style="text-align: left;height: 30px">Name</th>
                             <th style="text-align: left;height: 30px;">In Time</th>
                             <th style="text-align: left;height: 30px;">Out Time</th>
+                            <th style="text-align: left;height: 30px;">Total Time</th>
                             <th style="text-align: left;height: 30px"> Status</th>
                         </tr>
                     </thead>
@@ -76,6 +77,13 @@
                             <td>
                                 {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
                             </td> 
+                            <td>
+                                @if($login && $logout)
+                                   {{ date( 'g', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }} Hours 
+                                   {{ date( 'i', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }} Minutes
+                               
+                                @endif
+                            </td>
                             <td>                             
                                 <?php echo $present ? '<div style="' . $presentcolor. '">' .$presentmsg . '</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
                             </td>
