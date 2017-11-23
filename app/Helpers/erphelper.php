@@ -240,7 +240,7 @@ function getMenuListByRole($role_row_id) {
 }
 
 function getPoweredBy () {
-     return  '<div class="footer-pdf" style="border-top: 2px solid #000; text-align:right; margin-top:0px; font-style: italic; opacity:0.5">Powered By: bdeducations.org</div>';
+     return  '<div class="footer-pdf" style="border-top: 2px solid #000; text-align:right; margin-top:0px; font-style: italic; opacity:0.5">Powered By: bdeducation</div>';
 }
 
 function isEmployeeHoliday($emloyee_row_id, $date_of_attendance) {

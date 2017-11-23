@@ -7,7 +7,7 @@
                 font-weight: none;
             }
         </style>           
-</head><body style="font-size: 14px;">
+</head><body style="font-size: 12px;">
         <div style="width:100%;margin-top: -50px;">
             <div class="row">
                <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"   width="100%">
