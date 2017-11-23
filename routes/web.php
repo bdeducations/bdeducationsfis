@@ -28,45 +28,7 @@ Route::post('/areas/store', 'AreasController@store');
 Route::get('/areas/editArea/{area_id}', 'AreasController@editArea');
 Route::post('/areas/update/{area_id}', 'AreasController@update');
 Route::get('/areas/deleteArea/{area_id}', 'AreasController@destroy');
-/**
- *  Routing For Manage category
- */
-Route::any('/mis/category/list', 'CategoryController@index');
-Route::get('/mis/category/create', 'CategoryController@createCategory');
-Route::post('/mis/category/store', 'CategoryController@store');
-Route::get('/mis/category/edit/{category_row_id}', 'CategoryController@editCategory');
-Route::post('/mis/category/update/{category_row_id}', 'CategoryController@update');
-Route::get('/mis/category/delete/{category_row_id}', 'CategoryController@destroy');
-/**
- *  Routing For Manage mis applicant
- */
-Route::any('/mis/applicant/list', 'ApplicantsController@index');
-Route::get('/mis/applicant/create', 'ApplicantsController@createApplicant');
-Route::post('/mis/applicant/store', 'ApplicantsController@store');
-Route::get('/mis/applicant/getDistrictUpazilaList/{district_id}/{upazila_id}', 'ApplicantsController@getDistrictUpazilaList');
-Route::any('/mis/applicant/checkUniqueApplicantByMobile/{mobile_number}', 'ApplicantsController@checkUniqueApplicantByMobile');
-Route::any('/mis/applicant/checkUniqueApplicantByMobileOnUpdate/{mobile_number}/{applicant_row_id}', 'ApplicantsController@checkUniqueApplicantByMobileOnUpdate');
-Route::get('/mis/applicant/edit/{applicant_row_id}', 'ApplicantsController@editapplicant');
-Route::post('/mis/applicant/update/{applicant_row_id}', 'ApplicantsController@update');
-Route::get('/mis/applicant/delete/{applicant_row_id}', 'ApplicantsController@destroy');
-/**
- *  Routing For Manage mis applicant Donation
- */
-Route::any('/mis/donation/list', 'MisDonationController@index');
-Route::get('/mis/donation/create', 'MisDonationController@createDonation');
-Route::post('/mis/donation/store', 'MisDonationController@store');
-Route::get('/mis/applicant/getApplicantJsonList/{applicant_type}', 'ApplicantsController@getApplicantJsonList');
-Route::get('/mis/applicant/getApplicantPartialFormByType/{applicant_type}', 'ApplicantsController@getApplicantPartialFormByType');
-Route::get('/mis/applicant/getPartialformByType/{applicant_type}', 'MisDonationController@getPartialFormByType');
-Route::get('/mis/donation/getApplicantListByType/{applicant_type}/{applicant_row_id}', 'MisDonationController@getApplicantListByType');
-Route::get('/mis/donation/getApplicantListByTypeOnUpdate/{applicant_type}/{applicant_row_id}', 'MisDonationController@getApplicantListByTypeOnUpdate');
-Route::get('/mis/donation/edit/{donation_row_id}', 'MisDonationController@editDonation');
-Route::post('/mis/donation/update/{donation_row_id}', 'MisDonationController@update');
-Route::get('/mis/donation/delete/{donation_row_id}', 'MisDonationController@destroy');
-Route::any('/mis/donation/report', 'MisReportController@index');
-Route::any('/mis/donation/downloadDonationList', 'MisReportController@downloadDonationList');
-Route::any('/mis/donation/details/{donation_row_id}', 'MisReportController@donationDetails');
-Route::any('/mis/donation/details/download/{donation_row_id}', 'MisReportController@donationDetailsDownload');
+
 /**
  * Routing For Manage Budget Head
  */

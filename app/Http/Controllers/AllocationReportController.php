@@ -46,7 +46,7 @@ class AllocationReportController extends Controller {
         $data['grand_total_allocation'] = 0;
         $data['total_allocation_by_area'] = '';
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
+        $data['all_heads'] = $common_model->allMainHeads();
         $data['all_areas'] = $common_model->allAreas(1);
         $data['alphabets'] = $common_model->alphabet_array;
         $data['roman'] = $common_model->roman_array;
@@ -110,7 +110,6 @@ class AllocationReportController extends Controller {
         $data['head_name'] = '';
         $data['allocation_list'] = '';
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
         $data['all_areas'] = $common_model->allAreas(1);
         if ($request->isMethod('GET') && isset($request->head_row_id) && isset($request->area_row_id) && isset($request->budget_year)) {
             $area_row_id = $request->area_row_id;
@@ -158,7 +157,6 @@ class AllocationReportController extends Controller {
         $data['head_name'] = '';
         $data['allocation_list'] = '';
         $common_model = new Common();
-        $data['all_heads'] = $common_model->allHeads(0, 0);
         $data['all_areas'] = $common_model->allAreas(1);
         if ($request->isMethod('GET') && isset($request->head_row_id) && isset($request->area_row_id) && isset($request->budget_year)) {
             $area_row_id = $request->area_row_id;
@@ -312,81 +310,21 @@ class AllocationReportController extends Controller {
             if ($account_allocation_list) {
                 $head_serial_number = '';
                 $parent_serial = 1;
-                $child_serial = 1;
-                $grand_child_serial = 1;
-                $grand_parent_child_number = 0;
-                $grand_parent_child_counter = 0;
-                $grand_parent_total_allocation = 0;
-                $parent_child_number = 0;
-                $parent_child_counter = 0;
-                $parent_total_allocation = 0;
                 foreach ($account_allocation_list as $area_row_id_key => $area_allocation_row) {
-                    if (isset($child_serial) && $child_serial > 26):
-                        $child_serial = 1;
-                    endif;
-                    if (isset($grand_child_serial) && $grand_child_serial > 26):
-                        $grand_child_serial = 1;
-                    endif;
                     foreach ($area_allocation_row as $allocation_row) {
-                        if ($allocation_row['level'] == 0) {
-                            $child_serial = 1;
-                            $head_serial_number = $parent_serial . ". ";
-                            $parent_serial++;
-                            $grand_parent_child_counter = 0;
-                            if ($allocation_row['has_child'] == 1) {
-                                $parent_child_number = $allocation_row['parent_head_child_number'];
-                                $parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                $grand_parent_child_number = $allocation_row['parent_head_child_number'];
-                                $grand_parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                $parent_child_counter = 0;
-                            }
-                        }
-                        if ($allocation_row['level'] == 1) {
-                            $grand_child_serial = 1;
-                            $head_serial_number = "   " . $alphabets[$child_serial] . ". ";
-                            $child_serial++;
-                            if ($allocation_row['has_child'] == 1):
-                                $parent_child_number = $allocation_row['parent_head_child_number'];
-                                $parent_child_counter = 0;
-                                $parent_total_allocation = $allocation_row['parent_head_total_allocation'];
-                                $grand_parent_child_counter++;
-                            else:
-                                $parent_child_counter++;
-                            endif;
-                        }
-                        if ($allocation_row['level'] == 2) {
-                            $head_serial_number = "     " . $roman[$grand_child_serial] . ". ";
-                            $grand_child_serial++;
-                            $parent_child_counter++;
-                        }
+                        $head_serial_number = $parent_serial . ". ";
+                        $parent_serial++;
                         $a['Head Name'] = $head_serial_number . $allocation_row['title'];
                         $a['Area Name'] = $area_row_id_key;
-                        if (isset($allocation_row['head_total_allocation']) && ($allocation_row['head_total_allocation'] != 0) && ($allocation_row['has_child'] == 0)) {
+                        if (isset($allocation_row['head_total_allocation']) && ($allocation_row['head_total_allocation'] != 0)) {
                             $a['Allocation'] = number_format($allocation_row['head_total_allocation'], 2);
-                        } elseif (isset($allocation_row['head_total_allocation']) && ($allocation_row['head_total_allocation'] == 0) && ($allocation_row['has_child'] == 0)) {
+                        } elseif (isset($allocation_row['head_total_allocation']) && ($allocation_row['head_total_allocation'] == 0)) {
                             $a['Allocation'] = 0.00;
                         } else {
                             $a['Allocation'] = '';
                         }
                         $data[] = (array) $a;
-                        if (($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 1) && ($allocation_row['has_child'] == 0)):
-                            $parent_total['Head Name'] = "Total";
-                            $parent_total['Area Name'] = '';
-                            $parent_total['Allocation'] = number_format($parent_total_allocation, 2);
-                            $data[] = (array) $parent_total;
-                        endif;
-                        if (($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 2) && ($allocation_row['has_child'] == 0)):
-                            $parent_child_total['Head Name'] = "    Total";
-                            $parent_child_total['Area Name'] = '';
-                            $parent_child_total['Allocation'] = number_format($parent_total_allocation, 2);
-                            $data[] = (array) $parent_child_total;
-                        endif;
-                        if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($allocation_row['level'] == 2) && ($allocation_row['has_child'] == 0)):
-                            $grand_parent_total['Head Name'] = "Total";
-                            $grand_parent_total['Area Name'] = '';
-                            $grand_parent_total['Allocation'] = number_format($grand_parent_total_allocation, 2);
-                            $data[] = (array) $grand_parent_total;
-                        endif;
+                        $parent_serial = 1;
                     }
                     if ($head_row_id == -1):
                         $area_total['Head Name'] = "Total( " . $area_row_id_key . " )";
@@ -394,7 +332,6 @@ class AllocationReportController extends Controller {
                         $area_total['Allocation'] = number_format($total_allocation_by_area[$area_row_id_key], 2);
                         $data[] = (array) $area_total;
                     endif;
-                    $parent_serial = 1;
                 }
                 if (($head_row_id == -1) && ($area_row_id == -1)):
                     $all_area_total['Head Name'] = "Grand Total( All Areas )";
@@ -402,15 +339,15 @@ class AllocationReportController extends Controller {
                     $all_area_total['Allocation'] = number_format($grand_total_allocation, 2);
                     $data[] = (array) $all_area_total;
                 endif;
+                if ($area_row_id > 0):
+                    $area_row = $common_model->get_area_row_info($area_row_id);
+                    $area_name = str_replace(" ", "_", $area_row->title) . "_" . $budget_year;
+                else:
+                    $area_name = "All_Area_" . $budget_year;
+                endif;
+                $data['allocation_list'] = $data;
+                $this->exportAllocationReportToCsv($data['allocation_list'], $area_name);
             }
-            if ($area_row_id > 0):
-                $area_row = $common_model->get_area_row_info($area_row_id);
-                $area_name = str_replace(" ", "_", $area_row->title) . "_" . $budget_year;
-            else:
-                $area_name = "All_Area_". $budget_year;
-            endif;
-            $data['allocation_list'] = $data;
-            $this->exportAllocationReportToCsv($data['allocation_list'], $area_name);
         }
     }
 
