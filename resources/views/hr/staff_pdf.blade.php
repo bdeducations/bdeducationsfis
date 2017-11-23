@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html><head>
   <title></title>
   <meta charset="UTF-8">
 
-  <style>
+<style>
 span.bangla_text {
 	 font-family: 'kalpurush';
 }
@@ -14,12 +13,8 @@ span.bangla_text {
   font-style: normal;
   font-weight: normal;
   src: url("{{ url('/') }}public/solaiman.ttf") format('truetype');
-}
-    
-</style>
-</head>
-<body>
-
+} 
+</style></head><body>
 <div class="studentcontent">
 	<div style="width:100%; border-bottom: 2px solid #000;">
 		<table border="0" cellpadding="5" cellspacing="1" style="width:100%;">
@@ -62,7 +57,6 @@ span.bangla_text {
 		</tbody>
 	</table>
 </div>
-
 <div style="float:right; width:30%; border-left:2px solid #000; padding:5px;">
 	<table border="0" style="width:100%;background-color:#fff;border-collapse:collapse; margin-left:20px;">
 		<tbody>
@@ -147,7 +141,6 @@ span.bangla_text {
 				</tbody>
 			</table>
 	</div>
-
 	<div style="margin-top:0px; padding:5px; background-color: #eee; text-transform:uppercase;">Educational Background
 	</div>
 	<div>
@@ -180,12 +173,8 @@ span.bangla_text {
 						<tr>
 							<td>&nbsp;</td>
 						</tr>
-					</tbody>
-		</table>
+					</tbody></table>
 	</div>
 		<div class="footer-pdf" style="border-top: 2px solid #000; text-align:right; margin-top:30px; font-style: italic; opacity:0.5">Powered By: bdeducations.org
 		</div>			
-
-
-</body>
-</html>
+</body></html>
