@@ -183,10 +183,10 @@
                 </form>
                 <?php
                 $pdf_area_qstring = '';
-                $pdf_date_qstring = '';
-                $pdf_area_qstring = "&area_row_id=" . $data['selected_area_row_id'] . "&budget_year=" . $data['selected_budget_year'];
+                $pdf_date_qstring = '&date_type=1';
+                $pdf_area_qstring = "&area_row_id=" . $data['selected_area_row_id'] . "&budget_year=" . $data['selected_budget_year'] ."&report_title=" . $data['report_title'];
                 if ($data['from_month']):
-                    $pdf_date_qstring = "&date_type=1&from_month=" . $data['from_month'];
+                    $pdf_date_qstring .= "&from_month=" . $data['from_month'];
                 endif;
                 if ($data['to_month']):
                     $pdf_date_qstring .= "&to_month=" . $data['to_month'];
@@ -398,7 +398,7 @@
                                         </td>
                                         @endforeach
                                         <td class="text-center"><strong>{{ number_format($parent_total_expense, 2) }}</strong></td>
-                                        <td class="text-center"></strong></td>
+                                        <td class="text-center"></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($area_balance_row['level'] == 2) && ($area_balance_row['has_child'] == 0)): ?>
