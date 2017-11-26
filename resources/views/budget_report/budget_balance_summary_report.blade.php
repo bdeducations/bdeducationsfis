@@ -57,16 +57,14 @@
                                 <div class="form-group">
                                     <label for="head_row_id" class="col-md-3 control-label">Select Head <span class="input-required-asterik">*</span></label>
                                     <div class="col-md-9">
-                                        <select name="head_row_id" class="form-control" required="required">
+                                        <select name="head_row_id[]" multiple="multiple" class="form-control" required="required">
                                             <option value="">Select Head</option>
-                                            <option value="-1" @if($data['selected_head_row_id'] == -1) selected="selected"  @endif>All Main Head</option>
+                                            <option value="-1">All Main Head</option>
                                             @foreach( $data['all_heads'] as $row)
-                                            <option value="{{ $row->head_row_id }}" @if($row->head_row_id == $data['selected_head_row_id']) selected="selected"  @endif>
-                                                    @if($row->level == 0) <b>  @endif
-                                                    {{ $row->title }}
-                                                    @if($row->level == 0) </b>  @endif
-                                                </option>
-                                                @endforeach
+                                            <option value="{{ $row->head_row_id }}">
+                                                {{ $row->title }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -151,6 +149,17 @@
                                         <div class="col-md-9">
                                             <input type="text" name="to_date" class="form-control" id="to_datepicker" value="<?php echo isset($data['to_date']) ? $data['to_date'] : ''; ?>" />
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="report_title" class="col-md-3 control-label">Report Heading</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="report_title" class="form-control" placeholder="Report Heading Title" id="report_title" value="<?php echo isset($data['report_title']) ? $data['report_title'] : ''; ?>" />
                                     </div>
                                 </div>
                             </div>

@@ -185,10 +185,10 @@
                 </form>
                 <?php
                 $pdf_area_qstring = '';
-                $pdf_date_qstring = '';
-                $pdf_area_qstring = "&area_row_id=" . $data['selected_area_row_id'] . "&budget_year=" . $data['selected_budget_year'];
+                $pdf_date_qstring = '&date_type=2';
+                $pdf_area_qstring = "&area_row_id=" . $data['selected_area_row_id'] . "&budget_year=" . $data['selected_budget_year'] ."&report_title=" . $data['report_title'];
                 if ($data['from_date']):
-                    $pdf_date_qstring = "&date_type=2&from_date=" . $data['from_date'];
+                    $pdf_date_qstring .= "&from_date=" . $data['from_date'];
                 endif;
                 if ($data['to_date']):
                     $pdf_date_qstring .= "&to_date=" . $data['to_date'];
@@ -350,9 +350,9 @@
                                     <td>
                                         <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total: </strong>
                                     </td>
-                                    <td class="text-center"></strong></td>
+                                    <td class="text-center"></td>
                                     <td class="text-center"><strong>{{ number_format($parent_total_expense, 2) }}</strong></td>
-                                    <td class="text-center"><strong></strong></td>
+                                    <td class="text-center"></td>
                                 </tr>
                             <?php endif; ?>
                             <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($area_expense_row['level'] == 2) && ($area_expense_row['has_child'] == 0)): ?>
@@ -414,6 +414,32 @@
                     <?php $parent_serial = 1; ?>
                     @endforeach
                     <?php if ((in_array('-1', $data['selected_head_row_id'])) && ($data['selected_area_row_id'] == -1)): ?>
+                        <table style="margin-top:10px;" class="table table-striped table-bordered table-hover table-checkable order-column">
+                            <tbody>
+                                <tr>
+                                    <td width="55%">
+                                        <strong>&nbsp;Grand Total&nbsp;( All Areas ) </strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['grand_total_allocation'])): ?>
+                                            <strong>{{ number_format($data['grand_total_allocation'], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['grand_total_expense'])): ?>
+                                            <strong>{{ number_format($data['grand_total_expense'], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($data['grand_total_balance'])): ?>
+                                            <strong>{{ number_format($data['grand_total_balance'], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            </tbody>                        
+                        </table>
+                    <?php endif; ?>
+                    <?php if (!(in_array('-1', $data['selected_head_row_id'])) && ($data['selected_area_row_id'] == -1)): ?>
                         <table style="margin-top:10px;" class="table table-striped table-bordered table-hover table-checkable order-column">
                             <tbody>
                                 <tr>
