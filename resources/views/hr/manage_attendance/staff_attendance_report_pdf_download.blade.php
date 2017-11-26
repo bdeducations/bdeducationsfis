@@ -79,7 +79,7 @@
                             </td> 
                             <td>
                                 @if($login && $logout)
-                                   {{ date( 'g', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }} Hours 
+                                   {{ date( 'H', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }} Hours 
                                    {{ date( 'i', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }} Minutes
                                
                                 @endif
