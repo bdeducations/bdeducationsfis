@@ -170,6 +170,7 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-circle-o"></i>  Area and Date Wise Expense
                                     </a>
                                 </li>
+                                <!--
                                 <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BalanceReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budgetReport/balance">
                                         <i class="fa fa-circle-o"></i> Expenditure State
@@ -180,6 +181,7 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-circle-o"></i> Expenditure Summary State
                                     </a>
                                 </li>
+                                -->
                             </ul>
                         </li>
                         <!-- Manage Employee -->

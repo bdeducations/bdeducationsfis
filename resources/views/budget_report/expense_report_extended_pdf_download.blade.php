@@ -28,6 +28,9 @@
             .table > thead > tr > th {
                 padding:5px !important;
             }
+            table.expense-report-footer {
+               page-break-inside:avoid !important;
+            }
         </style>
 </head><body>
         <div class="pdfcontent" style="text-align:center;">
@@ -203,5 +206,33 @@
                 </table>
             <?php endif;?>
             @endif
+            @if(isset($data['grand_total_word_amount']))
+            <div style="text-align:left !important;"><strong>In Words: </strong><?php echo formatNumberToWord($data['grand_total_word_amount']);?></div>
+            @endif
+            <table style="margin-top:7px;"  class="expense-report-footer table table-striped table-bordered table-hover table-checkable order-column">
+                <tbody>
+                    <tr>
+                        <td width="35%" colspan="2">
+                            <strong>Prepared By : </strong>
+                        </td>
+                        <td width="30%"><strong>Recomended</strong></td>
+                        <td width="35%" colspan="2"><strong>Aproved By : </strong></td>
+                    </tr>
+                     <tr>
+                         <td rowspan="2" style="vertical-align:middle !important;">
+                            <strong>Authorize Signature & Date</strong>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;1.</td>
+                        <td rowspan="2" style="vertical-align:middle !important;"><strong>Authorize Signature & Date</strong></td>
+                        <td>&nbsp;1.</td>
+                    </tr>
+                    <tr style="background-color:#FFFFFF !important;">
+                        <td>&nbsp;</td>
+                        <td>&nbsp;2.</td>
+                        <td>&nbsp;2.</td>
+                    </tr>
+                </tbody>                        
+            </table>
         </div>
 </body></html>
