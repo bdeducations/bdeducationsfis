@@ -7,3 +7,8 @@ UPDATE `ut_hr_employees` SET `show_attendance_report` = '0' WHERE `ut_hr_employe
 UPDATE `ut_hr_employees` SET `show_attendance_report` = '0' WHERE `ut_hr_employees`.`employee_row_id` = 131;
 UPDATE `ut_hr_employees` SET `show_attendance_report` = '0' WHERE `ut_hr_employees`.`employee_row_id` = 132;
 
+
+
+--- 2017-12-11
+ALTER TABLE `ut_hr_employees` ADD `is_part_time` TINYINT(1) NOT NULL DEFAULT '0' AFTER `show_attendance_report`;
+

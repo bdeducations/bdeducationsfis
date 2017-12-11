@@ -27,15 +27,18 @@
 
         <div class="pdfcontent" style="text-align:center;">
            
-            <div class="main" style="padding: 10px 15px 20px 15px;">
+            <div class="main" style="padding: 10px 15px 20px 15px;width: 100%">
                  <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"  border="1" width="100%">
                   <thead>
                         <tr>
-                            <th style="text-align: left;height: 30px">Serial</th>
+                            <th style="text-align: left;height: 30px;width:10px">Sl.</th>
                             <th style="text-align: left;height: 30px">Name</th>
                             <th style="text-align: left;height: 30px;">In Time</th>
                             <th style="text-align: left;height: 30px;">Out Time</th>
-                            <th style="text-align: left;height: 30px;">Total Time</th>
+                            <th style="text-align: left;height: 30px;">Total Time</th>                            
+                            <th style="text-align: left;height: 30px;">Late Arrival</th>
+                            <th style="text-align: left;height: 30px;">Early Leave</th>
+                            <th style="text-align: left;height: 30px;">Comments</th>
                             <th style="text-align: left;height: 30px"> Status</th>
                         </tr>
                     </thead>
@@ -71,21 +74,57 @@
                             
                            ?> 
                         <tr>
-                            <td>{{ $i }}</td>
+                            <td style="width:10px">{{ $i }}</td>
                             <td>{{ $row->employee_name }}</td>
                            <td>{{ $present ? date('h:i a', strtotime($row->first_login)) : '' }}</td> 
                             <td>
-                                {{ ($row->first_login == $row->last_logout || !$logout) ? '' : date( 'h:i a', strtotime($row->last_logout) ) }}
+                                @php 
+                                $logoutStatus = 0;
+                                if ($row->first_login == $row->last_logout || !$logout) {
+                                        echo ''; //print something
+                                    } else {
+                                     $logoutStatus = 1;
+                                     echo date( 'h:i a', strtotime($row->last_logout) );
+                                    }
+                                @endphp
                             </td> 
-                            <td>
+                            <td style="width:60px">
                                 @if($login && $logout)
-								
-                                   {{ date( 'H', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }} Hours 
-                                   {{ date( 'i', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }} Minutes
-                               
+                                   {{ date( 'g', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }}h
+                                   {{ date( 'i', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }}m
                                 @endif
                             </td>
-                            <td>                             
+                            
+                            <td style="width:62px">
+                                @if(!$row->is_part_time && $present)
+                                    @php
+                                        $inTimeSupposedTo = strtotime($data['attendance_date'] . ' 09:30:00');
+                                        $inTimeHeWas = strtotime($row->first_login);
+                                        if($inTimeHeWas > $inTimeSupposedTo) {
+                                            if($inTimeHeWas - $inTimeSupposedTo > 3600) {
+                                              echo date('H', $inTimeHeWas - $inTimeSupposedTo) . 'h ' ;
+                                            }
+                                            echo date('i', $inTimeHeWas - $inTimeSupposedTo) . 'm';
+                                        }
+                                    @endphp
+                                @endif 
+                            </td>
+                            <td style="width:60px">
+                                  @if(!$row->is_part_time && $logoutStatus) 
+                                    @php
+                                        $outTimeSupposedTo = strtotime($data['attendance_date'] . ' 17:30:00');
+                                        $outTimeHeWas = strtotime($row->last_logout);
+                                        if($outTimeSupposedTo > $outTimeHeWas) {
+                                            if($outTimeSupposedTo - $outTimeHeWas > 3600) {
+                                              echo date('H', $outTimeSupposedTo - $outTimeHeWas) . 'h ' ;
+                                            }
+                                            echo date('i', $outTimeSupposedTo - $outTimeHeWas) . 'm';
+                                        }
+                                    @endphp
+                                @endif 
+                            </td>
+                            <td style="width:100px"> </td>
+                            <td style="width:50px">                             
                                 <?php echo $present ? '<div style="' . $presentcolor. '">' .$presentmsg . '</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
                             </td>
                         </tr>
@@ -97,7 +136,10 @@
                     <span style="color:green !important;">Total Present: {{ $countPresent }} persons, </span>  
                     <span style="color:red !important;">Total Absent: {{ $countAbsent }} persons </span>              
                 </div>
-               
+               <div style="text-align: left;padding-top:40px;font-size: 16px;">
+                    <div style="float:left;border-top:2px solid #000;width:110px">Admin Signature</div> <div style="border-top:2px solid #000; float:left; margin-left:400px;width:130px">  Director Signature </div>
+                </div>
+                <div style="clear:both"></div>
             </div>
              <?php echo getPoweredBy(); ?>
         </div>       
