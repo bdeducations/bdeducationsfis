@@ -137,7 +137,7 @@
                     <span style="color:red !important;">Total Absent: {{ $countAbsent }} persons </span>              
                 </div>
                <div style="text-align: left;padding-top:40px;font-size: 16px;">
-                    <div style="float:left;border-top:2px solid #000;width:110px">Admin Signature</div> <div style="border-top:2px solid #000; float:left; margin-left:400px;width:130px">  Director Signature </div>
+                    <div style="float:left;border-top:2px solid #000;width:110px">Admin's Signature</div> <div style="border-top:2px solid #000; float:left; margin-left:400px;width:130px">  Director's Signature </div>
                 </div>
                 <div style="clear:both"></div>
             </div>
