@@ -1,11 +1,9 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+function formatNumberToWord($number){
+    $formater = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+    $number_words = ucwords($formater->format($number));
+    return $number_words;
+}
 function budget_year_list() {
     $year_array = array(
         '2010' => '2010',

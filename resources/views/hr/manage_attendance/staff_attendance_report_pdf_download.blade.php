@@ -90,9 +90,9 @@
                             </td> 
                             <td style="width:60px">
                                 @if($login && $logout)
+
                                    {{ date( 'g', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }}h
                                    {{ date( 'i', (strtotime($row->last_logout) - strtotime($row->first_login)) ) }}m
-                               
                                 @endif
                             </td>
                             

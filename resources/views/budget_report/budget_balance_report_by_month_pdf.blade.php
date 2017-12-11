@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{{ url('/')}}/public/adminlte/plugins/datatables/dataTables.bootstrap.css">
         <style type="text/css">
             body{
-                font-size:10px !important;
+                font-size:9px !important;
                 font-weight:100;
             }
             .page-break {
@@ -25,12 +25,11 @@
                 padding:3px !important;
             }
             @page {
-                margin:5px 4px 0 4px;
+                margin:5px 4px 0 6px;
             }
         </style>
 </head><body>
         <div class="pdfcontent" style="text-align:center;">
-            <h1 style="margin:0;padding:0;font-size:22px !important;font-weight:bold;">Budget Balance Sheet : <?php echo $data['selected_budget_year']; ?></h1>
             @if($data['balance_report_by_month_list'])
             <?php
             $parent_head_total_expense_by_month = array();
@@ -59,13 +58,14 @@
                 $grand_child_serial = 1;
             endif;
             ?>
-            <h3 style="text-transform:uppercase;text-align:center;text-decoration:underline;font-weight:bold;font-size:16px !important;">
+            <h3 style="text-transform:uppercase;text-align:center;padding-bottom:10px;margin-bottom:10px !important;text-decoration:underline;font-size:16px !important;">
                 <?php
-                if (isset($data['all_area_list'][$area_row_id_key])):
-                    echo $data['all_area_list'][$area_row_id_key];
+                if (isset($data['report_title'])):
+                    echo $data['report_title'];
                 endif;
                 ?>
             </h3>
+            <div style="clear:both !important;"></div>
             <table class="table table-striped table-bordered table-hover table-checkable order-column">
                 <thead>
                     <tr>
@@ -133,6 +133,7 @@
                                         endforeach;
                                     else:
                                         $parent_child_counter++;
+                                        $grand_parent_child_counter++;
                                     endif;
                                     ?>
                                     &nbsp;
@@ -158,9 +159,9 @@
                             @endif
                         </td>
                         <td style="text-align:center;padding-left:7px">
-                            @if(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] != 0) && ($area_balance_row['has_child'] == 0))
+                            @if(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] != 0) && ($area_balance_row['parent_id'] == 0))
                             {{ number_format($area_balance_row['head_total_allocation'], 2) }}
-                            @elseif(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] == 0) && ($area_balance_row['has_child'] == 0))
+                            @elseif(isset($area_balance_row['head_total_allocation']) && ($area_balance_row['head_total_allocation'] == 0) && ($area_balance_row['parent_id'] == 0))
                             0.00
                             @endif
                         </td>
@@ -186,9 +187,9 @@
                             @endif
                         </td>
                         <td style="text-align:center;padding-left:7px">
-                            @if(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] != 0) && ($area_balance_row['has_child'] == 0))
+                            @if(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] != 0) && ($area_balance_row['parent_id'] == 0))
                             {{ number_format($area_balance_row['head_current_balance'], 2) }}
-                            @elseif(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] == 0) && ($area_balance_row['has_child'] == 0))
+                            @elseif(isset($area_balance_row['head_current_balance']) && ($area_balance_row['head_current_balance'] == 0) && ($area_balance_row['parent_id'] == 0))
                             0.00
                             @endif
                         </td>
@@ -213,14 +214,14 @@
                             <td>
                                 <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total: </strong>
                             </td>
-                            <td class="text-center"><strong>{{ number_format($parent_total_allocation, 2) }}</strong></td>
+                            <td class="text-center"></td>
                             @foreach($parent_head_total_expense_by_month as $month_key => $monthly_expense_row)
                             <td style="text-align:center;padding-left:7px">
                                 <strong>{{ number_format($monthly_expense_row, 2) }}</strong>
                             </td>
                             @endforeach
                             <td class="text-center"><strong>{{ number_format($parent_total_expense, 2) }}</strong></td>
-                            <td class="text-center"><strong>{{ number_format($parent_total_balance, 2) }}</strong></td>
+                            <td class="text-center"></td>
                         </tr>
                     <?php endif; ?>
                     <?php if (($grand_parent_child_number == $grand_parent_child_counter) && ($parent_child_number == $parent_child_counter) && ($area_balance_row['level'] == 2) && ($area_balance_row['has_child'] == 0)): ?>
@@ -239,10 +240,10 @@
                         </tr>
                     <?php endif; ?>
                     @endforeach
-                    <?php if (($data['selected_head_row_id'] == -1)): ?>
+                    <?php if ((in_array('-1', $data['selected_head_row_id']))): ?>
                         <tr>
                             <td>
-                                <strong>&nbsp;Total&nbsp;({{$data['all_area_list'][$area_row_id_key]}}):</strong>
+                                <strong>&nbsp;Area Total&nbsp;:</strong>
                             </td>
                             <td class="text-center"><strong>{{ number_format($data['total_allocation_by_area'][$area_row_id_key], 2) }}</strong></td>
                             <?php
@@ -256,6 +257,27 @@
                             <td class="text-center"><strong>{{ number_format($data['total_expense_by_area'][$area_row_id_key], 2) }}</strong></td>
                             <td class="text-center"><strong>{{ number_format($data['total_balance_by_area'][$area_row_id_key], 2) }}</strong></td>
                         </tr>
+                    <?php else: ?>
+                        <tr>
+                            <td width="40%">
+                                <strong>&nbsp;Area Total&nbsp;:</strong>
+                            </td>
+                            <td class="text-center"><strong>{{ number_format($data['selected_list_head_total_allocation'][$area_row_id_key], 2) }}</strong></td>
+                            <?php
+                            $start_month = $data['from_month'];
+                            for ($start_month; $start_month <= $data['to_month']; $start_month++):
+                                ?>
+                                <td style="text-align:center;padding-left:10px">
+                                    @if(isset($data['selected_list_head_total_expense_by_month'][$area_row_id_key][$start_month]))
+                                    <strong>{{ number_format($data['selected_list_head_total_expense_by_month'][$area_row_id_key][$start_month], 2) }}</strong>
+                                    @else
+                                    <strong>0.00</strong>
+                                    @endif
+                                </td>
+                            <?php endfor; ?>
+                            <td class="text-center"><strong>{{ number_format($data['selected_list_head_total_expense'][$area_row_id_key], 2) }}</strong></td>
+                            <td class="text-center"><strong>{{ number_format($data['selected_list_head_total_balance'][$area_row_id_key], 2) }}</strong></td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -267,7 +289,7 @@
             $parent_serial = 1;
             ?>
             @endforeach
-            <?php if (($data['selected_head_row_id'] == -1) && ($data['selected_area_row_id'] == -1)): ?>
+            <?php if ((in_array('-1', $data['selected_head_row_id'])) && ($data['selected_area_row_id'] == -1)): ?>
                 <div class="table-responsive">
                     <table style="margin-top:10px;" class="table table-striped table-bordered table-hover table-checkable order-column">
                         <thead>
@@ -317,6 +339,59 @@
                                 </td>
                             </tr>
                         </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+            <?php if ((!in_array('-1', $data['selected_head_row_id'])) && ($data['selected_area_row_id'] == -1)): ?>
+                <div class="table-responsive">
+                    <table style="margin-top:10px;" class="table table-striped table-bordered table-hover table-checkable order-column">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" width="25%" style="vertical-align:middle;text-align:left;padding-left:10px">Head Name</th>
+                                <th rowspan="2" width="15%" style="vertical-align:middle;text-align:center;padding-left:10px">Allocation</th>
+                                <th colspan="<?php echo $data['total_month']; ?>" width="30%" style="vertical-align:middle;text-align:center;padding-left:10px">Expense</th>
+                                <th rowspan="2" width="15%" style="vertical-align:middle;text-align:center;padding-left:10px">Total</th>
+                                <th rowspan="2" width="15%" style="vertical-align:middle;text-align:center;padding-left:10px">Balance</th>
+                            </tr>
+                            <tr>
+                                <?php
+                                for ($from_month = $data['from_month']; $from_month <= $data['to_month']; ++$from_month):
+                                    ?>
+                                    <th style="text-align:center;padding-left:10px;border-right-width:1px !important;"><?php echo $data['month_list'][$from_month]; ?></th>
+                                <?php endfor; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>&nbsp;Grand Total&nbsp;( All Areas ) </strong>
+                                </td>
+                                <td class="text-center">
+                                    <?php if (isset($data['grand_total_allocation_all_area'])): ?>
+                                        <strong>{{ number_format($data['grand_total_allocation_all_area'], 2) }}</strong>
+                                    <?php endif; ?>
+                                </td>
+                                <?php
+                                for ($start_month = $data['from_month']; $start_month <= $data['to_month']; $start_month++):
+                                    ?>
+                                    <td style="text-align:center;padding-left:10px">
+                                        <?php if (isset($data['grand_total_expense_by_month_all_area'][$start_month])): ?>
+                                            <strong>{{ number_format($data['grand_total_expense_by_month_all_area'][$start_month], 2) }}</strong>
+                                        <?php endif; ?>
+                                    </td>
+                                <?php endfor; ?>
+                                <td class="text-center">
+                                    <?php if (isset($data['grand_total_expense_all_area'])): ?>
+                                        <strong>{{ number_format($data['grand_total_expense_all_area'], 2) }}</strong>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php if (isset($data['grand_total_balance_all_area'])): ?>
+                                        <strong>{{ number_format($data['grand_total_balance_all_area'], 2) }}</strong>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        </tbody>                        
                     </table>
                 </div>
             <?php endif; ?>

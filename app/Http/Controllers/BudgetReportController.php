@@ -184,7 +184,7 @@ class BudgetReportController extends Controller {
         $data['account_expense_list'] = $expenseFilterHead;
         $pdf = PDF::loadView($this->viewFolderPath . 'expense_report_pdf_download', ['data' => $data]);
         return $pdf->stream('Budget_Expense_Report.pdf');
-//return view($this->viewFolderPath . 'expense_report_pdf_download', ['data' => $data]);
+        //return view($this->viewFolderPath . 'expense_report_pdf_download', ['data' => $data]);
     }
 
     public function allocationReport(Request $request) {
@@ -377,6 +377,7 @@ class BudgetReportController extends Controller {
         $data['selected_head_row_id'] = '';
         $data['selected_area_row_id'] = '';
         $data['grand_total_expense'] = 0;
+        $data['grand_total_word_amount'] = 0;
         $data['total_area_expense_list'] = '';
         $data['all_head_total_expense'] = '';
         $data['report_title'] = '';
@@ -433,8 +434,10 @@ class BudgetReportController extends Controller {
                      * Call For a specific area
                      */
                     $total_expense_by_area[$area_row_id] = $common_model->getTotalExpenseByArea($area_row_id, $budget_year, $from_date, $to_date);
+                    $data['grand_total_word_amount'] = $total_expense_by_area[$area_row_id];
                 } else {
                     $data['grand_total_expense'] = $common_model->getTotalExpenseByArea(-1, $budget_year, 0, 0);
+                    $data['grand_total_word_amount'] = $data['grand_total_expense'];
                     $area_list = $common_model->allAreas(1);
                     foreach ($area_list as $area) {
                         $total_expense_by_area[$area->area_row_id] = $common_model->getTotalExpenseByArea($area->area_row_id, $budget_year, $from_date, $to_date);
@@ -457,11 +460,13 @@ class BudgetReportController extends Controller {
                     $all_head_total_expense = array();
                     if ($area_row_id > 0) {
                         $all_head_total_expense[$area_row_id] = $common_model->totalParentHeadExpense($this->selected_head_list, $area_row_id, $budget_year, $from_date, $to_date);
+                        $data['grand_total_word_amount'] = $all_head_total_expense[$area_row_id];
                     } else {
                         $area_list = $common_model->allAreas(1);
                         foreach ($area_list as $area) {
                             $all_head_total_expense[$area->area_row_id] = $common_model->totalParentHeadExpense($this->selected_head_list, $area->area_row_id, $budget_year, $from_date, $to_date);
                         }
+                        $data['grand_total_word_amount'] = $common_model->totalParentHeadExpense($this->selected_head_list, -1, $budget_year, $from_date, $to_date);
                     }
                     $data['all_head_total_expense'] = $all_head_total_expense;
                 }

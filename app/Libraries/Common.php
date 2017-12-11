@@ -3405,41 +3405,64 @@ class Common {
      * @param type $start_date
      * @param type $end_date
      */
-    public function budgetBalanceSummaryByDate($area_row_id = -1, $head_row_id = -1, $budget_year = 0, $start_date = 0, $end_date = 0) {
+    public function budgetBalanceSummaryByDate($area_row_id = -1, $head_row_id_list = array(), $budget_year = 0, $start_date = 0, $end_date = 0) {
         $budget_year = !empty($budget_year) ? $budget_year : date('Y');
         $this->output = array();
         if ($area_row_id > 0) {
-            if ($head_row_id > 0) {
+            if (!in_array('-1', $head_row_id_list)) {
                 /**
                  * For specific area and specific main head
                  */
-                $head = \App\Models\Head::find($head_row_id);
-                if ($head->has_child) {
-                    $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
-                    $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area_row_id, $budget_year);
-                    $parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, $area_row_id, $budget_year, $start_date, $end_date);
-                    $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area_row_id, $budget_year, 0, 0);
-                    $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area_row_id, $budget_year, 0, 0);
-                    $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
-                    $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
-                    $head->parent_head_current_balance = $parent_head_current_balance;
-                    $head->parent_head_total_expense = $parent_head_total_expense;
-                    $head->parent_head_total_allocation = $parent_head_total_current_allocation;
-                    if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                        $this->output[] = $head;
-                    }
-                } else {
-                    $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area_row_id, $budget_year);
-                    $parent_head_total_adjustment = $this->totalFilterReceiption($area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                    $parent_head_total_donation = $this->totalFilterDonation($area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                    $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
-                    $head->parent_head_total_allocation = $parent_head_total_current_allocation;
-                    $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area_row_id, $budget_year, $start_date, $end_date);
-                    $head->parent_head_total_expense = $parent_head_total_expense;
-                    $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
-                    $head->parent_head_current_balance = $parent_head_current_balance;
-                    if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                        $this->output[] = $head;
+                if (count($head_row_id_list) > 0) {
+                    foreach ($head_row_id_list as $head_row_id) {
+                        $head = \App\Models\Head::find($head_row_id);
+                        if ($head->has_child) {
+                            $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
+                            $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area_row_id, $budget_year);
+                            $parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, $area_row_id, $budget_year, $start_date, $end_date);
+                            $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area_row_id, $budget_year, 0, 0);
+                            $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area_row_id, $budget_year, 0, 0);
+                            $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                            $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                            if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                $this->output[$area_row_id][$head->head_row_id] = array(
+                                    'head_row_id' => $head->head_row_id,
+                                    'title' => $head->title,
+                                    'sort_order' => $head->sort_order,
+                                    'parent_id' => $head->parent_id,
+                                    'has_child' => $head->has_child,
+                                    'level' => $head->level,
+                                    'area_row_id' => $area_row_id,
+                                    'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                    'parent_head_current_balance' => $parent_head_current_balance,
+                                    'parent_head_total_expense' => $parent_head_total_expense
+                                );
+                            }
+                        } else {
+                            $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area_row_id, $budget_year);
+                            $parent_head_total_adjustment = $this->totalFilterReceiption($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                            $parent_head_total_donation = $this->totalFilterDonation($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                            $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                            $head->parent_head_total_allocation = $parent_head_total_current_allocation;
+                            $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area_row_id, $budget_year, $start_date, $end_date);
+                            $head->parent_head_total_expense = $parent_head_total_expense;
+                            $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                            $head->parent_head_current_balance = $parent_head_current_balance;
+                            if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                $this->output[$area_row_id][$head->head_row_id] = array(
+                                    'head_row_id' => $head->head_row_id,
+                                    'title' => $head->title,
+                                    'sort_order' => $head->sort_order,
+                                    'parent_id' => $head->parent_id,
+                                    'has_child' => $head->has_child,
+                                    'level' => $head->level,
+                                    'area_row_id' => $area_row_id,
+                                    'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                    'parent_head_current_balance' => $parent_head_current_balance,
+                                    'parent_head_total_expense' => $parent_head_total_expense
+                                );
+                            }
+                        }
                     }
                 }
             } else {
@@ -3450,17 +3473,25 @@ class Common {
                 foreach ($all_main_head as $head) {
                     if ($head->has_child) {
                         $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
-                        $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area_row_id, $budget_year);
+                        $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area_row_id, $budget_year);
                         $parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, $area_row_id, $budget_year, $start_date, $end_date);
-                        $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area_row_id, $budget_year, 0, 0);
-                        $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area_row_id, $budget_year, 0, 0);
+                        $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area_row_id, $budget_year, 0, 0);
+                        $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area_row_id, $budget_year, 0, 0);
                         $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
                         $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
-                        $head->parent_head_current_balance = $parent_head_current_balance;
-                        $head->parent_head_total_expense = $parent_head_total_expense;
-                        $head->parent_head_total_allocation = $parent_head_total_current_allocation;
                         if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                            $this->output[] = $head;
+                            $this->output[$area_row_id][$head->head_row_id] = array(
+                                'head_row_id' => $head->head_row_id,
+                                'title' => $head->title,
+                                'sort_order' => $head->sort_order,
+                                'parent_id' => $head->parent_id,
+                                'has_child' => $head->has_child,
+                                'level' => $head->level,
+                                'area_row_id' => $area_row_id,
+                                'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                'parent_head_current_balance' => $parent_head_current_balance,
+                                'parent_head_total_expense' => $parent_head_total_expense
+                            );
                         }
                     } else {
                         $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area_row_id, $budget_year);
@@ -3469,68 +3500,81 @@ class Common {
                         $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
                         $head->parent_head_total_allocation = $parent_head_total_current_allocation;
                         $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area_row_id, $budget_year, $start_date, $end_date);
-                        $head->parent_head_total_expense = $parent_head_total_expense;
                         $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
-                        $head->parent_head_current_balance = $parent_head_current_balance;
                         if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                            $this->output[] = $head;
+                            $this->output[$area_row_id][$head->head_row_id] = array(
+                                'head_row_id' => $head->head_row_id,
+                                'title' => $head->title,
+                                'sort_order' => $head->sort_order,
+                                'parent_id' => $head->parent_id,
+                                'has_child' => $head->has_child,
+                                'level' => $head->level,
+                                'area_row_id' => $area_row_id,
+                                'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                'parent_head_current_balance' => $parent_head_current_balance,
+                                'parent_head_total_expense' => $parent_head_total_expense
+                            );
                         }
                     }
                 }
             }
         } else {
-            if ($head_row_id > 0) {
+            if (!in_array('-1', $head_row_id_list)) {
                 /**
                  * For all area and specific main head
                  */
-                $head = \App\Models\Head::find($head_row_id);
-                $allArea = $this->allAreas(1);
-                if (count($allArea)) {
-                    foreach ($allArea as $area) {
-                        if ($head->has_child) {
-                            $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
-                            $parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, $area->area_row_id, $budget_year, $start_date, $end_date);
-                            $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area->area_row_id, $budget_year);
-                            $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
-                            $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
-                            $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
-                            $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
-                            if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                                $this->output[$area->title][$head->head_row_id] = array(
-                                    'head_row_id' => $head->head_row_id,
-                                    'title' => $head->title,
-                                    'sort_order' => $head->sort_order,
-                                    'parent_id' => $head->parent_id,
-                                    'has_child' => $head->has_child,
-                                    'level' => $head->level,
-                                    'area_row_id' => $area->area_row_id,
-                                    'area_name' => $area->title,
-                                    'parent_head_total_allocation' => $parent_head_total_current_allocation,
-                                    'parent_head_current_balance' => $parent_head_current_balance,
-                                    'parent_head_total_expense' => $parent_head_total_expense
-                                );
-                            }
-                        } else {
-                            $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area->area_row_id, $budget_year);
-                            $parent_head_total_adjustment = $this->totalFilterReceiption($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                            $parent_head_total_donation = $this->totalFilterDonation($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                            $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
-                            $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area->area_row_id, $budget_year, $start_date, $end_date);
-                            $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
-                            if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                                $this->output[$area->title][$head->head_row_id] = array(
-                                    'head_row_id' => $head->head_row_id,
-                                    'title' => $head->title,
-                                    'sort_order' => $head->sort_order,
-                                    'parent_id' => $head->parent_id,
-                                    'has_child' => $head->has_child,
-                                    'level' => $head->level,
-                                    'area_row_id' => $area->area_row_id,
-                                    'area_name' => $area->title,
-                                    'parent_head_total_allocation' => $parent_head_total_current_allocation,
-                                    'parent_head_current_balance' => $parent_head_current_balance,
-                                    'parent_head_total_expense' => $parent_head_total_expense
-                                );
+                if (count($head_row_id_list) > 0) {
+                    foreach ($head_row_id_list as $head_row_id) {
+                        $head = \App\Models\Head::find($head_row_id);
+                        $allArea = $this->allAreas(1);
+                        if (count($allArea)) {
+                            foreach ($allArea as $area) {
+                                if ($head->has_child) {
+                                    $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
+                                    $parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, $area->area_row_id, $budget_year, $start_date, $end_date);
+                                    $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area->area_row_id, $budget_year);
+                                    $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
+                                    $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
+                                    $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                                    $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                                    if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                        $this->output[$area->area_row_id][$head->head_row_id] = array(
+                                            'head_row_id' => $head->head_row_id,
+                                            'title' => $head->title,
+                                            'sort_order' => $head->sort_order,
+                                            'parent_id' => $head->parent_id,
+                                            'has_child' => $head->has_child,
+                                            'level' => $head->level,
+                                            'area_row_id' => $area->area_row_id,
+                                            'area_name' => $area->title,
+                                            'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                            'parent_head_current_balance' => $parent_head_current_balance,
+                                            'parent_head_total_expense' => $parent_head_total_expense
+                                        );
+                                    }
+                                } else {
+                                    $parent_head_total_allocation = $this->totalAllcations($head->head_row_id, $area->area_row_id, $budget_year);
+                                    $parent_head_total_adjustment = $this->totalFilterReceiption($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                                    $parent_head_total_donation = $this->totalFilterDonation($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                                    $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                                    $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area->area_row_id, $budget_year, $start_date, $end_date);
+                                    $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
+                                    if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                        $this->output[$area->area_row_id][$head->head_row_id] = array(
+                                            'head_row_id' => $head->head_row_id,
+                                            'title' => $head->title,
+                                            'sort_order' => $head->sort_order,
+                                            'parent_id' => $head->parent_id,
+                                            'has_child' => $head->has_child,
+                                            'level' => $head->level,
+                                            'area_row_id' => $area->area_row_id,
+                                            'area_name' => $area->title,
+                                            'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                            'parent_head_current_balance' => $parent_head_current_balance,
+                                            'parent_head_total_expense' => $parent_head_total_expense
+                                        );
+                                    }
+                                }
                             }
                         }
                     }
@@ -3547,13 +3591,13 @@ class Common {
                             if ($head->has_child) {
                                 $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
                                 $parent_head_total_expense = $this->totalParentHeadExpense($this->parent_head_child_list, $area->area_row_id, $budget_year, $start_date, $end_date);
-                                $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area->area_row_id, $budget_year);
-                                $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
-                                $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
+                                $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area->area_row_id, $budget_year);
+                                $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
+                                $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
                                 $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
                                 $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
                                 if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                                    $this->output[$area->title][$head->head_row_id] = array(
+                                    $this->output[$area->area_row_id][$head->head_row_id] = array(
                                         'head_row_id' => $head->head_row_id,
                                         'title' => $head->title,
                                         'sort_order' => $head->sort_order,
@@ -3575,7 +3619,7 @@ class Common {
                                 $parent_head_total_expense = $this->totalFilterExpense($head->head_row_id, $area->area_row_id, $budget_year, $start_date, $end_date);
                                 $parent_head_current_balance = $parent_head_total_current_allocation - $parent_head_total_expense;
                                 if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                                    $this->output[$area->title][$head->head_row_id] = array(
+                                    $this->output[$area->area_row_id][$head->head_row_id] = array(
                                         'head_row_id' => $head->head_row_id,
                                         'title' => $head->title,
                                         'sort_order' => $head->sort_order,
@@ -3600,7 +3644,7 @@ class Common {
         return $output;
     }
 
-    public function BudgetBalanceSummaryReportByMonthRange($area_row_id = -1, $head_row_id = -1, $budget_year = 0, $from_month = 0, $to_month = 0) {
+    public function BudgetBalanceSummaryReportByMonthRange($area_row_id = -1, $head_row_id_list = array(), $budget_year = 0, $from_month = 0, $to_month = 0) {
         $budget_year = !empty($budget_year) ? $budget_year : date('Y');
         $all_main_head = $this->allMainHeads();
         $this->output = array();
@@ -3627,77 +3671,81 @@ class Common {
          */
         if ($area_row_id > 0) {
             $area_row_detail = $this->get_area_row_info($area_row_id);
-            if ($head_row_id > 0) {
+            if (!in_array('-1', $head_row_id_list)) {
                 /*
-                 * Specific area and head selected
+                 * Specific area and List head selected
                  */
-                $head = \App\Models\Head::find($head_row_id);
-                if ($head->has_child) {
-                    $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
-                    $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area_row_detail->area_row_id, $budget_year);
-                    $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area_row_detail->area_row_id, $budget_year, 0, 0);
-                    $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area_row_detail->area_row_id, $budget_year, 0, 0);
-                    $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
-                    $start_month = $from_month;
-                    $parent_total_expense = 0;
-                    $parent_month_expense = 0;
-                    for ($start_month; $start_month <= $to_month; $start_month++) {
-                        $parent_month_expense = $this->totalParentHeadExpenseByMonth($this->parent_head_child_list, $area_row_id, $budget_year, $start_month);
-                        $this->head_total_expense_by_month[$start_month] = $parent_month_expense;
-                        $parent_total_expense += $parent_month_expense;
+                if (count($head_row_id_list) > 0) {
+                    foreach ($head_row_id_list as $head_row_id) {
+                        $head = \App\Models\Head::find($head_row_id);
+                        if ($head->has_child) {
+                            $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
+                            $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area_row_detail->area_row_id, $budget_year);
+                            $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area_row_detail->area_row_id, $budget_year, 0, 0);
+                            $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area_row_detail->area_row_id, $budget_year, 0, 0);
+                            $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                            $start_month = $from_month;
+                            $parent_total_expense = 0;
+                            $parent_month_expense = 0;
+                            for ($start_month; $start_month <= $to_month; $start_month++) {
+                                $parent_month_expense = $this->totalParentHeadExpenseByMonth($this->parent_head_child_list, $area_row_id, $budget_year, $start_month);
+                                $this->head_total_expense_by_month[$start_month] = $parent_month_expense;
+                                $parent_total_expense += $parent_month_expense;
+                            }
+                            $parent_head_current_balance = $parent_head_total_current_allocation - $parent_total_expense;
+                            if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                $this->output[$area_row_id][$head->head_row_id] = array(
+                                    'head_row_id' => $head->head_row_id,
+                                    'title' => $head->title,
+                                    'sort_order' => $head->sort_order,
+                                    'parent_id' => $head->parent_id,
+                                    'has_child' => $head->has_child,
+                                    'level' => $head->level,
+                                    'area_row_id' => $area_row_id,
+                                    'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                    'parent_head_current_balance' => $parent_head_current_balance,
+                                    'parent_head_total_expense' => $parent_total_expense
+                                );
+                                array_push($this->output[$area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
+                            }
+                            unset($start_month);
+                            unset($parent_total_expense);
+                            unset($parent_month_expense);
+                        } else {
+                            $head_current_total_allocation = 0;
+                            $head_total_allocation = $this->totalAllcations($head->head_row_id, $area_row_id, $budget_year);
+                            $head_total_adjustment = $this->totalFilterReceiption($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                            $head_total_donation = $this->totalFilterDonation($area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                            $head_current_total_allocation = ($head_total_allocation + $head_total_adjustment) - $head_total_donation;
+                            $start_month = $from_month;
+                            $total_expense = 0;
+                            $month_expense = 0;
+                            for ($start_month; $start_month <= $to_month; $start_month++) {
+                                $month_expense = $this->totalFilterExpenseByMonth($head->head_row_id, $area_row_id, $budget_year, $start_month);
+                                $this->head_total_expense_by_month[$start_month] = $month_expense;
+                                $total_expense += $month_expense;
+                            }
+                            $head_current_balance = 0;
+                            $head_current_balance = $head_current_total_allocation - $total_expense;
+                            if (isset($head_current_total_allocation) && ($head_current_total_allocation != 0)) {
+                                $this->output[$area_row_id][$head->head_row_id] = array(
+                                    'head_row_id' => $head->head_row_id,
+                                    'title' => $head->title,
+                                    'sort_order' => $head->sort_order,
+                                    'parent_id' => $head->parent_id,
+                                    'has_child' => $head->has_child,
+                                    'level' => $head->level,
+                                    'area_row_id' => $area_row_id,
+                                    'parent_head_total_allocation' => $head_current_total_allocation,
+                                    'parent_head_current_balance' => $head_current_balance,
+                                    'parent_head_total_expense' => $total_expense
+                                );
+                                array_push($this->output[$area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
+                            }
+                            unset($start_month);
+                            unset($month_expense);
+                        }
                     }
-                    $parent_head_current_balance = $parent_head_total_current_allocation - $parent_total_expense;
-                    if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                        $this->output[$area_row_id][$head->head_row_id] = array(
-                            'head_row_id' => $head->head_row_id,
-                            'title' => $head->title,
-                            'sort_order' => $head->sort_order,
-                            'parent_id' => $head->parent_id,
-                            'has_child' => $head->has_child,
-                            'level' => $head->level,
-                            'area_row_id' => $area_row_id,
-                            'parent_head_total_allocation' => $parent_head_total_current_allocation,
-                            'parent_head_current_balance' => $parent_head_current_balance,
-                            'parent_head_total_expense' => $parent_total_expense
-                        );
-                        array_push($this->output[$area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
-                    }
-                    unset($start_month);
-                    unset($parent_total_expense);
-                    unset($parent_month_expense);
-                } else {
-                    $head_current_total_allocation = 0;
-                    $head_total_allocation = $this->totalAllcations($head->head_row_id, $area_row_id, $budget_year);
-                    $head_total_adjustment = $this->totalFilterReceiption($area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                    $head_total_donation = $this->totalFilterDonation($area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                    $head_current_total_allocation = ($head_total_allocation + $head_total_adjustment) - $head_total_donation;
-                    $start_month = $from_month;
-                    $total_expense = 0;
-                    $month_expense = 0;
-                    for ($start_month; $start_month <= $to_month; $start_month++) {
-                        $month_expense = $this->totalFilterExpenseByMonth($head->head_row_id, $area_row_id, $budget_year, $start_month);
-                        $this->head_total_expense_by_month[$start_month] = $month_expense;
-                        $total_expense += $month_expense;
-                    }
-                    $head_current_balance = 0;
-                    $head_current_balance = $head_current_total_allocation - $total_expense;
-                    if (isset($head_current_total_allocation) && ($head_current_total_allocation != 0)) {
-                        $this->output[$area_row_id][$head->head_row_id] = array(
-                            'head_row_id' => $head->head_row_id,
-                            'title' => $head->title,
-                            'sort_order' => $head->sort_order,
-                            'parent_id' => $head->parent_id,
-                            'has_child' => $head->has_child,
-                            'level' => $head->level,
-                            'area_row_id' => $area_row_id,
-                            'parent_head_total_allocation' => $head_current_total_allocation,
-                            'parent_head_current_balance' => $head_current_balance,
-                            'parent_head_total_expense' => $total_expense
-                        );
-                        array_push($this->output[$area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
-                    }
-                    unset($start_month);
-                    unset($month_expense);
                 }
             } else {
                 /*
@@ -3706,9 +3754,9 @@ class Common {
                 foreach ($all_main_head as $head) {
                     if ($head->has_child) {
                         $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
-                        $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area_row_id, $budget_year);
-                        $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area_row_id, $budget_year, 0, 0);
-                        $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area_row_id, $budget_year, 0, 0);
+                        $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area_row_id, $budget_year);
+                        $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area_row_id, $budget_year, 0, 0);
+                        $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area_row_id, $budget_year, 0, 0);
                         $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
                         $start_month = $from_month;
                         $parent_total_expense = 0;
@@ -3775,80 +3823,84 @@ class Common {
             }
         } else {
             $allArea = $this->allAreas(1);
-            if ($head_row_id > 0) {
+            if (!in_array('-1', $head_row_id_list)) {
                 /*
                  * All area and specific head selected
                  */
-                $head = \App\Models\Head::find($head_row_id);
-                if (count($allArea)) {
-                    foreach ($allArea as $area) {
-                        if ($head->has_child) {
-                            $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
-                            $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area->area_row_id, $budget_year);
-                            $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
-                            $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
-                            $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
-                            $start_month = $from_month;
-                            $parent_total_expense = 0;
-                            $parent_month_expense = 0;
-                            for ($start_month; $start_month <= $to_month; $start_month++) {
-                                $parent_month_expense = $this->totalParentHeadExpenseByMonth($this->parent_head_child_list, $area->area_row_id, $budget_year, $start_month);
-                                $this->head_total_expense_by_month[$start_month] = $parent_month_expense;
-                                $parent_total_expense += $parent_month_expense;
-                            }
-                            $parent_head_current_balance = $parent_head_total_current_allocation - $parent_total_expense;
-                            if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
-                                $this->output[$area->area_row_id][$head->head_row_id] = array(
-                                    'head_row_id' => $head->head_row_id,
-                                    'title' => $head->title,
-                                    'sort_order' => $head->sort_order,
-                                    'parent_id' => $head->parent_id,
-                                    'has_child' => $head->has_child,
-                                    'level' => $head->level,
-                                    'area_row_id' => $area->area_row_id,
-                                    'parent_head_total_allocation' => $parent_head_total_current_allocation,
-                                    'parent_head_current_balance' => $parent_head_current_balance,
-                                    'parent_head_total_expense' => $parent_total_expense
-                                );
-                                array_push($this->output[$area->area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
-                            }
-                            unset($start_month);
-                            unset($parent_total_expense);
-                            unset($parent_month_expense);
-                        } else {
-                            $head_current_total_allocation = 0;
-                            $head_total_allocation = $this->totalAllcations($head->head_row_id, $area->area_row_id, $budget_year);
-                            $head_total_adjustment = $this->totalFilterReceiption($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                            $head_total_donation = $this->totalFilterDonation($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
-                            $head_current_total_allocation = ($head_total_allocation + $head_total_adjustment) - $head_total_donation;
-                            $start_month = $from_month;
-                            $total_expense = 0;
-                            $month_expense = 0;
-                            for ($start_month; $start_month <= $to_month; $start_month++) {
-                                $month_expense = $this->totalFilterExpenseByMonth($head->head_row_id, $area->area_row_id, $budget_year, $start_month);
-                                $this->head_total_expense_by_month[$start_month] = $month_expense;
-                                $total_expense += $month_expense;
-                            }
-                            $head_current_balance = 0;
-                            $head_current_balance = $head_current_total_allocation - $total_expense;
+                if (count($head_row_id_list) > 0) {
+                    foreach ($head_row_id_list as $head_row_id) {
+                        $head = \App\Models\Head::find($head_row_id);
+                        if (count($allArea)) {
+                            foreach ($allArea as $area) {
+                                if ($head->has_child) {
+                                    $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
+                                    $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area->area_row_id, $budget_year);
+                                    $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
+                                    $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
+                                    $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
+                                    $start_month = $from_month;
+                                    $parent_total_expense = 0;
+                                    $parent_month_expense = 0;
+                                    for ($start_month; $start_month <= $to_month; $start_month++) {
+                                        $parent_month_expense = $this->totalParentHeadExpenseByMonth($this->parent_head_child_list, $area->area_row_id, $budget_year, $start_month);
+                                        $this->head_total_expense_by_month[$start_month] = $parent_month_expense;
+                                        $parent_total_expense += $parent_month_expense;
+                                    }
+                                    $parent_head_current_balance = $parent_head_total_current_allocation - $parent_total_expense;
+                                    if (isset($parent_head_total_current_allocation) && ($parent_head_total_current_allocation != 0)) {
+                                        $this->output[$area->area_row_id][$head->head_row_id] = array(
+                                            'head_row_id' => $head->head_row_id,
+                                            'title' => $head->title,
+                                            'sort_order' => $head->sort_order,
+                                            'parent_id' => $head->parent_id,
+                                            'has_child' => $head->has_child,
+                                            'level' => $head->level,
+                                            'area_row_id' => $area->area_row_id,
+                                            'parent_head_total_allocation' => $parent_head_total_current_allocation,
+                                            'parent_head_current_balance' => $parent_head_current_balance,
+                                            'parent_head_total_expense' => $parent_total_expense
+                                        );
+                                        array_push($this->output[$area->area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
+                                    }
+                                    unset($start_month);
+                                    unset($parent_total_expense);
+                                    unset($parent_month_expense);
+                                } else {
+                                    $head_current_total_allocation = 0;
+                                    $head_total_allocation = $this->totalAllcations($head->head_row_id, $area->area_row_id, $budget_year);
+                                    $head_total_adjustment = $this->totalFilterReceiption($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                                    $head_total_donation = $this->totalFilterDonation($area->area_row_id, $head->head_row_id, $budget_year, 0, 0);
+                                    $head_current_total_allocation = ($head_total_allocation + $head_total_adjustment) - $head_total_donation;
+                                    $start_month = $from_month;
+                                    $total_expense = 0;
+                                    $month_expense = 0;
+                                    for ($start_month; $start_month <= $to_month; $start_month++) {
+                                        $month_expense = $this->totalFilterExpenseByMonth($head->head_row_id, $area->area_row_id, $budget_year, $start_month);
+                                        $this->head_total_expense_by_month[$start_month] = $month_expense;
+                                        $total_expense += $month_expense;
+                                    }
+                                    $head_current_balance = 0;
+                                    $head_current_balance = $head_current_total_allocation - $total_expense;
 
-                            if (isset($head_current_total_allocation) && ($head_current_total_allocation != 0)) {
-                                $this->output[$area->area_row_id][$head->head_row_id] = array(
-                                    'head_row_id' => $head->head_row_id,
-                                    'title' => $head->title,
-                                    'sort_order' => $head->sort_order,
-                                    'parent_id' => $head->parent_id,
-                                    'has_child' => $head->has_child,
-                                    'level' => $head->level,
-                                    'area_row_id' => $area->area_row_id,
-                                    'parent_head_total_allocation' => $head_current_total_allocation,
-                                    'parent_head_current_balance' => $head_current_balance,
-                                    'parent_head_total_expense' => $total_expense
-                                );
-                                array_push($this->output[$area->area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
+                                    if (isset($head_current_total_allocation) && ($head_current_total_allocation != 0)) {
+                                        $this->output[$area->area_row_id][$head->head_row_id] = array(
+                                            'head_row_id' => $head->head_row_id,
+                                            'title' => $head->title,
+                                            'sort_order' => $head->sort_order,
+                                            'parent_id' => $head->parent_id,
+                                            'has_child' => $head->has_child,
+                                            'level' => $head->level,
+                                            'area_row_id' => $area->area_row_id,
+                                            'parent_head_total_allocation' => $head_current_total_allocation,
+                                            'parent_head_current_balance' => $head_current_balance,
+                                            'parent_head_total_expense' => $total_expense
+                                        );
+                                        array_push($this->output[$area->area_row_id][$head->head_row_id], $this->head_total_expense_by_month);
+                                    }
+                                    unset($start_month);
+                                    unset($month_expense);
+                                }
                             }
-                            unset($start_month);
-                            unset($month_expense);
                         }
                     }
                 }
@@ -3861,9 +3913,9 @@ class Common {
                         foreach ($all_main_head as $head) {
                             if ($head->has_child) {
                                 $this->parent_head_child_list = $this->findHeadChildrenList($head->head_row_id);
-                                $parent_head_total_allocation = $this->totalParentHeadAllocations($this->parent_head_child_list, $area->area_row_id, $budget_year);
-                                $parent_head_total_adjustment = $this->totalParentHeadAdjustment($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
-                                $parent_head_total_donation = $this->totalParentHeadDonation($this->parent_head_child_list, $area->area_row_id, $budget_year, 0, 0);
+                                $parent_head_total_allocation = $this->totalParentHeadAllocations($head->head_row_id, $area->area_row_id, $budget_year);
+                                $parent_head_total_adjustment = $this->totalParentHeadAdjustment($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
+                                $parent_head_total_donation = $this->totalParentHeadDonation($head->head_row_id, $area->area_row_id, $budget_year, 0, 0);
                                 $parent_head_total_current_allocation = ($parent_head_total_allocation + $parent_head_total_adjustment) - $parent_head_total_donation;
                                 $start_month = $from_month;
                                 $parent_total_expense = 0;
