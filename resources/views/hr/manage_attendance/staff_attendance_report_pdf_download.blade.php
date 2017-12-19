@@ -7,7 +7,7 @@
                 font-weight: none;
             }
         </style>           
-</head><body style="font-size: 12px;">
+</head><body style="font-size: 10px;">
         <div style="width:100%;margin-top: -50px;">
             <div class="row">
                <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"   width="100%">
@@ -37,9 +37,9 @@
                             <th style="text-align: left;height: 30px;">Out Time</th>
                             <th style="text-align: left;height: 30px;">Total Time</th>                            
                             <th style="text-align: left;height: 30px;">Late Arrival</th>
-                            <th style="text-align: left;height: 30px;">Early Leave</th>
-                            <th style="text-align: left;height: 30px;">Comments</th>
+                            <th style="text-align: left;height: 30px;">Early Leave</th>                            
                             <th style="text-align: left;height: 30px"> Status</th>
+                            <th style="text-align: left;height: 30px;">Comments</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,11 +122,11 @@
                                         }
                                     @endphp
                                 @endif 
-                            </td>
-                            <td style="width:100px"> </td>
+                            </td>                            
                             <td style="width:50px">                             
                                 <?php echo $present ? '<div style="' . $presentcolor. '">' .$presentmsg . '</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
                             </td>
+                            <td style="width:100px"> </td>
                         </tr>
                          @php $i++; @endphp
                     @endforeach
@@ -137,7 +137,7 @@
                     <span style="color:red !important;">Total Absent: {{ $countAbsent }} persons </span>              
                 </div>
                <div style="text-align: left;padding-top:40px;font-size: 16px;">
-                    <div style="float:left;border-top:2px solid #000;width:110px">Admin's Signature</div> <div style="border-top:2px solid #000; float:left; margin-left:400px;width:130px">  Director's Signature </div>
+                    <div style="float:left;border-top:2px solid #000;width:135px">Admin's Signature</div> <div style="border-top:2px solid #000; float:left; margin-left:400px;width:135px">  Director's Signature </div>
                 </div>
                 <div style="clear:both"></div>
             </div>
