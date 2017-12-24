@@ -231,9 +231,14 @@ $route_name = $route_name_arr[0];
                               
                                 <li class="@if($route_name == 'all-staff-attendance-report-option') active @endif">
                                     <a href="{{ url('/') }}/hr/attendance/all-staff-attendance-report-option">
-                                        <i class="fa fa-circle-o"></i> Attendance (All Employee)
+                                        <i class="fa fa-circle-o"></i> Daily Attendance (All)
                                     </a>
-                                </li>       
+                                </li>    
+                                <li class="@if($route_name == 'all-staff-attendance-monthly-report-option') active @endif">
+                                    <a href="{{ url('/') }}/hr/attendance/all-staff-attendance-monthly-report-option">
+                                        <i class="fa fa-circle-o"></i> Monthly Attendance (All)
+                                    </a>
+                                </li>     
                                 <li class="@if($route_name == 'individual-staff-attendance-report-option') active @endif">
                                     <a href="{{ url('/') }}/hr/attendance/individual-staff-attendance-report-option">
                                         <i class="fa fa-circle-o"></i> Individual Attendance

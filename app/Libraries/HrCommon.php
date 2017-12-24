@@ -353,7 +353,13 @@ class HrCommon
        return  $arr;
     }
 
-    function getAttendancesByIdWithDateRange($admin_id, $date_from_attendance, $date_to_attendance) {
+
+    /*
+      // suppose for 2017-10-05 to 2017-10-28. 
+        show_only_present_days =1 means show only those day when he was present
+        otherwise show all days whether he was present or not.
+     */
+    function getAttendancesByIdWithDateRange($admin_id, $date_from_attendance, $date_to_attendance, $show_only_present_days = 0) {
         $records = [];
         $arr = [];
         $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();
@@ -392,8 +398,14 @@ class HrCommon
                     break;
                 }
             }
-
-            $records[$currentDate ] = $arr;
+            
+            if($show_only_present_days) {
+                if(count($arr)) // if array has value thet means if he is present .
+                $records[$currentDate ] = $arr;    
+            } else { 
+                $records[$currentDate ] = $arr;
+            }
+            
         }
         endif;
 
