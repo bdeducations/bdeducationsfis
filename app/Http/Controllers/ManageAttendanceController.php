@@ -164,8 +164,8 @@ class ManageAttendanceController extends Controller {
             $total_time_present_in_a_month = 0;
 
             foreach ($attendance_records  as $row) {
-                //calculate total effective hours-minutes in a month.
-              
+                
+                //calculate total effective hours-minutes in a month.              
                 $logout =  date( 'H:i', strtotime($row['last_logout']) );                
                 if($logout != '00:00')
                 {

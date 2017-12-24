@@ -34,10 +34,10 @@
                         <tr>
                             <th style="text-align: left;height: 30px;width:10px">Sl.</th>
                             <th style="text-align: left;height: 30px">Name</th>
-                            <th style="text-align: left;height: 30px;">Present</th>
-                            <th style="text-align: left;height: 30px;">Absent</th>
-                            <th style="text-align: left;height: 30px;">Late Arrival</th>                            
-                            <th style="text-align: left;height: 30px;">Early Leave</th>
+                            <th style="text-align: left;height: 30px;">Present (days)</th>
+                            <th style="text-align: left;height: 30px;">Absent (days)</th>
+                            <th style="text-align: left;height: 30px;width:80px">Late Arrival (days)</th>
+                            <th style="text-align: left;height: 30px;width:80px">Early Leave (days)</th>
                             <th style="text-align: left;height: 30px;">Effective Time</th>                            
                             <th style="text-align: left;height: 30px;">Comments</th>
                         </tr>
