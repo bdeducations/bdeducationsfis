@@ -141,9 +141,11 @@ class ManageAttendanceController extends Controller {
         $data['attendance_month'] = $month_array[$attendance_month]; //work here
         $start_date = $attendance_year . '-' . $attendance_month . '-' . '01'; // 1th of the month
         $total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
-        $data['total_working_days_this_month'] =  18; // up to 25th of a month.
+        $data['total_working_days_this_month'] =  23; // up to 25th of a month.
         $end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.
         
+        $start_date = '2017-11-25';
+        $end_date = '2017-12-25';
         // here
         //$data['attendance_date'] = $attendance_date;
         $HrObj = new \App\Libraries\HrCommon();
@@ -191,12 +193,24 @@ class ManageAttendanceController extends Controller {
 
             $arr['late_incoming'] = $late_incoming;
             $arr['early_leave'] = $early_leave;
-            $arr['total_time_present_in_a_month'] = $total_time_present_in_a_month; 
+            //$arr['total_time_present_in_a_month'] = $total_time_present_in_a_month; 
+            $arr['total_time_present_in_a_month'] = ceil($total_time_present_in_a_month/3600); 
+
             $staff_attendance_info[] =$arr;
         }
 
         $data['staff_attendance_info'] = $staff_attendance_info;
         //dd($data['staff_attendance_info']);
+
+        //excel report
+        $data =  $staff_attendance_info;
+        $excel_file_name = 'all_staff_monthly_attendance_report_excel';
+        Excel::create($excel_file_name, function($excel) use ($data) {
+            $excel->sheet('mySheet', function($sheet) use ($data) {
+                $sheet->fromArray($data);
+            });
+        })->download('csv'); exit;
+
 
         $pdf = PDF::loadView($this->viewFolderPath . 'all_staff_monthly_attendance_report_pdf', ['data' => $data]);
         return $pdf->stream($attendance_month.'_staff_attendance_report.pdf');
