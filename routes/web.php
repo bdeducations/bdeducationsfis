@@ -453,6 +453,9 @@ Route::get('hr/attendance/individual-staff-attendance-report-option', 'ManageAtt
 Route::post('hr/attendance/individual-staff-attendance-report-show', 'ManageAttendanceController@individualStaffAttendanceReportShow');
 Route::get('hr/attendance/all-staff-attendance-report-pdf/{date}', 'ManageAttendanceController@allStaffAttendanceReportPdf');
 Route::get('hr/attendance/staff-individual-report-pdf/{id}/{fromDate}/{toDate}', 'ManageAttendanceController@staffIndividualReportPdf');
+Route::get('hr/attendance/all-staff-attendance-monthly-report-option', 'ManageAttendanceController@allStaffAttendanceMonthlyReportOption')->name('all-staff-attendance-monthly-report-option');
+Route::post('hr/attendance/all-staff-attendance-monthly-report-pdf', 'ManageAttendanceController@allStaffAttendanceMonthlyReportPdf');
+
 
 
 

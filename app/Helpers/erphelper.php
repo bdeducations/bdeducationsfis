@@ -267,3 +267,33 @@ function isEmployeeHoliday($emloyee_row_id, $date_of_attendance) {
     return false;
 
 }
+
+
+function getNumberOfDaysInAMonth($year, $month) {
+    //year is needed to calculate day of month feb. as leap year issue is there.
+    //but for the time being we are not calculating leap year.
+    switch ($month) {
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
+            $number_of_days = 31;
+            break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            $number_of_days = 30;
+            break;
+        case 2:
+            $number_of_days = 28;
+            break;   
+        default:
+            $number_of_days = 30;
+    }
+
+    return $number_of_days;
+}
