@@ -116,21 +116,21 @@ $route_name = $route_name_arr[0];
                                 <i class="fa fa-book"></i> <span>Name Of Head</span>
                             </a>
                         </li>
-                        <li class="{{ active_class((current_controller() == 'App\Http\Controllers\ProjectHeadsController')? true:false) }}">
+                        <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\ProjectHeadsController')? true:false) }}">
                             <a href="{{ url('/') }}/budget/project/head">
                                 <i class="fa fa-hdd-o"></i> <span>Name Of Project Head</span>
                             </a>
-                        </li>
+                        </li-->
                         <li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationController')? true:false) }}">
                             <a href="{{ url('/') }}/budgetAllocation">
                                 <i class="fa fa-file"></i> <span>Budget Allocation</span>
                             </a>
                         </li>
-                        <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BudgetAdjustmentController')? true:false) }}">
+                        <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\BudgetAdjustmentController')? true:false) }}">
                             <a href="{{ url('/') }}/budget/adjustment">
                                 <i class="fa fa-adjust"></i> <span>Budget Adjustment</span>
                             </a>
-                        </li>
+                        </li-->
                         <li class="{{ active_class((current_controller() == 'App\Http\Controllers\ExpenseController')? true:false) }}">
                             <a href="{{ url('/') }}/budgetExpense">
                                 <i class="fa fa-file-text"></i> <span>Budget Expenditure</span>
@@ -155,7 +155,7 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-circle-o"></i> Budget Allocation Summary
                                     </a>
                                 </li-->
-                                <li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationAdjustmentReportController')? true:false) }}">
+                                <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationAdjustmentReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budget/allocation/adjustment/report">
                                         <i class="fa fa-circle-o"></i> Allocation With Adjustment
                                     </a>
@@ -164,7 +164,7 @@ $route_name = $route_name_arr[0];
                                     <a href="{{ url('/') }}/budget/adjustment/report">
                                         <i class="fa fa-circle-o"></i> Adjustment
                                     </a>
-                                </li>
+                                </li-->
                                 <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BudgetReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budgetReport/expenseExtended">
                                         <i class="fa fa-circle-o"></i>  Area and Date Wise Expense
