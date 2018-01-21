@@ -130,22 +130,31 @@ class ManageAttendanceController extends Controller {
         // show report generate options.
         $school_row_id = Auth::user()->id;
         $data['breadcrumb'] = 'Staff Attendance Report';
-
         $attendance_year = $request->attendance_year;
         $attendance_month = $request->attendance_month;
-
-        $attendance_month = str_pad($attendance_month, 2, "0", STR_PAD_LEFT);
         $data['attendance_year'] = $attendance_year;
         $ob = new \App\Libraries\HrCommon;
         $month_array = $ob->month_array;
-        $data['attendance_month'] = $month_array[$attendance_month]; //work here
+        $data['attendance_month'] = $month_array[$attendance_month]; //month name to show in report
         $start_date = $attendance_year . '-' . $attendance_month . '-' . '01'; // 1th of the month
         $total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
-        $data['total_working_days_this_month'] =  23; // up to 25th of a month.
-        $end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.
-        
-        $start_date = '2017-11-25';
-        $end_date = '2017-12-25';
+        $data['total_working_days_this_month'] =  24; // up to 25th of a month.
+        $end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.       
+
+        $attendance_month = str_pad($attendance_month, 2, "0", STR_PAD_LEFT);
+        if($attendance_month == 1) { 
+            $prev_year = $attendance_year - 1;
+            $prev_month = 12;
+            $data['prev_attendance_month'] = 'December'; //month name show in report
+            $start_date = $prev_year . '-' . $prev_month . '-' . '25';
+            $end_date = $attendance_year . '-' . $attendance_month . '-' . '25';    
+        } else {
+            $prev_month = $attendance_month - 1;
+            $data['prev_attendance_month'] = $month_array[$prev_month];
+            $start_date = $attendance_year . '-' . $prev_month . '-' . '25';
+            $end_date = $attendance_year . '-' . $attendance_month . '-' . '25';
+        }       
+    
         // here
         //$data['attendance_date'] = $attendance_date;
         $HrObj = new \App\Libraries\HrCommon();
@@ -202,20 +211,21 @@ class ManageAttendanceController extends Controller {
         $data['staff_attendance_info'] = $staff_attendance_info;
         //dd($data['staff_attendance_info']);
 
-        //excel report
-        $data =  $staff_attendance_info;
-        $excel_file_name = 'all_staff_monthly_attendance_report_excel';
-        Excel::create($excel_file_name, function($excel) use ($data) {
-            $excel->sheet('mySheet', function($sheet) use ($data) {
-                $sheet->fromArray($data);
-            });
-        })->download('csv'); exit;
+        if($request->report_type == 1) { //pdf report
+             $pdf = PDF::loadView($this->viewFolderPath . 'all_staff_monthly_attendance_report_pdf', ['data' => $data]);
+            return $pdf->stream($attendance_month.'_staff_attendance_report.pdf');
 
-
-        $pdf = PDF::loadView($this->viewFolderPath . 'all_staff_monthly_attendance_report_pdf', ['data' => $data]);
-        return $pdf->stream($attendance_month.'_staff_attendance_report.pdf');
-        
+        } else { //excel report
+            $data =  $staff_attendance_info;
+            $excel_file_name = 'all_staff_monthly_attendance_report_excel';
+            Excel::create($excel_file_name, function($excel) use ($data) {
+                $excel->sheet('mySheet', function($sheet) use ($data) {
+                    $sheet->fromArray($data);
+                });
+            })->download('csv');
         }
+        
+    }
 
     //used
     public function  individualStaffAttendanceReportOption() {

@@ -62,6 +62,19 @@
                                 </div>
                             </div>
                         </div>
+                         <div class="row" style="padding-top: 20px">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="area_name" class="col-md-3 control-label">Report Type <span class="input-required-asterik">*</span></label>
+                                    <div class="col-md-9">
+                                       <label class="col-md-3 control-label"><input type="radio" name="report_type" value="1">Pdf</label>
+                                       <label class="col-md-3 control-label"><input type="radio" name="report_type" value="2">Excel</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">                                
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">

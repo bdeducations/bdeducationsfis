@@ -16,7 +16,7 @@
                         <td style="vertical-align: center;width: 60%">
                             <h2 style="margin-bottom: 0px;"><u>   Attendance Report</u></h2>
                             <h4 style="margin-top: 0px;"> {{ $data['attendance_month'] }}, {{ $data['attendance_year'] }}</h4>
-                            <h4 style="margin-top: 0px;">Total Working days: {{ $data['total_working_days_this_month'] }} (25th Nov  to 25th {{ $data['attendance_month'] }})</h4>
+                            <h4 style="margin-top: 0px;">Total Working days: {{ $data['total_working_days_this_month'] }} (25th  {{ $data['prev_attendance_month'] }}  to 25th {{ $data['attendance_month'] }})</h4>
                         </td>
                         
                     </tr>
@@ -53,8 +53,7 @@
                             <td>{{ $row['absent_days'] }}</td>                             
                             <td style="width:62px">{{ $row['late_incoming'] }} </td>
                             <td style="width:62px">{{ $row['early_leave'] }} </td>
-                            <td style="width:62px">{{ floor($row['total_time_present_in_a_month'] /3600 ) }}h
-                            @php  $reminder = ceil($row['total_time_present_in_a_month'] % 3600);  echo  ceil($reminder/60) @endphp m</td>
+                            <td style="width:62px">{{ $row['total_time_present_in_a_month']}} H</td>
                             <td style="width:60px"> &nbsp; </td>
                         </tr>
                          @php $i++; @endphp
