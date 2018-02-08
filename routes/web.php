@@ -489,6 +489,17 @@ Route::post('/hr/manageCalender/storeEventDetails', 'ManageCalenderController@st
 Route::get('/hr/calender/deleteEvent/{event_row_id}', 'ManageCalenderController@deleteEvent');
 Route::get('/hr/viewcalender', 'ManageCalenderController@viewCalender');
 Route::get('/hr/viewcalender/viewAsCalendar', 'ManageCalenderController@viewAsCalendar');
+
+//..............................Employee performance...........................................
+Route::get('/hr/employee-performance', 'ManagePerformanceController@index')->name('hr-manage-employee-performance');
+Route::post('/hr/employee-performance/store', 'ManagePerformanceController@store');
+
+Route::get('/hr/employee-performance/delete/{id}', 'ManagePerformanceController@deleteRecord');
+
+//..........................Manage Weekend.........................................................
+Route::get('/hr/institution-offday', 'ManageOffDayController@index')->name('hr-manage-offday');
+Route::post('/hr/institution-offday/create', 'ManageOffDayController@create');
+Route::get('/hr/institution-offday/delete/{off_day_row_id}', 'ManageOffDayController@delete');
 	
 //.............................Common............................................
 
@@ -505,9 +516,9 @@ Route::get('getUpazilas/{districtId}/{presentUpazila?}', function ($districtId, 
     return $CommonData->getUpazilas($districtId, $presentUpazila);
 });
 
-Route::get('getEmployeeList/{institution_row_id}/{employee_row_id?}', function ($institution_row_id,$employee_row_id=0) {
+Route::get('getEmployeeList/{department_row_id}/{employee_row_id?}', function ($department_row_id,$employee_row_id=0) {
     $CommonData = new HrCommon();
-    return $CommonData->getEmployeeList($institution_row_id,$employee_row_id);
+    return $CommonData->employeeListByDepartment($department_row_id,$employee_row_id);
 });
 
 Route::get('getInstitutions/{area_row_id}/{department_row_id}/{current_institution_id?}', function ($area_row_id,$department_row_id, $current_institution_id = 0) {

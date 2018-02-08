@@ -254,6 +254,16 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-circle-o"></i> Payroll
                                     </a>
                                 </li>
+                                <li class="@if($route_name == 'hr-manage-employee-performance') active @endif">
+                                    <a href="{{ url('/') }}/hr/employee-performance">
+                                        <i class="fa fa-bar-chart" aria-hidden="true"></i> Employee Performance
+                                    </a>
+                                </li>
+                                <li class="@if($route_name == 'hr-manage-offday') active @endif">
+                                    <a href="{{ url('/') }}/hr/institution-offday">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i> Manage Weekend
+                                    </a>
+                                </li> 
                             </ul>
                         </li>
                         <!-- Manage User -->
