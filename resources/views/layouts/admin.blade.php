@@ -187,7 +187,7 @@ $route_name = $route_name_arr[0];
                         <!-- Manage Employee -->
                         <li class="treeview {{ active_class( (current_controller() == 'App\Http\Controllers\ManageEmployeeController' || current_controller() == 'App\Http\Controllers\ManageAttendanceController') ? true:false) }}">
                             <a href="{{ url('/') }}/manage-employee/create">
-                                <i class="fa fa-users"></i> <span>Hr &Payroll</span>
+                                <i class="fa fa-users"></i> <span>Hr & Payroll</span>
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </span>

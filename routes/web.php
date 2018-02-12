@@ -420,7 +420,18 @@ Route::get('/hr/manage-departments/delete/{department_row_id}', 'ManageEmployeeC
 Route::any('/hr/manage-designations', 'ManageEmployeeController@designations')->name('hr-designation');
 Route::get('/hr/manage-designations/delete/{designation_row_id}', 'ManageEmployeeController@deleteDesignation');
 Route::any('/hr/employee-list-payroll', 'ManageEmployeeController@employeeListForPayroll')->name('hr-employee-payroll');
+
 Route::get('/hr/salary-sheet', 'ManageEmployeeController@salarySheet')->name('hr-salary-sheet');
+
+
+Route::get('/hr/salary-sheet', 'ManageEmployeeController@salarySheet')->name('hr-salary-sheet');
+Route::any('/hr/salary-heads', 'ManageEmployeeController@salaryHeads')->name('hr-salary-head');
+Route::any('/hr/salary-heads/delete/{id}', 'ManageEmployeeController@deleteSalaryHeads');
+Route::get('/hr/salary-heads-pay-setting', 'ManageEmployeeController@salaryHeadsPaySettings')->name('hr-salary-head-pay-setting');
+Route::post('/hr/save-salary-heads-pay-setting', 'ManageEmployeeController@saveSalaryHeadsPaySettings')->name('hr-salary-head-pay-setting');
+Route::get('/hr/get-salary-head-amount/{basic_salary}', 'ManageEmployeeController@getSalaryHeadAmount')->name('hr-salary-setting');
+
+
 Route::any('/hr/salary-heads', 'ManageEmployeeController@salaryHeads')->name('hr-salary-head');
 Route::any('/hr/salary-heads/delete/{id}', 'ManageEmployeeController@deleteSalaryHeads');
 Route::get('/hr/salary-heads-pay-setting', 'ManageEmployeeController@salaryHeadsPaySettings')->name('hr-salary-head-pay-setting');
