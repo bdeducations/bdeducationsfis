@@ -138,7 +138,7 @@ class ManageAttendanceController extends Controller {
         $data['attendance_month'] = $month_array[$attendance_month]; //month name to show in report
         $start_date = $attendance_year . '-' . $attendance_month . '-' . '01'; // 1th of the month
         $total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
-        $data['total_working_days_this_month'] =  24; // up to 25th of a month.
+        $data['total_working_days_this_month'] =  22; // up to 24th of a month.
         $end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.       
 
         $attendance_month = str_pad($attendance_month, 2, "0", STR_PAD_LEFT);
@@ -147,12 +147,12 @@ class ManageAttendanceController extends Controller {
             $prev_month = 12;
             $data['prev_attendance_month'] = 'December'; //month name show in report
             $start_date = $prev_year . '-' . $prev_month . '-' . '25';
-            $end_date = $attendance_year . '-' . $attendance_month . '-' . '25';    
+            $end_date = $attendance_year . '-' . $attendance_month . '-' . '24';    
         } else {
             $prev_month = $attendance_month - 1;
             $data['prev_attendance_month'] = $month_array[$prev_month];
             $start_date = $attendance_year . '-' . $prev_month . '-' . '25';
-            $end_date = $attendance_year . '-' . $attendance_month . '-' . '25';
+            $end_date = $attendance_year . '-' . $attendance_month . '-' . '24';
         }       
     
         // here

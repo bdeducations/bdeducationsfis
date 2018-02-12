@@ -1,6 +1,4 @@
 @extends('layouts.admin')
-
-
 @section('content')
 <section class="content-header">
     <h1 class="left-main-heading-breadcum">Attendance Report</h1>
@@ -17,7 +15,7 @@
                 <div class="portlet-title">
                     <div class="caption font-red-sunglo">
                         <i class="icon-settings font-red-sunglo"></i>
-                        <span class="caption-subject bold uppercase"> &nbsp;&nbsp; Personal Attendance Report</span>
+                        <span class="caption-subject bold uppercase">&nbsp;&nbsp; Personal Attendance Report</span>
                     </div>
                     <div class="actions">
                     </div>
@@ -52,12 +50,13 @@
                                             <th class="min-phone-l">Day</th>
                                             <th class="min-phone-l">In Time</th>
                                             <th class="min-phone-l">Out Time</th>
+                                            <th class="min-phone-l">Duration</th>
                                             <th class="min-phone-l">Attendance Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <div class="checkbox_wrapper">
-                                            @php $i = 1; $count_absent = 0; @endphp
+                                            @php $i = 1; $count_absent = 0; $total_duration = 0; @endphp
                                             @foreach($data['attendance_list']  as  $key=>$row)
                                                 <?php
                                                 $presentmsg = 'Present'; $absentmsg = 'Absent';
@@ -66,6 +65,7 @@
 
                                                  $login = 0;
                                                  $absent = 0;
+                                                 $duration = 0;
 
                                                  if(!isset($row['first_login']))
                                                     $login = 0;
@@ -96,7 +96,7 @@
                                                     <td>{{ date( 'l', strtotime($key) ) }}</td>
                                                     
                                                     <?php if(!$login && !$logout && ( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) ) {
-                                                         echo '<td colspan="3" style="padding-left:120px;color:green" >Weekend</td>';
+                                                         echo '<td colspan="4" style="padding-left:120px;color:green" >Weekend</td>';
                                                     } else { ?>
 
                                                     <td>{{ $login ? date('h:i a', $login) : '' }} </td> 
@@ -106,23 +106,28 @@
                                                     // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
                                                     </td> 
                                                     <td>
+                                                    <?php 
+                                                        if($login && $logout) {
+                                                            echo date('G:i', $logout - $login);
+                                                            $duration = $logout - $login;
+                                                            $total_duration = $total_duration + $duration;
+                                                        }
+                                                     ?>
+                                                    </td>
+                                                    <td>
                                                         <?php echo $login ? '<div style="' . $presentcolor.'">' . $presentmsg  .'</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
                                                     </td>
                                                     <?php } ?>
-                                                  
                                                 </tr>
-
                                             @php $i++; @endphp
                                         @endforeach
+                                        <tr><td colspan="6" style="text-align: center;font-weight: bold"> Total Hour: {{ ceil($total_duration/3600) }}</td> </tr>
                                         </div>
                                     </tbody>
                                 </table>
-                        </div> 
-                                                    
+                        </div>
                     </div>
-                                     
                 </div>
-               
             </div>
         </div>
     </div>

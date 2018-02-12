@@ -134,11 +134,18 @@ class HrCommon
     
     public function employeeList($department_row_id=0)
     {
-
-        return \App\Models\HrEmployee::with('employeeDesignation')
+        if($department_row_id) {
+            return \App\Models\HrEmployee::with('employeeDesignation')
+                            ->where('show_attendance_report', 1)
+                            ->where('department_row_id', $department_row_id)
+                            ->orderBy('sort_order')
+                            ->get();
+        } else {
+            return \App\Models\HrEmployee::with('employeeDesignation')
                             ->where('show_attendance_report', 1)
                             ->orderBy('sort_order')
                             ->get();
+        }
 
         /* return \App\Models\HrEmployee::with('employeeDepartment', 'employeeDesignation')
                             ->where('department_row_id',$department_row_id)
@@ -362,8 +369,7 @@ class HrCommon
     function getAttendancesByIdWithDateRange($admin_id, $date_from_attendance, $date_to_attendance, $show_only_present_days = 0) {
         $records = [];
         $arr = [];
-        $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();
-        
+        $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();        
 
         if($attendace_records) :
         $date1 = $date_from_attendance;
