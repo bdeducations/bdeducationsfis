@@ -263,6 +263,11 @@ $route_name = $route_name_arr[0];
                                     <a href="{{ url('/') }}/hr/institution-offday">
                                         <i class="fa fa-calendar" aria-hidden="true"></i> Manage Weekend
                                     </a>
+                                </li>
+                                <li class="@if($route_name == 'hr-sendSMS') active @endif">
+                                    <a href="{{ url('/') }}/hr/sendSMS">
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i> Send SMS
+                                    </a>
                                 </li> 
                             </ul>
                         </li>
