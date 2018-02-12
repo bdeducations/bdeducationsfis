@@ -44,8 +44,7 @@
                     </thead>
                     <tbody>
                         @php $i = 1; $countPresent = 0; $countAbsent = 0; @endphp
-                        @foreach($data['staff_attendance_info']  as $row)
-                        
+                        @foreach($data['staff_attendance_info']  as $row)                        
                         <tr>
                             <td style="width:10px">{{ $i }}</td>
                             <td>{{ $row['employee_name'] }}</td>

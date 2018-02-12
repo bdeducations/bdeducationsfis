@@ -134,11 +134,18 @@ class HrCommon
     
     public function employeeList($department_row_id=0)
     {
-
-        return \App\Models\HrEmployee::with('employeeDesignation')
+        if($department_row_id) {
+            return \App\Models\HrEmployee::with('employeeDesignation')
+                            ->where('show_attendance_report', 1)
+                            ->where('department_row_id', $department_row_id)
+                            ->orderBy('sort_order')
+                            ->get();
+        } else {
+            return \App\Models\HrEmployee::with('employeeDesignation')
                             ->where('show_attendance_report', 1)
                             ->orderBy('sort_order')
                             ->get();
+        }
 
         /* return \App\Models\HrEmployee::with('employeeDepartment', 'employeeDesignation')
                             ->where('department_row_id',$department_row_id)
@@ -362,8 +369,7 @@ class HrCommon
     function getAttendancesByIdWithDateRange($admin_id, $date_from_attendance, $date_to_attendance, $show_only_present_days = 0) {
         $records = [];
         $arr = [];
-        $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();
-        
+        $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();        
 
         if($attendace_records) :
         $date1 = $date_from_attendance;
@@ -410,6 +416,32 @@ class HrCommon
         endif;
 
         return $records;
+    }
+
+    public function employeePerformanceRecordList()
+    {
+        $sql = "SELECT e.employee_row_id,e.employee_name,ut_hr_departments.department_name,ut_hr_departments.department_row_id,pc.* FROM ut_hr_employee_performance_comments as pc JOIN ut_hr_employees as e ON pc.employee_row_id = e.employee_row_id JOIN  ut_hr_departments ON e.department_row_id=ut_hr_departments.department_row_id";
+
+        return DB::select($sql);
+    }
+
+    public function employeeListByDepartment($department_row_id,$current_employee)
+    {
+        $employeeList = \App\Models\HrEmployee::with('employeeDesignation')
+                            ->where('department_row_id',$department_row_id)
+                            ->orderBy('department_row_id','designation_row_id','ASC')
+                            ->get();
+        $html = "";
+        $html .= "<option value=''>Select</option>";
+        foreach($employeeList as $employee) {
+            if(isset($current_employee) && ($employee->employee_row_id == $current_employee)) {
+                $selected = 'selected="selected"';
+            } else {
+                $selected = '';
+            }
+            $html .= "<option value=" . $employee->employee_row_id . " " . $selected . ">" . $employee->employee_name . "</option>";
+        }
+        echo $html;
     }
 
 }

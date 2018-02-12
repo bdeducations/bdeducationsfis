@@ -187,7 +187,7 @@ $route_name = $route_name_arr[0];
                         <!-- Manage Employee -->
                         <li class="treeview {{ active_class( (current_controller() == 'App\Http\Controllers\ManageEmployeeController' || current_controller() == 'App\Http\Controllers\ManageAttendanceController') ? true:false) }}">
                             <a href="{{ url('/') }}/manage-employee/create">
-                                <i class="fa fa-users"></i> <span>Hr &Payroll</span>
+                                <i class="fa fa-users"></i> <span>Hr & Payroll</span>
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </span>
@@ -254,6 +254,16 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-circle-o"></i> Payroll
                                     </a>
                                 </li>
+                                <li class="@if($route_name == 'hr-manage-employee-performance') active @endif">
+                                    <a href="{{ url('/') }}/hr/employee-performance">
+                                        <i class="fa fa-bar-chart" aria-hidden="true"></i> Employee Performance
+                                    </a>
+                                </li>
+                                <li class="@if($route_name == 'hr-manage-offday') active @endif">
+                                    <a href="{{ url('/') }}/hr/institution-offday">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i> Manage Weekend
+                                    </a>
+                                </li> 
                             </ul>
                         </li>
                         <!-- Manage User -->
