@@ -68,14 +68,14 @@
                             }
                             $is_offday = isEmployeeHoliday($row->employee_row_id, $data['attendance_date']);
                             if($is_offday) {
-                                $absentmsg = 'Not scheduled day';
+                                $absentmsg = 'Not scheduled';
                                 $absentcolor = '';
                             }
                             
                            ?> 
                         <tr>
                             <td style="width:10px">{{ $i }}</td>
-                            <td>{{ $row->employee_name }}</td>
+                            <td style="width:120px">{{ $row->employee_name }}</td>
                            <td>{{ $present ? date('h:i a', strtotime($row->first_login)) : '' }}</td> 
                             <td>
                                 @php 
@@ -123,7 +123,7 @@
                                     @endphp
                                 @endif 
                             </td>                            
-                            <td style="width:50px">                             
+                            <td style="width:70px">                             
                                 <?php echo $present ? '<div style="' . $presentcolor. '">' .$presentmsg . '</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
                             </td>
                             <td style="width:100px"> </td>
