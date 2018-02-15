@@ -51,7 +51,7 @@
                         @foreach($data['staff_attendance_info']  as $row)                        
                         <tr>
                             <td style="width:10px">{{ $i }}</td>
-                            <td>{{ $row['employee_name'] }} {{ $row['employee_row_id'] }}</td>
+                            <td>{{ $row['employee_name'] }}</td>
                             <td>{{ $row['present_days'] }}</td> 
                             <td>{{ $row['absent_days'] }}</td>                             
                             <td style="width:62px">{{ $row['late_incoming'] }} </td>

@@ -511,6 +511,10 @@ Route::get('/hr/employee-performance/delete/{id}', 'ManagePerformanceController@
 Route::get('/hr/institution-offday', 'ManageOffDayController@index')->name('hr-manage-offday');
 Route::post('/hr/institution-offday/create', 'ManageOffDayController@create');
 Route::get('/hr/institution-offday/delete/{off_day_row_id}', 'ManageOffDayController@delete');
+
+//..........................Send sms...............................................................
+Route::get('/hr/sendSMS', 'SendSMSController@index')->name('hr-sendSMS');
+Route::post('/hr/sendSMS', 'SendSMSController@sendSMS');
 	
 //.............................Common............................................
 
