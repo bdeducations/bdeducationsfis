@@ -138,7 +138,7 @@ class ManageAttendanceController extends Controller {
         $data['attendance_month'] = $month_array[$attendance_month]; //month name to show in report
         $start_date = $attendance_year . '-' . $attendance_month . '-' . '01'; // 1th of the month
         $total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
-        $data['total_working_days_this_month'] =  22; // up to 24th of a month.
+        $data['total_working_days_this_month'] =  15; // up to 24th of a month.
         $end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.       
 
         $attendance_month = str_pad($attendance_month, 2, "0", STR_PAD_LEFT);
@@ -147,24 +147,25 @@ class ManageAttendanceController extends Controller {
             $prev_month = 12;
             $data['prev_attendance_month'] = 'December'; //month name show in report
             $start_date = $prev_year . '-' . $prev_month . '-' . '25';
-            $end_date = $attendance_year . '-' . $attendance_month . '-' . '24';    
+            $end_date = $attendance_year . '-' . $attendance_month . '-' . '14';    
         } else {
             $prev_month = $attendance_month - 1;
             $data['prev_attendance_month'] = $month_array[$prev_month];
             $start_date = $attendance_year . '-' . $prev_month . '-' . '25';
-            $end_date = $attendance_year . '-' . $attendance_month . '-' . '24';
+            $end_date = $attendance_year . '-' . $attendance_month . '-' . '14';
         }       
     
         // here
         //$data['attendance_date'] = $attendance_date;
         $HrObj = new \App\Libraries\HrCommon();
 
-        $sql = "SELECT `employee_row_id`, `is_part_time`, `employee_name`, `contact_1` FROM ut_hr_employees WHERE show_attendance_report = 1 ORDER BY sort_order";
+        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1` FROM ut_hr_employees WHERE show_attendance_report = 1 ORDER BY sort_order";
         $employeeList =  DB::select($sql);
 
         foreach ($employeeList as $key => $value) {            
             $arr['employee_row_id'] = $value->employee_row_id;
             $arr['employee_name'] = $value->employee_name;
+         
             
             //get Attendace records for a month. it contains those record which i spresent, that has login-logout or login value at leat.
             $attendance_records = $HrObj->getAttendancesByIdWithDateRange($value->employee_row_id, $start_date, $end_date, 1);
@@ -175,6 +176,12 @@ class ManageAttendanceController extends Controller {
             $total_time_present_in_a_month = 0;
 
             foreach ($attendance_records  as $row) {
+
+                // do not time device record if early /late leave is approved.
+                if($row['count_manual_hours'] >0 || $row['count_manual_minutes']>0) {
+                    $total_time_present_in_a_month += ($row['count_manual_hours']*3600 + $row['count_manual_minutes']*60); 
+                    continue;
+                }
                 
                 //calculate total effective hours-minutes in a month.              
                 $logout =  date( 'H:i', strtotime($row['last_logout']) );                
@@ -182,7 +189,7 @@ class ManageAttendanceController extends Controller {
                 {
                     $total_time_present_in_a_month += strtotime($row['last_logout']) - strtotime($row['first_login']);
                 } else {
-                    $total_time_present_in_a_month += 5*3600; // if did not logout then treat he was 5 hour in office.
+                    //$total_time_present_in_a_month += 5*3600; // if did not logout then treat he was 5 hour in office.
                 }
 
                 //calculate late incoming
@@ -204,6 +211,38 @@ class ManageAttendanceController extends Controller {
             $arr['early_leave'] = $early_leave;
             //$arr['total_time_present_in_a_month'] = $total_time_present_in_a_month; 
             $arr['total_time_present_in_a_month'] = ceil($total_time_present_in_a_month/3600); 
+
+            //casual leave
+            $arr['number_of_leave'] = DB::table('hr_employee_leave_records')
+                                      ->where([ 
+                                                ['employee_row_id', $value->employee_row_id],
+                                                ['leave_type', 1],
+                                                ['leave_date_from',  '>=', $start_date],
+                                                ['leave_date_to', '<=', $end_date  ] 
+                                            ])->sum('number_of_days');
+
+            //count sick leave..
+
+            //count all tour days
+            $arr['number_of_tour'] = DB::table('hr_employee_leave_records')
+                                      ->where([ 
+                                                ['employee_row_id', $value->employee_row_id],
+                                                ['leave_type', 3],
+                                                ['leave_date_from',  '>=', $start_date],
+                                                ['leave_date_to', '<=', $end_date  ] 
+                                            ])->sum('number_of_days');
+
+            $arr['unauthorized_leave'] = DB::table('hr_employee_leave_records')
+                                      ->where([ 
+                                                ['employee_row_id', $value->employee_row_id],
+                                                ['leave_type', 4],
+                                                ['leave_date_from',  '>=', $start_date],
+                                                ['leave_date_to', '<=', $end_date  ] 
+                                            ])->sum('number_of_days');
+
+            // all hour including working and leave, tour.                      
+
+            $arr['total_hour_including_leave'] =  $arr['total_time_present_in_a_month'] + ($arr['number_of_leave'] * 9 )+ ($arr['number_of_tour'] * 9);   
 
             $staff_attendance_info[] =$arr;
         }

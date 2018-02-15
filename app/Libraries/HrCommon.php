@@ -370,7 +370,7 @@ class HrCommon
         $records = [];
         $arr = [];
         $attendace_records = $attendace_records = \App\Models\StaffAttendanceRecord::where([ ['card_id', $admin_id], ['attendance_date', '>=', $date_from_attendance], ['attendance_date', '<=', $date_to_attendance] ])->orderBy('attendance_date', 'ASC')->get();        
-
+        
         if($attendace_records) :
         $date1 = $date_from_attendance;
         $date2 = $date_to_attendance;
@@ -399,6 +399,8 @@ class HrCommon
                     $arr['attendance_date'] =  $row->attendance_date;
                     $arr['first_login'] =  $row->first_login;
                     $arr['last_logout'] =  $row->last_logout;
+                    $arr['count_manual_hours'] =  $row->count_manual_hours;
+                    $arr['count_manual_minutes'] =  $row->count_manual_minutes;
                     $arr['attendance_record_exits'] = 1;
                     $present_at_least_one_day_withing_date_range = 1; 
                     break;
