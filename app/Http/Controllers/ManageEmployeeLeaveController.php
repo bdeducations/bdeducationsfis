@@ -38,8 +38,8 @@ class ManageEmployeeLeaveController extends Controller
         $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->get();
         $data['search_result'] = 0;
 
-        $data['leave_records'] = \App\Models\HrEmployeeLeaveRecord::with('employeeDetails','institutionName','areaName','employeeDepartment', 'employeeDesignation')->get();
-        // dd($data['leave_records']);        
+        $data['leave_records'] = \App\Models\HrEmployeeLeaveRecord::with('employeeDetails','employeeDepartment', 'employeeDesignation')->get();
+        //dd($data['leave_records']);        
 
         return view($this->viewFolderPath . 'leave_index', ['data' => $data]);
     }
@@ -49,10 +49,15 @@ class ManageEmployeeLeaveController extends Controller
         {
             $leave_record = \App\Models\HrEmployeeLeaveRecord::find($request->leave_record_row_id);
             $leave_record->employee_row_id = $request->employee_row_id;
-            $leave_record->area_row_id = $request->area_row_id;
-            $leave_record->department_row_id = $request->department_row_id;
-            $leave_record->institution_row_id = $request->institution_row_id;
             $leave_record->leave_type = $request->leave_type;
+            $leave_record->leave_year = date("Y");
+            if($request->is_authorized)
+            {
+                $leave_record->is_authorized = 1;
+            }
+            else{
+                $leave_record->is_authorized = 0;
+            }
 
             if(isset($request->date_to) && $request->date_to)
             {
@@ -75,15 +80,22 @@ class ManageEmployeeLeaveController extends Controller
             $leave_record = new HrEmployeeLeaveRecord();
             $leave_record->employee_row_id = $request->employee_row_id;
             $employee = \App\Models\HrEmployee::find($request->employee_row_id);
-            $leave_record->area_row_id = $employee->area_row_id;
-            $leave_record->department_row_id = $request->department_row_id;
-            $leave_record->institution_row_id = $request->institution_row_id;
             $leave_record->leave_type = $request->leave_type;
+            $leave_record->leave_year = date("Y");
+            if($request->is_authorized)
+            {
+                $leave_record->is_authorized = 1;
+            }
+            else{
+                $leave_record->is_authorized = 0;
+            }
+
             if(isset($request->date_to) && $request->date_to)
             {
                 $datetime1 = date_create($request->date_to);
                 $datetime2 = date_create($request->date_from);
                 $dteDiff  = $datetime1->diff($datetime2);
+
                 $leave_record->number_of_days = $dteDiff->days +1;
                 $leave_record->leave_date_to = date('Y-m-d', strtotime($request->date_to));
             }

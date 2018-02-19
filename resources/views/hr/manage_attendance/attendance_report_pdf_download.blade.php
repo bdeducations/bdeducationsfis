@@ -34,8 +34,8 @@
                         <tr>
                         	<th style="text-align:left;width:10%;"> Roll </th> 
                             <th style="text-align:left;width:30%;"> Student Name </th> 
-                            <th style="text-align:left;width:15%;"> In Time</th>
-                            <th style="text-align:left;width:15%;">Out Time</th>
+                            <th style="text-align:left;width:15%;"> Time In </th>
+                            <th style="text-align:left;width:15%;"> Time Out </th>
                             <th style="text-align:left;width:10%;">Status</th>
                         </tr>
                     </thead>

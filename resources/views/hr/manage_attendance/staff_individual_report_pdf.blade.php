@@ -32,8 +32,8 @@
                         <tr>
                             <th style="text-align:left;width:20%;height: 20px"> Date </th> 
                             <th style="text-align:left;width:20%;"> Day </th>        
-                            <th style="text-align: center;width:20%;"> In Time</th>
-                            <th style="text-align: center; width:20%;">Out Time</th>
+                            <th style="text-align: center;width:20%;"> Time In</th>
+                            <th style="text-align: center; width:20%;">Time Out</th>
                             <th style="text-align: center; width:10%;">Duration</th>
                             <th style="text-align:left;width:10%;">Status</th>
                         </tr>
