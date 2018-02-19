@@ -454,8 +454,8 @@ Route::get('hr/attendance/attendance-from-device', 'ManageAttendanceController@s
 Route::post('hr/attendance/sinkAttendanceRecordsFromCsv', 'ManageAttendanceController@sinkAttendanceRecordsFromCsv');
 
 //get attendance manualy
-Route::any('hr/attendance/manual-attendance', 'ManageAttendanceController@manualAttendanceForm')->name('manual-attendance');
-Route::any('hr/attendance/store-attendance', 'ManageAttendanceController@storeStaffAttendance')->name('manual-attendance');
+Route::get('hr/attendance/manual-attendance', 'ManageAttendanceController@allStaffManualAttendance')->name('manual-attendance-select-date');
+Route::post('hr/attendance/all-staff-manual-attendance', 'ManageAttendanceController@storeStaffAttendance')->name('manual-attendance');
 
 //staff attendance report 
 Route::get('hr/attendance/all-staff-attendance-report-option', 'ManageAttendanceController@allStaffAttendanceReportOption')->name('all-staff-attendance-report-option');
@@ -466,19 +466,12 @@ Route::get('hr/attendance/all-staff-attendance-report-pdf/{date}', 'ManageAttend
 Route::get('hr/attendance/staff-individual-report-pdf/{id}/{fromDate}/{toDate}', 'ManageAttendanceController@staffIndividualReportPdf');
 Route::get('hr/attendance/all-staff-attendance-monthly-report-option', 'ManageAttendanceController@allStaffAttendanceMonthlyReportOption')->name('all-staff-attendance-monthly-report-option');
 Route::post('hr/attendance/all-staff-attendance-monthly-report-pdf', 'ManageAttendanceController@allStaffAttendanceMonthlyReportPdf');
-
-
-
-
-
-
-
-
 Route::post('schoolAdmin/attendance/staffList', 'ManageAttendanceController@staffList');
 Route::post('schoolAdmin/staffAttendance/storeStaffAttendance', 'ManageAttendanceController@storeStaffAttendance');
 
 
 Route::get('schoolAdmin/attendance/studentIndividualReportPdf/{id}/{val1}/{val2}', 'ManageAttendanceController@studentIndividualReportPdf');
+
 /* .......... End of Attendance route.....................*/
 
 
@@ -541,4 +534,8 @@ Route::get('getInstitutions/{area_row_id}/{department_row_id}/{current_instituti
     return $CommonData->getInstitutions($area_row_id,$department_row_id, $current_institution_id);
 });
 
+Route::get('getNumberOfLeaveLeft/{employee_row_id?}', function ($employee_row_id) {
+    $CommonData = new HrCommon();
+    return $CommonData->getNumberOfLeaveLeft($employee_row_id);
+});
 

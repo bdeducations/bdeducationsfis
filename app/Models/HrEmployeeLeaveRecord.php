@@ -14,14 +14,6 @@ class HrEmployeeLeaveRecord extends Model
     
     protected $primaryKey = 'leave_record_row_id';
 
-    public function areaName()
-    {
-        return $this->hasOne('App\Models\Area', 'area_row_id', 'area_row_id');
-    }
-    public function institutionName()
-    {
-        return $this->hasOne('App\Models\HrInstitution','institution_row_id','institution_row_id');
-    }
     public function employeeDetails()
     {
         return $this->hasOne('App\Models\HrEmployee', 'employee_row_id', 'employee_row_id');

@@ -89,7 +89,7 @@
                 </div>  
                 @if( $data['performance_records'])
                 <div style="padding: 5px;">
-                    <table id="UT_jakat_allocation_list" class="table table-bordered table-striped">
+                    <table id="employee_performance_list" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th> # </th>
@@ -138,7 +138,7 @@
 <script src="{{ url('/')}}/public/adminlte/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#UT_jakat_allocation_list').DataTable({
+        $('#employee_performance_list').DataTable({
             paging: true,
             lengthMenu: [[-1, 100, 50, 25], ["All", 100, 50, 25]],
             ordering: false,
@@ -159,11 +159,6 @@
 
     $('#cancel'). click(function(){
         $('#performance_record_form').toggle();
-    });
-
-    $("#area_row_id").change(function(e){
-        $('#employee_row_id').empty('');
-        $('#department_row_id').val(''); 
     });
 
 

@@ -33,8 +33,8 @@
                         <tr>
                             <th style="text-align: left;height: 30px;width:10px">Sl.</th>
                             <th style="text-align: left;height: 30px">Name</th>
-                            <th style="text-align: left;height: 30px;">In Time</th>
-                            <th style="text-align: left;height: 30px;">Out Time</th>
+                            <th style="text-align: left;height: 30px;"> Time In</th>
+                            <th style="text-align: left;height: 30px;"> Time Out</th>
                             <th style="text-align: left;height: 30px;">Total Time</th>                            
                             <th style="text-align: left;height: 30px;">Late Arrival</th>
                             <th style="text-align: left;height: 30px;">Early Leave</th>                            

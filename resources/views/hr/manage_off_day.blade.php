@@ -28,7 +28,7 @@
                     <h3 class="box-title">Weekend List</h3>
                     <a href="javascript:void(0)">
                         <button type="button" class="btn btn-primary pull-right" id="add_new_leave_record" >
-                            <i class="fa fa-plus"></i> Set Weekend For Institutions
+                            <i class="fa fa-plus"></i> Set Weekend 
                         </button>
                     </a>
                 </div>

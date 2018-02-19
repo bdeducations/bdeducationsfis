@@ -223,6 +223,13 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-calendar"></i>Manage Year calendar
                                     </a>
                                 </li> 
+
+                                <li class="@if($route_name == 'manual-attendance-select-date') active @endif">
+                                    <a href="{{ url('/') }}/hr/attendance/manual-attendance">
+                                        <i class="fa fa-circle-o"></i> Manual Attendance
+                                    </a>
+                                </li>  
+
                                 <li class="@if($route_name == 'attendance-from-device') active @endif">
                                     <a href="{{ url('/') }}/hr/attendance/attendance-from-device">
                                         <i class="fa fa-circle-o"></i> Attendance From Device

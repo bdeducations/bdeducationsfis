@@ -41,21 +41,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="budget_year" class="col-md-5 control-label">Area<span class="input-required-asterik">*</span></label>
-                                        <div class="col-md-7">
-                                            <select name="area_row_id" id="area_row_id" class ="form-control" required="required">
-                                                <option value="">Select Area</option>
-                                                <option value="-1" @if(isset($data['selected_area_row_id']) && $data['selected_area_row_id'] == -1) selected="selected"  @endif>All Area</option>
-                                                @foreach( $data['all_areas'] as $area_row)
-                                                <option value="{{ $area_row->area_row_id }}" @if(isset($data['selected_area_row_id']) && $area_row->area_row_id == $data['selected_area_row_id']) selected="selected"  @endif>{{ $area_row['title'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="head_row_id" class="col-md-3 control-label">Sector <span class="input-required-asterik">*</span></label>
+                                        <label for="head_row_id" class="col-md-5 control-label">Department <span class="input-required-asterik">*</span></label>
                                         <div class="col-md-7">
                                             <select class="form-control" name="department_row_id" id="department_row_id" required>
                                                 <option value="">Select</option>
@@ -68,8 +54,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="head_row_id" class="col-md-3 control-label">Employee <span class="input-required-asterik">*</span></label>
@@ -92,9 +76,28 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="head_row_id" class="col-md-3 control-label">To <span class="input-required-asterik"></span></label>
+                                        <label for="head_row_id" class="col-md-3 control-label">To <span class="input-required-asterik">*</span></label>
                                         <div class="col-md-7">
-                                            <input type="text" class="form-control pull-right" name="date_to" id="datepicker2" style="margin-bottom: 0px;">
+                                            <input type="text" class="form-control pull-right" required name="date_to" id="datepicker2" style="margin-bottom: 0px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="budget_year" class="col-md-5 control-label">Total Days</label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="total_days" id="total_days" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="budget_year" class="col-md-3 control-label">Days Left</label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="days_left" id="days_left" class="form-control" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -106,37 +109,31 @@
                                         <label for="head_row_id" class="col-md-5 control-label">Leave Type <span class="input-required-asterik">*</span></label>
                                         <div class="col-md-7">
                                             <select class="form-control employee_row_id" name="leave_type" id="leave_type" required>
-                                                <option> Select</option>
-                                                <option> Sick</option>
-                                                <option> Casual</option>
-                                                <option> Others</option>        
+                                                <option value=""> Select</option>
+                                                <option value="Sick"> Sick</option>
+                                                <option value="On Tour"> On Tour</option>
+                                                <option value="Casual"> Casual</option>
+                                                <option value="Others"> Others</option>        
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="budget_year" class="col-md-3 control-label">Authorized</label>
+                                        <label for="Authorized" class="col-md-3 control-label">Authorized<span class="input-required-asterik">*</span></label>
                                         <div class="col-md-2">
-                                            <input type="checkbox" class="minimal" name="is_authorized" style="margin-top: 10px;">
+                                            <input type="checkbox" checked class="minimal" name="is_authorized" style="margin-top: 10px;" id="is_authorized"  >
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                           
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="budget_year" class="col-md-5 control-label">Days Left</label>
+                                        <label for="budget_year" class="col-md-5 control-label">Comment</label>
                                         <div class="col-md-7">
-                                            <input type="number" name="days_left" class="form-control" value="22">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="budget_year" class="col-md-3 control-label">Comment</label>
-                                        <div class="col-md-9">
-                                            <textarea class="form-control" name="comment" id="comment" style="width: 290px;"></textarea>
+                                            <textarea class="form-control" name="comment" id="comment" style="width: 280px;"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -150,15 +147,13 @@
                         </div>
                     </form>
                 </div>
-                @if( $data['leave_records'])
+                @if($data['leave_records'])
                 <div style="padding: 5px;">
                     <table id="UT_jakat_allocation_list" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th> # </th>
                                 <th>Name</th>
-                                <th>Area</th>
-                                <th>Institution</th>
                                 <th>Leave Type</th>
                                 <th style="min-width: 45px;">From</th>
                                 <th style="min-width: 45px;">To</th>
@@ -175,16 +170,6 @@
                                     <td>
                                         {{ $row->employeeDetails->employee_name }}
                                     </td>
-                                    <td>
-                                         @if(isset($row->areaName->title)) {{ $row->areaName->title }} @endif
-                                    </td>                
-                                    <td>
-                                        @if(isset($row->institutionName->short_name))
-                                            {{ $row->institutionName->short_name }}
-                                        @else
-                                            {{ $row->institutionName->institution_name }}
-                                        @endif
-                                    </td> 
                                     <td>
                                         {{ $row->leave_type }}
                                     </td>
@@ -209,9 +194,7 @@
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
                                                 <li><a href="javascript:void(0)" class="edit"
-                                                leave_record_row_id="{{ $row->leave_record_row_id }}" area_row_id = "{{ $row->area_row_id }}" department_row_id ="{{ $row->department_row_id }}" employee_row_id = "{{ $row->employee_row_id }}" leave_type="{{ $row->leave_type }}" date_from="{{ $row->leave_date_from }}" @if(isset($row->institution_row_id) && $row->institution_row_id)
-                                                institution_row_id="{{ $row->institution_row_id }}"
-                                                @endif @if(isset($row->leave_date_to) && $row->leave_date_to)
+                                                leave_record_row_id="{{ $row->leave_record_row_id }}"  department_row_id ="{{ $row->employeeDetails->department_row_id }}" employee_row_id = "{{ $row->employee_row_id }}" leave_type="{{ $row->leave_type }}" date_from="{{ $row->leave_date_from }}" is_authorized="{{ $row->is_authorized }}" @if(isset($row->leave_date_to) && $row->leave_date_to)
                                                 date_to="{{ $row->leave_date_to }}"
                                                 @endif @if(isset($row->comment) && $row->comment)
                                                 comment="{{ $row->comment }}"
@@ -266,32 +249,12 @@
         $('#leave_record_form').toggle();
     });
 
-    $("#area_row_id").change(function(e){
-        $('#employee_row_id').empty('');
-        $('#department_row_id').val(''); 
-    });
-
+    
     $("#department_row_id").change(function(e){
-        var department_row_id = $(this).val();
-        var area_row_id = $('#area_row_id').val();
-        $('#institution_row_id').empty();
-        $.ajax({
-            url: "{{ url('getInstitutions/') }}"+ '/'+ area_row_id + '/'+ department_row_id,
-            type: "GET",
-            dataType: "html",
-            success: function(data){
-                $('#institution_row_id').append(data);
-            }
-        });
-    });
-
-     $("#institution_row_id").change(function(e){
-            var area_row_id = $('#area_row_id').val();
-            var department_row_id = $('#department_row_id').val();
-            var institution_row_id = $(this).val();
+            var department_row_id = $(this).val();
             $('#employee_row_id').empty('');
             $.ajax({
-                url: "{{ url('getEmployeeList/') }}"+ '/'+ institution_row_id,
+                url: "{{ url('getEmployeeList/') }}"+ '/'+ department_row_id,
                 type: "GET",
                 dataType: "html",
                 success: function(data){
@@ -299,6 +262,22 @@
                 }
             });
         });
+
+    $("#employee_row_id").change(function(e){
+        var employee_row_id = $(this).val();
+        $('#days_left').empty('');
+        $.ajax({
+                url: "{{ url('getNumberOfLeaveLeft/') }}"+ '/'+ employee_row_id,
+                type: "GET",
+                dataType: "html",
+                success: function(data){
+                    $('#days_left').val(data);
+                }
+            });
+
+    }); 
+
+
      $('.edit') .click( function() {
         var leave_record_row_id = $(this).attr('leave_record_row_id');
          var area_row_id = $(this).attr('area_row_id');
@@ -306,22 +285,30 @@
          var institution_row_id = $(this).attr('institution_row_id');
          var employee_row_id = $(this).attr('employee_row_id');
          var leave_type = $(this).attr('leave_type');
+         var is_authorized = $(this).attr('is_authorized');
          var date_from = $(this).attr('date_from');
          var date_to = $(this).attr('date_to');
          var comment = $(this).attr('comment');
          $('#leave_record_row_id').val(leave_record_row_id);
-         $('#area_row_id').val(area_row_id);
          $('#department_row_id').val(department_row_id);
-         $('#institution_row_id').val(institution_row_id);
          $('#employee_row_id').val(employee_row_id);
          $('#leave_type').val(leave_type);
+         
+         if(is_authorized == 0)
+         {
+            $('#is_authorized').prop('checked', false);
+         }
+         else{
+            $('#is_authorized').prop('checked', true);
+         }
+         
          $('#datepicker1').val(date_from);
          $('#datepicker2').val(date_to);
          $('#comment').val(comment);
          $('#leave_record_form').show();
          $('html, body').animate({scrollTop: '0px'}, 0);
             $.ajax({
-                url: "{{ url('getEmployeeList/') }}"+ '/'+ institution_row_id + '/' + employee_row_id,
+                url: "{{ url('getEmployeeList/') }}"+ '/'+ department_row_id + '/' + employee_row_id,
                 type: "GET",
                 dataType: "html",
                 success: function(data){
@@ -329,14 +316,6 @@
                 }
             });
 
-            $.ajax({
-                url: "{{ url('getInstitutions/') }}"+ '/' + area_row_id + '/' + department_row_id + '/' + institution_row_id,
-                type: "GET",
-                dataType: "html",
-                success: function(data){
-                $('#institution_row_id').append(data);
-                }
-                });
 
           $('#employee_row_id').val(employee_row_id);
         });
@@ -361,4 +340,21 @@
     })  
   })    
 </script>
+
+<script type="text/javascript">
+    $("#datepicker2").change(function(e){
+            var from_date = $("#datepicker1").val();
+            console.log(m_from_date);
+            var to_date = $("#datepicker2").val();
+            var diffDays = to_date.getDate() - from_date.getDate();
+            $('#total_days').empty('');
+            $.ajax({
+                success: function(data){
+                    $('#total_days').append(diffDays);
+                }
+            });
+        });
+    
+</script>
+
 @endsection

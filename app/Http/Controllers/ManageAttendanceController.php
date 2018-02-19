@@ -307,4 +307,17 @@ class ManageAttendanceController extends Controller {
 
     }
 
+    //Manual Attendance
+    public function allStaffManualAttendance() {   
+
+        return view($this->viewFolderPath .  'staff_manual_attendance');
+    }
+
+    public function manualAttendanceForm(Request $request) {
+
+        $data['breadcrumb'] = 'Manual Attendance';
+        $data['date_of_attendance'] = $request->date_of_attendance;
+
+    }
+
 }
