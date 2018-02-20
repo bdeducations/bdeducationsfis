@@ -128,6 +128,7 @@ class ManageAttendanceController extends Controller {
     // used staff atendance report pdf        
     public function allStaffAttendanceMonthlyReportPdf(Request $request) {
         // show report generate options.
+        $per_day_hour = 9;
         $school_row_id = Auth::user()->id;
         $data['breadcrumb'] = 'Staff Attendance Report';
         $attendance_year = $request->attendance_year;
@@ -139,6 +140,7 @@ class ManageAttendanceController extends Controller {
         $start_date = $attendance_year . '-' . $attendance_month . '-' . '01'; // 1th of the month
         $total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
         $data['total_working_days_this_month'] =  15; // up to 24th of a month.
+        $data['total_working_hours_this_month'] =  $data['total_working_days_this_month'] * $per_day_hour;
         $end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.       
 
         $attendance_month = str_pad($attendance_month, 2, "0", STR_PAD_LEFT);
@@ -165,6 +167,7 @@ class ManageAttendanceController extends Controller {
         foreach ($employeeList as $key => $value) {            
             $arr['employee_row_id'] = $value->employee_row_id;
             $arr['employee_name'] = $value->employee_name;
+            $arr['is_part_time'] = $value->is_part_time;
          
             
             //get Attendace records for a month. it contains those record which i spresent, that has login-logout or login value at leat.

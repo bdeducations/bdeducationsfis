@@ -111,7 +111,6 @@ class ManageEmployeeLeaveController extends Controller
             if($request->total_days)
             {
                 $leave_record->number_of_days = $request->total_days;
-
             }
             $leave_record->leave_date_from = date('Y-m-d', strtotime($request->date_from));
             $leave_record->comment = $request->comment; 

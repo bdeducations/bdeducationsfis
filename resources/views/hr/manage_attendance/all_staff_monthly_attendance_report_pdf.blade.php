@@ -15,34 +15,34 @@
                         <td><img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px;margin:0px 10px 0px 0px;"></td>
                         <td style="vertical-align: center;width: 60%">
                             <h2 style="margin-bottom: 0px;"><u>   Attendance Report</u></h2>
-                            <h4 style="margin-top: 0px;"> {{ $data['attendance_month'] }}, {{ $data['attendance_year'] }}</h4>
-                            <h4 style="margin-top: 0px;">Total Working days: {{ $data['total_working_days_this_month'] }} (25th  {{ $data['prev_attendance_month'] }}  to 14th {{ $data['attendance_month'] }})</h4>
-                        </td>
-                        
+                            <h4 style="margin-top: 0px;"> {{ $data['attendance_month'] }}, {{ $data['attendance_year'] }} (25th  {{ $data['prev_attendance_month'] }}  to 14th {{ $data['attendance_month'] 
+                            }})</h4>                            
+                            <h4 style="margin-top: 0px; margin-bottom:20px; font-weight:bold">
+                            Total Working Days: {{ $data['total_working_days_this_month'] }} &nbsp; &nbsp;
+                            Total Working Hours: {{ $data['total_working_hours_this_month'] }}                             
+                            </h4>                            
+                        </td>                        
                     </tr>
                 </table>
-
-
             </div>
         </div>
 
-        <div class="pdfcontent" style="text-align:center;">
+        <div class="pdfcontent" style="text-align:center; margin-top:15px">
            
             <div class="main" style="padding: 10px 15px 20px 15px;width: 100%">
                  <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"  border="1" width="100%">
                   <thead>
                         <tr>
                             <th style="text-align: left;height: 30px;width:10px">Sl.</th>
-                            <th style="text-align: left;height: 30px;width:90px">Name</th>
+                            <th style="text-align: left;height: 30px;width:120px">Name</th>
                             <th style="text-align: left;height: 30px;width:30px">Present</th>
-                            <th style="text-align: left;height: 30px;width:30px">Absent</th>
-                            <th style="text-align: left;height: 30px;width:60px">Late Arrival</th>
-                            <th style="text-align: left;height: 30px;width:60px">Early Leave</th>
-                            <th style="text-align: left;height: 30px;width:50px">Time</th>
-                            <th style="text-align: left;height: 30px;width:30px">Leave </th>
-                            <th style="text-align: left;height: 30px;width:30px">Tour</th>
-                            <th style="text-align: left;height: 30px;width:60px">UnAuth. Leave</th>
-                            <th style="text-align: left;height: 30px;width:50px">Time Total</th>                           
+                            <th style="text-align: left;height: 30px;width:30px">Late Arrival</th>
+                            <th style="text-align: left;height: 30px;width:30px">Early Leave</th>
+                            <th style="text-align: left;height: 30px;width:25px">Leave </th>
+                            <th style="text-align: left;height: 30px;width:25px">Tour</th>
+                            <th style="text-align: left;height: 30px;width:75px">UnAuth. Leave</th>
+                            <th style="text-align: left;height: 30px;width:88px">Effective Office Time</th>
+                            <th style="text-align: left;height: 30px;width:85px">Total Office Time</th>
                             <th style="text-align: left;height: 30px;">Comments</th>
                         </tr>
                     </thead>
@@ -52,16 +52,24 @@
                         <tr>
                             <td style="width:10px">{{ $i }}</td>
                             <td>{{ $row['employee_name'] }}</td>
-                            <td>{{ $row['present_days'] }}</td> 
-                            <td>{{ $row['absent_days'] }}</td>                             
+                            <td>{{ $row['present_days'] }}</td>                             
                             <td style="width:62px">{{ $row['late_incoming'] }} </td>
                             <td style="width:62px">{{ $row['early_leave'] }} </td>
-                            <td style="width:62px">{{ $row['total_time_present_in_a_month']}} H</td>
                             <td>{{ $row['number_of_leave'] }}</td>
                             <td>{{ $row['number_of_tour'] }}</td> 
                             <td>{{ $row['unauthorized_leave'] }}</td>
-                            <td style="width:62px">{{ $row['total_hour_including_leave'] }} H</td>                          
-                            <td style="width:60px"> &nbsp; </td>
+                            <td style="width:62px">{{ $row['total_time_present_in_a_month']}} H</td>
+                            <td style="width:62px">{{ $row['total_hour_including_leave'] }} H</td>
+                            <td style="width:60px">
+                                @php 
+                                    if(!$row['is_part_time']) {                                        
+                                    $diff = 0;
+                                    $diff = $data['total_working_hours_this_month'] - $row['total_hour_including_leave'];
+                                    echo $diff > 0 ? '-'  : ($diff == 0 ? '' : '+');
+                                    echo abs($diff);
+                                    }
+                                @endphp 
+                            </td>
                         </tr>
                          @php $i++; @endphp
                     @endforeach
