@@ -70,6 +70,12 @@ class ManageEmployeeLeaveController extends Controller
             else{
                 $leave_record->number_of_days = 1;
             }
+
+            if($request->total_days)
+            {
+                $leave_record->number_of_days = $request->total_days;
+
+            }
             $leave_record->leave_date_from = date('Y-m-d', strtotime($request->date_from));
             $leave_record->comment = $request->comment; 
             $leave_record->updated_by = Auth()->user()->id;
@@ -101,6 +107,11 @@ class ManageEmployeeLeaveController extends Controller
             }
             else{
                 $leave_record->number_of_days = 1;
+            }
+            if($request->total_days)
+            {
+                $leave_record->number_of_days = $request->total_days;
+
             }
             $leave_record->leave_date_from = date('Y-m-d', strtotime($request->date_from));
             $leave_record->comment = $request->comment; 
