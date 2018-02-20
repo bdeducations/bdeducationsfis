@@ -448,7 +448,7 @@ class HrCommon
 
     public function getNumberOfLeaveLeft($employee_row_id)
     {
-        $total_taken_leave = \App\Models\HrEmployeeLeaveRecord::where('employee_row_id',$employee_row_id)->where('leave_year',date('Y'))->sum('number_of_days');
+        $total_taken_leave = \App\Models\HrEmployeeLeaveRecord::where('employee_row_id',$employee_row_id)->where('leave_year',date('Y'))-> where('leave_type','!=', 3)->sum('number_of_days');
         $number_of_total_leave = \App\Models\HrLeaveSetting::select('total_leave')->first();
         return  $number_of_total_leave->total_leave - $total_taken_leave;  
     }

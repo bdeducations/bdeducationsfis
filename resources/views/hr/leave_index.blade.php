@@ -87,9 +87,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="budget_year" class="col-md-5 control-label">Total Days</label>
+                                        <label for="budget_year" class="col-md-5 control-label">Total Days<span class="input-required-asterik">*</span></label>
                                         <div class="col-md-7">
-                                            <input type="text" name="total_days" id="total_days" class="form-control">
+                                            <input type="text" required name="total_days" id="total_days" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -110,10 +110,10 @@
                                         <div class="col-md-7">
                                             <select class="form-control employee_row_id" name="leave_type" id="leave_type" required>
                                                 <option value=""> Select</option>
-                                                <option value="Sick"> Sick</option>
-                                                <option value="On Tour"> On Tour</option>
-                                                <option value="Casual"> Casual</option>
-                                                <option value="Others"> Others</option>        
+                                                <option value="1"> Casual</option>
+                                                <option value="2"> Sick</option>
+                                                <option value="3"> On Tour</option>
+                                                <option value="4"> Unauthorized</option>        
                                             </select>
                                         </div>
                                     </div>
@@ -168,10 +168,17 @@
                                 <tr>
                                     <td><?php echo $i.'.'; ?></td>
                                     <td>
-                                        {{ $row->employeeDetails->employee_name }}
+                                        {{  isset($row->employeeDetails->employee_name) ? $row->employeeDetails->employee_name : ''  }}
                                     </td>
                                     <td>
-                                        @if(isset($row->leave_type)){{ $row->leave_type }}@endif
+                                        @if($row->leave_type == 1) Casual leave @endif
+
+                                        @if($row->leave_type == 2) Sick @endif
+
+                                        @if($row->leave_type == 3) On Tour @endif
+
+                                        @if($row->leave_type == 4) Unauthorized @endif
+
                                     </td>
                                     <td>
                                        {{ date('d-m-Y', strtotime( $row->leave_date_from )) }}
@@ -194,7 +201,10 @@
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
                                                 <li><a href="javascript:void(0)" class="edit"
-                                                leave_record_row_id="{{ $row->leave_record_row_id }}"  department_row_id ="{{ $row->employeeDetails->department_row_id }}" employee_row_id = "{{ $row->employee_row_id }}" leave_type="{{ $row->leave_type }}" date_from="{{ $row->leave_date_from }}" is_authorized="{{ $row->is_authorized }}" @if(isset($row->leave_date_to) && $row->leave_date_to)
+                                                leave_record_row_id="{{ $row->leave_record_row_id }}"   employee_row_id = "{{ $row->employee_row_id }}" leave_type="{{ $row->leave_type }}" date_from="{{ $row->leave_date_from }}" is_authorized="{{ $row->is_authorized }}" total_days = "{{ $row->number_of_days }}" @if(isset($row->employeeDetails->department_row_id))
+                                                department_row_id="{{ $row->employeeDetails->department_row_id }}" @endif 
+
+                                                @if(isset($row->leave_date_to) && $row->leave_date_to)
                                                 date_to="{{ $row->leave_date_to }}"
                                                 @endif @if(isset($row->comment) && $row->comment)
                                                 comment="{{ $row->comment }}"
@@ -289,6 +299,7 @@
          var date_from = $(this).attr('date_from');
          var date_to = $(this).attr('date_to');
          var comment = $(this).attr('comment');
+         var total_days = $(this).attr('total_days');
          $('#leave_record_row_id').val(leave_record_row_id);
          $('#department_row_id').val(department_row_id);
          $('#employee_row_id').val(employee_row_id);
@@ -301,7 +312,8 @@
          else{
             $('#is_authorized').prop('checked', true);
          }
-         
+
+         $('#total_days').val(total_days);
          $('#datepicker1').val(date_from);
          $('#datepicker2').val(date_to);
          $('#comment').val(comment);
