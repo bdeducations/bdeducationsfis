@@ -171,7 +171,7 @@
                                         {{ $row->employeeDetails->employee_name }}
                                     </td>
                                     <td>
-                                        {{ $row->leave_type }}
+                                        @if(isset($row->leave_type)){{ $row->leave_type }}@endif
                                     </td>
                                     <td>
                                        {{ date('d-m-Y', strtotime( $row->leave_date_from )) }}
