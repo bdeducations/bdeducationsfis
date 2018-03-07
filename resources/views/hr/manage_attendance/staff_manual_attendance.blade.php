@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="area_name" class="col-md-3 control-label">Select Date <span class="input-required-asterik">*</span></label>
+                                    <label for="date_of_attendance" class="col-md-3 control-label">Select Date <span class="input-required-asterik">*</span></label>
                                     <div class="col-md-9">
                                         <div class="input-group input-medium  date date-picker col-md-9" data-date-format="yyyy-mm-dd" style="padding: 0 0 0 12px">
                                             <input type="text" name="date_of_attendance" class="form-control" id="datepicker" required="required" />
@@ -42,7 +42,7 @@
                                 <div class="form-group">
                                     
                                     <div class="col-md-9 col-md-offset-3">
-                                         <button type="submit" class="btn btn-primary" style="">Submit</button>
+                                         <button type="submit" class="btn btn-primary" style="margin-left: 15px;">Staff Attendance</button>
                                     </div>
                                 </div>
                             </div>
