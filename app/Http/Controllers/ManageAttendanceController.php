@@ -15,6 +15,7 @@ use App\Models\StaffsCard;
 use App\Models\StudentsCard;
 use App\Models\StaffsAttendanceRecord;
 use App\Models\Admin;
+use App\Libraries\Common;
 use PDF;
 use Log;
 use Excel;
@@ -317,6 +318,80 @@ class ManageAttendanceController extends Controller {
 
         $data['breadcrumb'] = 'Manual Attendance';
         $data['date_of_attendance'] = $request->date_of_attendance;
+
+    }
+
+     public function getStaffList(Request $request) {
+      $data['date_of_attendance'] = $request->date_of_attendance;
+
+        
+        $sql = "SELECT ut_hr_employees.`employee_row_id`, ut_hr_employees.`employee_name`,(SELECT first_login FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$request->date_of_attendance' LIMIT 1) AS first_login, (SELECT last_logout FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$request->date_of_attendance' LIMIT 1) AS last_logout, (SELECT count_manual_hours FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$request->date_of_attendance' LIMIT 1) AS count_manual_hours FROM ut_hr_employees WHERE ut_hr_employees.show_attendance_report = 1 ORDER BY ut_hr_employees.sort_order";
+        $data['staff_list'] =  DB::select($sql);  
+        //dd($data['staff_list']);
+      return view($this->viewFolderPath .  'staff_list', ['data'=>$data] );
+    }
+
+    public function storeManualAttendance(Request $request)
+    {
+        $date_of_attendance = $request->date_of_attendance;
+
+        //StaffsAttendanceRecord
+
+        $inTimeHrArr = $request->in_time_hr;
+        $inTimeMinArr = $request->in_time_min;
+        $inTimeAmPmArr= $request->in_time_ampm;
+        $outTimeHrArr = $request->out_time_hr;
+        $outTimeMinArr = $request->out_time_min;
+        $outTimeAmPmArr = $request->out_time_ampm;
+        
+        //dd( $count_manual_hours);
+        $insertData = array();
+        for($i=0; $i<count($request->staff_ids); $i++) {
+            $attendance_available = \App\Models\StaffAttendanceRecord::where([ ['card_id', $request->staff_ids[$i]], ['attendance_date', $date_of_attendance ] ])->first();
+
+            $inTimeFinal = '00:00:00';
+            if($inTimeAmPmArr[$i])
+            {
+                if($inTimeAmPmArr[$i] == 'pm' && $inTimeHrArr[$i] !=12)
+                    $inTimeFinal =  ($inTimeHrArr[$i] + 12) . ':' . $inTimeMinArr[$i] . ':' . '00';
+                else
+                    $inTimeFinal =  $inTimeHrArr[$i] . ':' . $inTimeMinArr[$i] . ':' . '00';
+            }
+
+            $outTimeFinal = '00:00:00';            
+            if($outTimeAmPmArr[$i])
+            {
+                    if($outTimeAmPmArr[$i] == 'pm' && $outTimeHrArr[$i]!= 12)
+                        $outTimeFinal =  ($outTimeHrArr[$i] + 12) . ':' . $outTimeMinArr[$i] . ':' . '00';
+                    else
+                        $outTimeFinal =  $outTimeHrArr[$i] . ':' . $outTimeMinArr[$i] . ':' . '00';
+            }
+
+            $inTimeFinal = $date_of_attendance . ' ' .  $inTimeFinal;
+            $outTimeFinal = $date_of_attendance . ' ' .  $outTimeFinal;         
+            
+            if($request->count_manual_hours && $request->total_hour) {
+                    $updateData = ['card_id' => $request->staff_ids[$i], 'first_login'=>$inTimeFinal, 'last_logout'=>$outTimeFinal, 'attendance_date' => $date_of_attendance,
+                    'count_manual_hours' => $request->total_hour[$i] ,'updated_by'=> Auth::id()];
+
+                    DB::table('staff_attendance_records')->where([ ['card_id', $request->staff_ids[$i]], ['attendance_date', $date_of_attendance ] ])->update($updateData);
+                 } 
+            else{
+                $insertData[] = ['card_id' => $request->staff_ids[$i], 'first_login'=>$inTimeFinal, 'last_logout'=>$outTimeFinal, 'attendance_date' => $date_of_attendance,'count_manual_hours' => $request->total_hour[$i],'created_by'=> Auth::id()];
+                }
+
+          }
+
+        Session::flash('success-message', 'Attendance has been updated successfully.');
+       
+        if(!empty($insertData)) {
+            \App\Models\StaffAttendanceRecord::insert($insertData);                  
+        }
+
+         
+        
+        return redirect('hr/attendance/manual-attendance');
+
 
     }
 

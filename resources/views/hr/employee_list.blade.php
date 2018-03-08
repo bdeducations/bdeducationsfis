@@ -139,8 +139,6 @@
                                             <td>
                                                 {{ $row->employee_name }}
                                             </td>
-                                            
-
                                             <td>
                                                 @if(isset($row->employeeDesignation->designation_name)) {{ $row->employeeDesignation->designation_name }} @endif
                                             </td>

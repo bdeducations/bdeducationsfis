@@ -455,7 +455,8 @@ Route::post('hr/attendance/sinkAttendanceRecordsFromCsv', 'ManageAttendanceContr
 
 //get attendance manualy
 Route::get('hr/attendance/manual-attendance', 'ManageAttendanceController@allStaffManualAttendance')->name('manual-attendance-select-date');
-Route::post('hr/attendance/all-staff-manual-attendance', 'ManageAttendanceController@storeStaffAttendance')->name('manual-attendance');
+Route::post('hr/attendance/all-staff-manual-attendance', 'ManageAttendanceController@getStaffList')->name('manual-attendance');
+Route::post('hr/staffAttendance/storeStaffAttendance', 'ManageAttendanceController@storeManualAttendance')->name('store-manual-attendance');
 
 //staff attendance report 
 Route::get('hr/attendance/all-staff-attendance-report-option', 'ManageAttendanceController@allStaffAttendanceReportOption')->name('all-staff-attendance-report-option');

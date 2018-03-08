@@ -16,6 +16,7 @@ $config_subject_group ['sg_arts'] = 4;
 //$config_base_url ['base_url']	= 'http://localhost/bdeducms/';
 
 
+
 return  [
     'config_admin_type' => $config_admin_type,
 

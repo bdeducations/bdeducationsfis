@@ -66,9 +66,6 @@ $route_name = $route_name_arr[0];
                                 <ul class="dropdown-menu">
                                     <!-- User image -->
                                     <li class="user-header">
-                                        <!--
-                                        <img src="{{ url('/')}}/public/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                        -->
                                         <p>
                                             {{ Auth::user()->name }}
                                         </p>
@@ -150,40 +147,31 @@ $route_name = $route_name_arr[0];
                                         <i class="fa fa-circle-o"></i> Budget Allocation
                                     </a>
                                 </li>
-                                <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationSummaryReportController')? true:false) }}">
-                                    <a href="{{ url('/') }}/budget/allocation/summary/report">
-                                        <i class="fa fa-circle-o"></i> Budget Allocation Summary
-                                    </a>
-                                </li-->
-                                <!--li class="{{ active_class((current_controller() == 'App\Http\Controllers\AllocationAdjustmentReportController')? true:false) }}">
-                                    <a href="{{ url('/') }}/budget/allocation/adjustment/report">
-                                        <i class="fa fa-circle-o"></i> Allocation With Adjustment
-                                    </a>
-                                </li>
-                                <li class="{{ active_class((current_controller() == 'App\Http\Controllers\AdjustmentReportController')? true:false) }}">
-                                    <a href="{{ url('/') }}/budget/adjustment/report">
-                                        <i class="fa fa-circle-o"></i> Adjustment
-                                    </a>
-                                </li-->
                                 <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BudgetReportController')? true:false) }}">
                                     <a href="{{ url('/') }}/budgetReport/expenseExtended">
                                         <i class="fa fa-circle-o"></i>  Area and Date Wise Expense
                                     </a>
                                 </li>
-                                <!--
-                                <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BalanceReportController')? true:false) }}">
-                                    <a href="{{ url('/') }}/budgetReport/balance">
-                                        <i class="fa fa-circle-o"></i> Expenditure State
-                                    </a>
-                                </li>
-                                <li class="{{ active_class((current_controller() == 'App\Http\Controllers\BalanceSummaryReportController')? true:false) }}">
-                                    <a href="{{ url('/') }}/budgetReport/balance/summary">
-                                        <i class="fa fa-circle-o"></i> Expenditure Summary State
-                                    </a>
-                                </li>
-                                -->
                             </ul>
                         </li>
+
+                         <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-th"></i>
+                                <span>Data Analysis</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="">
+                                    <a href="{{ url('/') }}/data-analysis/asset-report">
+                                        <i class="fa fa-circle-o"></i> Asset Report
+                                    </a>
+                                </li>                                
+                            </ul>
+                        </li>
+
                         <!-- Manage Employee -->
                         <li class="treeview {{ active_class( (current_controller() == 'App\Http\Controllers\ManageEmployeeController' || current_controller() == 'App\Http\Controllers\ManageAttendanceController') ? true:false) }}">
                             <a href="{{ url('/') }}/manage-employee/create">
@@ -335,7 +323,9 @@ $route_name = $route_name_arr[0];
         <!-- SlimScroll 1.3.0 -->
         <script src="{{ url('/')}}/public/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
         <!-- AdminLTE for demo purposes -->
-        <script src="{{ url('/')}}/public/adminlte/dist/js/demo.js"></script>@yield('page_js')
+        <script src="{{ url('/')}}/public/adminlte/dist/js/demo.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        @yield('page_js')
         <script type="text/javascript">
             $(document).ready(function () {
                 // show the alert
@@ -344,4 +334,5 @@ $route_name = $route_name_arr[0];
                 }, 2000);
             });
         </script>
+        
     </body></html>
