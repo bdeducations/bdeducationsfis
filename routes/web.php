@@ -508,7 +508,10 @@ Route::get('/hr/institution-offday/delete/{off_day_row_id}', 'ManageOffDayContro
 //..........................Send sms...............................................................
 Route::get('/hr/sendSMS', 'SendSMSController@index')->name('hr-sendSMS');
 Route::post('/hr/sendSMS', 'SendSMSController@sendSMS');
-	
+
+//Data Analysis
+Route::get('data-analysis/asset-report', 'DataAnalysisController@assetReport')->name('analysis-asset-report');
+
 //.............................Common............................................
 
 Route::get('getDesignation/{department_row_id}/{current_designation_id?}', function ($department_row_id, $current_designation_id = 0) {
