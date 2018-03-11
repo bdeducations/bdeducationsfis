@@ -370,25 +370,26 @@ class ManageAttendanceController extends Controller {
             $inTimeFinal = $date_of_attendance . ' ' .  $inTimeFinal;
             $outTimeFinal = $date_of_attendance . ' ' .  $outTimeFinal;         
             
-            if($request->count_manual_hours && $request->total_hour) {
+            
+            if($request->count_manual_hours && $request->total_hour) {               
                     $updateData = ['card_id' => $request->staff_ids[$i], 'first_login'=>$inTimeFinal, 'last_logout'=>$outTimeFinal, 'attendance_date' => $date_of_attendance,
                     'count_manual_hours' => $request->total_hour[$i] ,'updated_by'=> Auth::id()];
-
                     DB::table('staff_attendance_records')->where([ ['card_id', $request->staff_ids[$i]], ['attendance_date', $date_of_attendance ] ])->update($updateData);
                  } 
             else{
-                $insertData[] = ['card_id' => $request->staff_ids[$i], 'first_login'=>$inTimeFinal, 'last_logout'=>$outTimeFinal, 'attendance_date' => $date_of_attendance,'count_manual_hours' => $request->total_hour[$i],'created_by'=> Auth::id()];
+
+                   //never comes here.
+                    //$insertData[] = ['card_id' => $request->staff_ids[$i], 'first_login'=>$inTimeFinal, 'last_logout'=>$outTimeFinal, 'attendance_date' => $date_of_attendance,'count_manual_hours' => $request->total_hour[$i],'created_by'=> Auth::id()];
                 }
 
           }
 
+
         Session::flash('success-message', 'Attendance has been updated successfully.');
        
         if(!empty($insertData)) {
-            \App\Models\StaffAttendanceRecord::insert($insertData);                  
-        }
-
-         
+           //  \App\Models\StaffAttendanceRecord::insert($insertData);                  
+        }         
         
         return redirect('hr/attendance/manual-attendance');
 
