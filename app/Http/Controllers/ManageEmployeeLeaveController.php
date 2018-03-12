@@ -38,7 +38,7 @@ class ManageEmployeeLeaveController extends Controller
         $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->get();
         $data['search_result'] = 0;
 
-        $data['leave_records'] = \App\Models\HrEmployeeLeaveRecord::with('employeeDetails','employeeDepartment', 'employeeDesignation')->get();
+        $data['leave_records'] = \App\Models\HrEmployeeLeaveRecord::with('employeeDetails','employeeDepartment', 'employeeDesignation')->orderBy('leave_date_from')->get();
         //dd($data['leave_records']);        
 
         return view($this->viewFolderPath . 'leave_index', ['data' => $data]);

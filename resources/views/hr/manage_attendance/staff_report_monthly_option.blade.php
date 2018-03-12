@@ -23,41 +23,32 @@
                     {!! csrf_field() !!}
                     <div class="box-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="area_name" class="col-md-3 control-label">Select Year <span class="input-required-asterik">*</span></label>
-                                    <div class="col-md-9">
-                                        <div class="input-group input-medium  date date-picker col-md-9" style="padding: 0 0 0 12px">
-                                            <select class="form-control" name="attendance_year">
-                                                <option @if( date('Y') == 2017) selected="selected" @endif>2017</option>
-                                                <option @if( date('Y') == 2018) selected="selected" @endif>2018</option>
-                                                <option @if( date('Y') == 2019) selected="selected" @endif>2019</option>
-                                                <option @if( date('Y') == 2020) selected="selected" @endif>2020</option>
-                                            </select>
-                                        </div>
+                                    <label for="area_name" class="col-md-2 control-label">From<span class="input-required-asterik">*</span></label>
+                                    <div class="col-md-10">
+                                        <div class="input-group input-medium  date date-picker col-md-12" data-date-format="yyyy-mm-dd" style="padding: 0 0 0 12px">
+                                        <input type="text" name="date_from" class="form-control" id="datepicker1" required="required" />
+                                    </div> 
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="area_name" class="col-md-3 control-label">Select Month <span class="input-required-asterik">*</span></label>
+                                    <label for="area_name" class="col-md-2 control-label">To<span class="input-required-asterik">*</span></label>
+                                    <div class="col-md-10">
+                                        <div class="input-group input-medium  date date-picker col-md-12" data-date-format="yyyy-mm-dd" style="padding: 0 0 0 12px">
+                                        <input type="text" name="date_to" class="form-control" id="datepicker2" required="required" />
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="area_name" class="col-md-3 control-label">Working Days<span class="input-required-asterik">*</span></label>
                                     <div class="col-md-9">
-                                        <div class="input-group input-medium  date date-picker col-md-9" style="padding: 0 0 0 12px">
-                                            <select class="form-control" name="attendance_month">
-                                                <option value="1"  @if( date('n') == 1) selected="selected" @endif>January</option>
-                                                <option value="2"  @if( date('n') == 2) selected="selected" @endif>February</option>
-                                                <option value="3"  @if( date('n') == 3)  selected="selected" @endif>March</option>
-                                                <option value="4" @if( date('n') == 4) selected="selected" @endif>April</option>
-                                                <option value="5" @if( date('n') == 5) selected="selected" @endif>May</option>
-                                                <option value="6" @if( date('n') == 6) selected="selected" @endif>June</option>
-                                                <option value="7" @if( date('n') == 7) selected="selected" @endif>July</option>
-                                                <option value="8"  @if( date('n') == 8) selected="selected" @endif>August</option>
-                                                <option value="9" @if( date('n') == 9)  selected="selected" @endif>September</option>
-                                                <option value="10" @if( date('n') == 10) selected="selected" @endif>October</option>
-                                                <option value="11" @if( date('n') == 11) selected="selected" @endif>November</option>
-                                                <option value="12" @if( date('n') == 12) selected="selected" @endif>December</option>
-                                            </select>
-                                        </div>
+                                        <input type="text" name="total_working_days" class="form-control" required="required" value="22" />
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +73,7 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     
-                                    <div class="col-md-9 col-md-offset-3">
+                                    <div class="col-md-11 col-md-offset-1">
                                          <button type="submit" class="btn btn-primary" style="">Submit</button>
                                     </div>
                                 </div>
@@ -104,7 +95,12 @@
 <script src="{{ url('/')}}/public/adminlte/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#datepicker').datepicker({
+        $('#datepicker1').datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+        });
+        $('#datepicker2').datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',
             todayHighlight: true,

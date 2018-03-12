@@ -136,26 +136,27 @@ class ManageAttendanceController extends Controller {
         $attendance_month = $request->attendance_month;
         $data['attendance_year'] = $attendance_year;
         $ob = new \App\Libraries\HrCommon;
-        $month_array = $ob->month_array;
-        $data['attendance_month'] = $month_array[$attendance_month]; //month name to show in report
-        $start_date = $attendance_year . '-' . $attendance_month . '-' . '01'; // 1th of the month
-        $total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
-        $data['total_working_days_this_month'] =  15; // up to 24th of a month.
+        // $month_array = $ob->month_array;
+        // $data['attendance_month'] = $month_array[$attendance_month]; //month name to show in report
+        // $start_date = $attendance_year . '-' . $attendance_month . '-' . '01'; // 1th of the month
+        //$total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
+        $data['total_working_days_this_month'] =  $request->total_working_days ; // up to 24th of a month.
         $data['total_working_hours_this_month'] =  $data['total_working_days_this_month'] * $per_day_hour;
-        $end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.       
+        $data['start_date'] = $request->date_from;
+        $data['end_date'] = $request->date_to;   
+        //$end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.       
 
-        $attendance_month = str_pad($attendance_month, 2, "0", STR_PAD_LEFT);
+        //$attendance_month = str_pad($attendance_month, 2, "0", STR_PAD_LEFT);
         if($attendance_month == 1) { 
             $prev_year = $attendance_year - 1;
             $prev_month = 12;
             $data['prev_attendance_month'] = 'December'; //month name show in report
-            $start_date = $prev_year . '-' . $prev_month . '-' . '25';
-            $end_date = $attendance_year . '-' . $attendance_month . '-' . '14';    
+            $start_date = $request->date_from;
+            $end_date = $request->date_to;   
         } else {
             $prev_month = $attendance_month - 1;
-            $data['prev_attendance_month'] = $month_array[$prev_month];
-            $start_date = $attendance_year . '-' . $prev_month . '-' . '25';
-            $end_date = $attendance_year . '-' . $attendance_month . '-' . '14';
+            $start_date = $request->date_from;
+            $end_date = $request->date_to;   
         }       
     
         // here

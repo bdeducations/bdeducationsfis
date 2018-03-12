@@ -3,7 +3,7 @@
         <title>Attendance Report PDF</title>
         <meta charset="UTF-8">
         <style type="text/css">
-            h2,h4{
+            h1,h3,h4{
                 font-weight: none;
             }
         </style>           
@@ -14,9 +14,8 @@
                     <tr> 
                         <td><img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px;margin:0px 10px 0px 0px;"></td>
                         <td style="vertical-align: center;width: 60%">
-                            <h2 style="margin-bottom: 0px;"><u>   Attendance Report</u></h2>
-                            <h4 style="margin-top: 0px;"> {{ $data['attendance_month'] }}, {{ $data['attendance_year'] }} (25th  {{ $data['prev_attendance_month'] }}  to 14th {{ $data['attendance_month'] 
-                            }})</h4>                            
+                            <h1 style="margin-bottom: 0px;margin-left: 30px;"><u>   Attendance Report</u></h1>
+                            <h3 style="margin-top: 0px;">Date: {{ date('F j, Y', strtotime( $data['start_date'])) }} &nbsp;To&nbsp; {{ date('F j, Y', strtotime( $data['end_date'])) }}</h3>                            
                             <h4 style="margin-top: 0px; margin-bottom:20px; font-weight:bold">
                             Total Working Days: {{ $data['total_working_days_this_month'] }} &nbsp; &nbsp;
                             Total Working Hours: {{ $data['total_working_hours_this_month'] }}                             
