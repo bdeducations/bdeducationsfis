@@ -172,7 +172,7 @@ class ManageAttendanceController extends Controller {
             $arr['is_part_time'] = $value->is_part_time;
          
             
-            //get Attendace records for a month. it contains those record which i spresent, that has login-logout or login value at leat.
+            //get Attendace records for a month. it contains those record which i spresent, that has login-logout or login value at least.
             $attendance_records = $HrObj->getAttendancesByIdWithDateRange($value->employee_row_id, $start_date, $end_date, 1);
             $arr['present_days'] = count($attendance_records);
             $arr['absent_days'] = $data['total_working_days_this_month'] - $arr['present_days'];
@@ -182,7 +182,7 @@ class ManageAttendanceController extends Controller {
 
             foreach ($attendance_records  as $row) {
 
-                // do not time device record if early /late leave is approved.
+                // do not count device record if manual hour is counted.
                 if($row['count_manual_hours'] >0 || $row['count_manual_minutes']>0) {
                     $total_time_present_in_a_month += ($row['count_manual_hours']*3600 + $row['count_manual_minutes']*60); 
                     continue;
@@ -217,16 +217,15 @@ class ManageAttendanceController extends Controller {
             //$arr['total_time_present_in_a_month'] = $total_time_present_in_a_month; 
             $arr['total_time_present_in_a_month'] = ceil($total_time_present_in_a_month/3600); 
 
-            //casual leave
+            //casual leave, sick leave 
             $arr['number_of_leave'] = DB::table('hr_employee_leave_records')
                                       ->where([ 
-                                                ['employee_row_id', $value->employee_row_id],
-                                                ['leave_type', 1],
-                                                ['leave_date_from',  '>=', $start_date],
-                                                ['leave_date_to', '<=', $end_date  ] 
-                                            ])->sum('number_of_days');
+                                            ['employee_row_id', $value->employee_row_id],
+                                            ['leave_date_from',  '>=', $start_date],
+                                            ['leave_date_to', '<=', $end_date  ] 
+                                        ])->whereIn('leave_type', [1, 2])->sum('number_of_days');
 
-            //count sick leave..
+            
 
             //count all tour days
             $arr['number_of_tour'] = DB::table('hr_employee_leave_records')
