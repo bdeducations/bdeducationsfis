@@ -511,7 +511,7 @@ Route::get('/hr/sendSMS', 'SendSMSController@index')->name('hr-sendSMS');
 Route::post('/hr/sendSMS', 'SendSMSController@sendSMS');
 
 //Data Analysis
-Route::get('data-analysis/asset-report', 'DataAnalysisController@assetReport')->name('analysis-asset-report');
+Route::any('data-analysis/asset-report', 'DataAnalysisController@assetReport')->name('analysis-asset-report');
 
 //.............................Common............................................
 
