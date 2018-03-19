@@ -47,7 +47,7 @@
                                 <div class="form-group">
                                     <label for="area_name" class="col-md-3 control-label">Working Days<span class="input-required-asterik">*</span></label>
                                     <div class="col-md-9">
-                                        <input type="text" name="total_working_days" class="form-control" required="required" value="22" />
+                                        <input type="text" name="total_working_days" class="form-control" required="required" value="19" />
                                     </div>
                                     </div>
                                 </div>

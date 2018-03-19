@@ -635,7 +635,7 @@ class ManageEmployeeController extends Controller
         }
         else{
             $hrObj = new HrCommon();
-            $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->get();
+            $data['departments'] = \App\Models\HrDepartment::select('department_name','department_row_id')->orderBy('sort_order')->get();
             $data['designations_list'] = $hrObj->designations();
             // dd($data['designations_list']);
             return view($this->viewFolderPath . 'designations_list', ['data' => $data]);

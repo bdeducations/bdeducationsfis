@@ -19,8 +19,15 @@ class SendSMSController extends Controller
 
 
     public function index(){  
-        $sql = "SELECT `employee_row_id`,`sort_order`, `employee_name`, `contact_1`, `department_row_id`, `designation_row_id` FROM `ut_hr_employees` WHERE 1";
-        $data['staff_list'] =  DB::select($sql);     
+        // $sql = "SELECT `employee_row_id`,`sort_order`, `employee_name`, `contact_1`, `department_row_id`, `designation_row_id` FROM `ut_hr_employees` WHERE 1";
+        // $data['staff_list'] =  DB::select($sql);  
+         
+
+        $data['staff_list'] = \App\Models\HrEmployee::with('employeeDetails','employeeDepartment', 'employeeDesignation')                          
+            ->get()->sortBy(function($q) {
+            return $q->sort_order;
+        }); 
+        //dd($data['staff_list']);         
         return view($this->viewFolderPath .  'send_sms', ['data'=>$data] );
     }
 
@@ -28,34 +35,18 @@ class SendSMSController extends Controller
 
     	$user = "bdeducation";
     	$pass="Bdedu312017";
-		//$sid = "ABSchoolBDBrand";
-
-	    $sms_ccredentail = DB::table('sms_credentials')->first();
-	    $sid = $sms_ccredentail->sms_sid;	    
-	    $url="http://sms.sslwireless.com/pushapi/dynamic/server.php";
-	    if($request->sms_to =="students")
-	    {
-	    	$sms_text = $request->sms_text1;	    	    	
-	    	$receiver_list = $request->checkStudentItem;
-	    }
+		$sid = "MKMABangla";
 	    
-	    if($request->sms_to =="staff")
-	    {
-	    	$sms_text = $request->sms_text2;    	
-	    	$receiver_list = $request->staffItem;
-	    }
+	    $url="http://sms.sslwireless.com/pushapi/dynamic/server.php";
 
-	    if($request->sms_to =="others")
-	    {	
-	    	$sms_text = $request->sms_text3;	    	
-		    $receiver_list_comma = trim($request->other_mobile, ',');	    
-		    $receiver_list = explode(',' ,  $receiver_list_comma);	 
-	    }
+    	$sms_text = $request->sms_text1;	    	    	
+    	$receiver_list = $request->send_sms;
+	
+    	// dd($receiver_list);
+    	// exit();
 
 
-	    if($sms_ccredentail->lang == 'bn') {
-	    	$sms_text = $this->utf8_to_unicode($sms_text);
-	    }
+	    $sms_text = $this->utf8_to_unicode($sms_text);
 
 	    $i = 0;
 	    $param ="user=$user&pass=$pass";   
@@ -87,7 +78,7 @@ class SendSMSController extends Controller
 	    $response = curl_exec($crl);
 	    curl_close($crl);
 	    Session::flash('success-message','SMS has been sent successfully.');	    
-	    return redirect('schoolAdmin/administrative/sendSMS');
+	    return redirect('hr/sendSMS');
 	    
     }
     public function utf8_to_unicode($str) {
@@ -123,4 +114,5 @@ class SendSMSController extends Controller
 
 	    return ($str);   
 	}
+
 }
