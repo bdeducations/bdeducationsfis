@@ -397,8 +397,10 @@ class HrCommon
                     continue;  
 
                     $last_logout_arr =  explode(' ', $row->last_logout);                    
-                    if( !isset($last_logout_arr[1]) || $last_logout_arr[1] == '00:00:00' )
-                    continue;                 
+                    if( !isset($last_logout_arr[1]) || $last_logout_arr[1] == '00:00:00' ) {
+                        $last_logout_arr = $first_login_arr;
+                    }
+                                    
 
                     $arr['attendance_date'] =  $row->attendance_date;
                     $arr['first_login'] =  $row->first_login;
