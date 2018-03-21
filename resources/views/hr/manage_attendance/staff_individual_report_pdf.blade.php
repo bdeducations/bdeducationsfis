@@ -108,11 +108,11 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div style="float:left;text-align: left;margin-top:5px; margin-bottom: 5px">
+                <!--div style="float:left;text-align: left;margin-top:5px; margin-bottom: 5px">
                     Total Absent: {{ $count_absent ? $count_absent . ' days' : 'Nil' }}
 
                     Total Hour: {{ ceil($total_duration/3600) }}
-                </div>
+                </div-->
             </div>
             <div class="clear" style="margin-top:20px; "><?php echo getPoweredBy(); ?></div>
         </div>
