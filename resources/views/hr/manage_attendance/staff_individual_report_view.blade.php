@@ -121,7 +121,7 @@
                                                 </tr>
                                             @php $i++; @endphp
                                         @endforeach
-                                        <tr><td colspan="6" style="text-align: center;font-weight: bold"> Total Hour: {{ ceil($total_duration/3600) }}</td> </tr>
+                                        <!--tr><td colspan="6" style="text-align: center;font-weight: bold"> Total Hour: {{ ceil($total_duration/3600) }}</td> </tr-->
                                         </div>
                                     </tbody>
                                 </table>
