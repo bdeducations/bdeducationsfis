@@ -394,6 +394,10 @@ class HrCommon
                     // if first login is suppose 2017-11-20 00:00:00, it means he is not present.
                     $first_login_arr =  explode(' ', $row->first_login);                    
                     if( !isset($first_login_arr[1]) || $first_login_arr[1] == '00:00:00' )
+                    continue;  
+
+                    $last_logout_arr =  explode(' ', $row->last_logout);                    
+                    if( !isset($last_logout_arr[1]) || $last_logout_arr[1] == '00:00:00' )
                     continue;                 
 
                     $arr['attendance_date'] =  $row->attendance_date;
