@@ -111,7 +111,7 @@ class ManageAttendanceController extends Controller {
         $data['breadcrumb'] = 'Staff Attendance Report';
         $data['attendance_date'] = $attendance_date;
 
-        $sql = "SELECT ut_hr_employees.`employee_row_id`, ut_hr_employees.`is_part_time`, ut_hr_employees.`employee_name`, ut_hr_employees.`contact_1` ,(SELECT first_login FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS first_login, (SELECT last_logout FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS last_logout FROM ut_hr_employees WHERE ut_hr_employees.show_attendance_report = 1 ORDER BY  ut_hr_employees.sort_order";      
+        $sql = "SELECT ut_hr_employees.`employee_row_id`, ut_hr_employees.`is_part_time`, ut_hr_employees.`employee_name`, ut_hr_employees.`contact_1`,ut_hr_employees.`in_time_supposed`, ut_hr_employees.`out_time_supposed` ,(SELECT first_login FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS first_login, (SELECT last_logout FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS last_logout FROM ut_hr_employees WHERE ut_hr_employees.show_attendance_report = 1 ORDER BY  ut_hr_employees.sort_order";      
 
         $data['staff_attendance_info'] =  DB::select($sql);
 
