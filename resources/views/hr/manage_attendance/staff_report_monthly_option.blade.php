@@ -74,7 +74,7 @@
                                 <div class="form-group">
                                     
                                     <div class="col-md-11 col-md-offset-1">
-                                         <button type="submit" class="btn btn-primary" style="">Submit</button>
+                                         <button type="submit" class="btn btn-primary" style="" target="_blank">Submit</button>
                                     </div>
                                 </div>
                             </div>

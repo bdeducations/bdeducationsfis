@@ -15,7 +15,7 @@
                         <td><img src="{{ asset('/public/img/bdeducation_logo.png') }}" style="width: 200px;margin:0px 10px 0px 0px;"></td>
                         <td style="vertical-align: center;width: 60%">
                             <h2 style="margin-bottom: 0px;"><u>   Attendance Report</u></h2>
-                            <h4 style="margin-top: 0px;">{{ date('j M (l), Y', strtotime($data['attendance_date'])) }}</h4>
+                            <h4 style="margin-top: 0px;">{{ date('j F (l), Y', strtotime($data['attendance_date'])) }}</h4>
                         </td>
                         
                     </tr>
