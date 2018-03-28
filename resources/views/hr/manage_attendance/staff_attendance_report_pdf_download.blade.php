@@ -96,9 +96,10 @@
                             </td>
                             
                             <td style="width:62px">
-                                @if(!$row->is_part_time && $present)
-                                    @php
-                                        $inTimeSupposedTo = strtotime($data['attendance_date'] . ' 09:30:00');
+                                @if(!$row->is_part_time && $present)                                    
+                                    @php                                       
+
+                                        $inTimeSupposedTo = strtotime($data['attendance_date'] . $row->in_time_supposed);
                                         $inTimeHeWas = strtotime($row->first_login);
                                         if($inTimeHeWas > $inTimeSupposedTo) {
                                             if($inTimeHeWas - $inTimeSupposedTo > 3600) {
@@ -112,7 +113,7 @@
                             <td style="width:60px">
                                   @if(!$row->is_part_time && $logoutStatus) 
                                     @php
-                                        $outTimeSupposedTo = strtotime($data['attendance_date'] . ' 17:30:00');
+                                        $outTimeSupposedTo = strtotime($data['attendance_date'] .  $row->out_time_supposed);
                                         $outTimeHeWas = strtotime($row->last_logout);
                                         if($outTimeSupposedTo > $outTimeHeWas) {
                                             if($outTimeSupposedTo - $outTimeHeWas > 3600) {

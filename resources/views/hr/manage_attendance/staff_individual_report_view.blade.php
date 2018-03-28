@@ -50,6 +50,7 @@
                                             <th class="min-phone-l">Day</th>
                                             <th class="min-phone-l">In Time</th>
                                             <th class="min-phone-l">Out Time</th>
+                                            <th class="min-phone-l">Manual Hour</th>
                                             <th class="min-phone-l">Duration</th>
                                             <th class="min-phone-l">Attendance Status</th>
                                         </tr>
@@ -106,12 +107,28 @@
                                                     // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
                                                     </td> 
                                                     <td>
+                                                        <?php 
+                                                            if(isset($row['count_manual_hours']) && $row['count_manual_hours'])
+                                                            echo $row['count_manual_hours'] . ' Hours';
+                                                        ?>
+                                                    </td>
+                                                    <td>
                                                     <?php 
+                                                    $manual_hour_counted= 0;
+                                                    if(isset($row['count_manual_hours']) && $row['count_manual_hours']) {
+                                                            $total_duration =  $total_duration + (3600*$row['count_manual_hours']);
+                                                            $manual_hour_counted = 1;
+                                                                
+                                                        }
+
                                                         if($login && $logout) {
                                                             echo date('G:i', $logout - $login);
                                                             $duration = $logout - $login;
+                                                            if(!$manual_hour_counted) // if manual hour not counted
                                                             $total_duration = $total_duration + $duration;
                                                         }
+                                                    
+                                                        
                                                      ?>
                                                     </td>
                                                     <td>
