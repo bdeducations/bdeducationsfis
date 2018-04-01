@@ -76,6 +76,7 @@ class SendSMSController extends Controller
 	    curl_setopt($crl,CURLOPT_POST,1);
 	    curl_setopt($crl,CURLOPT_POSTFIELDS,$param);
 	    $response = curl_exec($crl);
+	    dd($response);
 	    curl_close($crl);
 	    Session::flash('success-message','SMS has been sent successfully.');	    
 	    return redirect('hr/sendSMS');
