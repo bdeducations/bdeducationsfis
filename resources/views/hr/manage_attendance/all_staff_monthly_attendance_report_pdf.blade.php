@@ -47,7 +47,7 @@
                     </thead>
                     <tbody>
                         @php $i = 1; $countPresent = 0; $countAbsent = 0; @endphp
-                        @foreach($data['staff_attendance_info']  as $row)                        
+                        @foreach($data['staff_attendance_info']  as $row)                       
                         <tr>
                             <td style="width:10px">{{ $i }}</td>
                             <td>{{ $row['employee_name'] }}</td>
@@ -63,7 +63,14 @@
                                 @php 
                                     if(!$row['is_part_time']) {                                        
                                     $diff = 0;
-                                    $diff = $data['total_working_hours_this_month'] - $row['total_hour_including_leave'];
+
+                                    if( in_array($row['employee_row_id'], $data['people_under_per_day_more_1']) ) {
+                                       $diff = $data['total_working_hours_more_1_this_month'] - $row['total_hour_including_leave'];
+                                    } else {
+                                        $diff = $data['total_working_hours_this_month'] - $row['total_hour_including_leave'];
+                                    }
+
+                                   
                                     echo $diff > 0 ? '-'  : ($diff == 0 ? '' : '+');
                                     echo abs($diff);
                                     }

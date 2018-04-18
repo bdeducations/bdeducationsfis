@@ -130,6 +130,9 @@ class ManageAttendanceController extends Controller {
     public function allStaffAttendanceMonthlyReportPdf(Request $request) {
         // show report generate options.
         $per_day_hour = 9;
+        $per_day_more_1 = 10;
+        $data['people_under_per_day_more_1'] = [133, 134];
+
         $school_row_id = Auth::user()->id;
         $data['breadcrumb'] = 'Staff Attendance Report';
         $attendance_year = $request->attendance_year;
@@ -142,6 +145,7 @@ class ManageAttendanceController extends Controller {
         //$total_days_in_month = getNumberOfDaysInAMonth($attendance_year, $attendance_month);
         $data['total_working_days_this_month'] =  $request->total_working_days ; // up to 24th of a month.
         $data['total_working_hours_this_month'] =  $data['total_working_days_this_month'] * $per_day_hour;
+        $data['total_working_hours_more_1_this_month'] =  $data['total_working_days_this_month'] * $per_day_more_1;
         $data['start_date'] = $request->date_from;
         $data['end_date'] = $request->date_to;   
         //$end_date = $attendance_year . '-' . $attendance_month . '-' . $total_days_in_month; // last day of the month.       
