@@ -183,6 +183,7 @@ class ManageAttendanceController extends Controller {
             $late_incoming = 0;
             $early_leave = 0;
             $total_time_present_in_a_month = 0;
+           
 
             foreach ($attendance_records  as $row) {
 
@@ -293,6 +294,7 @@ class ManageAttendanceController extends Controller {
         $data['card_id'] = $request->employee_row_id;        
         //up to this done 11-15-2017.
         $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($request->employee_row_id, $request->date_from_attendance, $request->date_to_attendance);
+      //  dd($data['attendance_list'] );
         
 
         return view($this->viewFolderPath .  'staff_individual_report_view', ['data'=>$data] );

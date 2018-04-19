@@ -67,6 +67,7 @@
                                                  $login = 0;
                                                  $absent = 0;
                                                  $duration = 0;
+                                                 $count_manual_hours = isset ($row['count_manual_hours']) && $row['count_manual_hours'] ? 1 : 0;
 
                                                  if(!isset($row['first_login']))
                                                     $login = 0;
@@ -79,13 +80,15 @@
                                                 else {
                                                     $logout =  strtotime($row['last_logout']) ;
                                                 }
+
                                                 $is_offday = isEmployeeHoliday($data['card_id'], $key);
                                                 if($is_offday) {
                                                     $absentmsg = 'Not scheduled day';
                                                     $absentcolor = '';
                                                 }
 
-                                                if(!$login && !$logout && !( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) && !$is_offday)
+
+                                                if(!$count_manual_hours && !$login && !$logout && !( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) && !$is_offday)
                                                  {
                                                     $absent = 1;
                                                     $count_absent ++;
@@ -97,37 +100,34 @@
                                                     <td>{{ date( 'l', strtotime($key) ) }}</td>
                                                     
                                                     <?php if(!$login && !$logout && ( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) ) {
-                                                         echo '<td colspan="4" style="padding-left:120px;color:green" >Weekend</td>';
+                                                         echo '<td colspan="5" style="padding-left:120px;color:green" >Weekend</td>';
                                                     } else { ?>
 
-                                                    <td>{{ $login ? date('h:i a', $login) : '' }} </td> 
+                                                    <td>@if(!$count_manual_hours) {{ $login ? date('h:i a', $login) : '' }} @endif</td> 
                                                     <td>
-                                                    <?php 
-                                                     echo ( ($login == $logout) ||  !$logout ) ? '' : date('h:i a', $logout);
-                                                    // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
+                                                        @if(!$count_manual_hours)
+                                                            <?php echo ( ($login == $logout) ||  !$logout ) ? '' : date('h:i a', $logout); ?>
+                                                        @endif
                                                     </td> 
                                                     <td>
                                                         <?php 
-                                                            if(isset($row['count_manual_hours']) && $row['count_manual_hours'])
-                                                            echo $row['count_manual_hours'] . ' Hours';
+                                                            if($count_manual_hours) {
+                                                                 echo $row['count_manual_hours'] . ' Hours';
+                                                            } 
                                                         ?>
                                                     </td>
                                                     <td>
                                                     <?php 
                                                     $manual_hour_counted= 0;
-                                                    if(isset($row['count_manual_hours']) && $row['count_manual_hours']) {
-                                                            $total_duration =  $total_duration + (3600*$row['count_manual_hours']);
-                                                            $manual_hour_counted = 1;
-                                                                
-                                                        }
-
-                                                        if($login && $logout) {
+                                                    if($count_manual_hours) {
+                                                        $total_duration =  $total_duration + (3600*$row['count_manual_hours']);
+                                                    } else {
+                                                         if($login && $logout) {
                                                             echo date('G:i', $logout - $login);
                                                             $duration = $logout - $login;
-                                                            if(!$manual_hour_counted) // if manual hour not counted
                                                             $total_duration = $total_duration + $duration;
                                                         }
-                                                    
+                                                    }
                                                         
                                                      ?>
                                                     </td>
