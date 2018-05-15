@@ -34,8 +34,8 @@
                             <th style="text-align:left;width:15%;"> Day </th>        
                             <th style="text-align: center;width:20%;"> Time In</th>
                             <th style="text-align: center; width:10%;">Time Out</th>                            
-                            <th style="text-align: center; width:10%;">Duration</th>
                             <th style="text-align: center; width:15%;">Manual Hour</th>
+                            <th style="text-align: center; width:10%;">Duration</th>                            
                             <th style="text-align:left;width:10%;">Status</th>
                         </tr>
                     </thead>
@@ -50,6 +50,7 @@
                             $login = 0;
                             $absent = 0;
                             $duration = 0;
+                            $count_manual_hours = isset ($row['count_manual_hours']) && $row['count_manual_hours'] ? 1 : 0;
 
                              if(!isset($row['first_login']))
                                 $login = 0;
@@ -69,7 +70,7 @@
                                 $absentcolor = '';
                             }
 
-                            if(!$login && !$logout && !( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) && !$is_offday)
+                            if(!$count_manual_hours && !$login && !$logout && !( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) && !$is_offday)
                             {
                                 $absent = 1;
                                 $count_absent ++;
@@ -77,49 +78,47 @@
 
                             
                             ?>
-                            <tr style="font-size:12px; <?php echo $absent ?  : ''; ?> ">
-                                <td>{{ $key }}</td>
-                                <td>{{ date( 'l', strtotime($key) ) }}</td>
-                                <?php
-                                    if(!$login && !$logout && ( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) ) {
-                                        echo '<td colspan="5" style="padding-left:120px;color:green" >Weekend</td>';
-                                    } else { ?>
-                                <td style="text-align: center;">{{ $login ? date('h:i a', $login) : '' }} </td> 
-                                <td style="text-align: center;">
-                                <?php 
-                                 echo ( ($login == $logout) ||  !$logout ) ? '' : date('h:i a', $logout);
-                                // ($row['first_login'] == $row['last_logout'] || !$logout) ? '' : date( 'h:i a', strtotime($row['last_logout']) ) ?>
-                                </td>                                
-                                 <td>
-                                    <?php 
-                                    $manual_hour_counted= 0;
-                                    if(isset($row['count_manual_hours']) && $row['count_manual_hours']) {
-                                            $total_duration =  $total_duration + (3600*$row['count_manual_hours']);
-                                            $manual_hour_counted = 1;
-                                                
-                                        }
+                            <tr <?php echo $absent ?  : ''; ?>>
+                                                    <td>{{ $key }}</td>
+                                                    <td>{{ date( 'l', strtotime($key) ) }}</td>
+                                                    
+                                                    <?php if(!$login && !$logout && ( date( 'l', strtotime($key)) == 'Friday' || date( 'l', strtotime($key)) == 'Saturday' ) ) {
+                                                         echo '<td colspan="5" style="padding-left:120px;color:green" >Weekend</td>';
+                                                    } else { ?>
 
-                                        if($login && $logout) {
-                                            echo date('G:i', $logout - $login);
-                                            $duration = $logout - $login;
-                                            if(!$manual_hour_counted) // if manual hour not counted
-                                            $total_duration = $total_duration + $duration;
-                                        }                                   
-                                        
-                                     ?>
-                            
-                                </td>
-                                <td>
-                                    <?php 
-                                        if(isset($row['count_manual_hours']) && $row['count_manual_hours'])
-                                        echo $row['count_manual_hours'] . ' Hours';
-                                        ?>
-                                </td>
-                                <td>
-                                <?php echo $login ? '<div style="' . $presentcolor . '">' . $presentmsg . '</div>' : '<div style="' . $absentcolor . '">' . $absentmsg . '</div>'; ?>
-                                </td>
-                              <?php } ?>
-                            </tr>
+                                                    <td>@if(!$count_manual_hours) {{ $login ? date('h:i a', $login) : '' }} @endif</td> 
+                                                    <td>
+                                                        @if(!$count_manual_hours)
+                                                            <?php echo ( ($login == $logout) ||  !$logout ) ? '' : date('h:i a', $logout); ?>
+                                                        @endif
+                                                    </td> 
+                                                    <td>
+                                                        <?php 
+                                                            if($count_manual_hours) {
+                                                                 echo $row['count_manual_hours'] . ' Hours';
+                                                            } 
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                    <?php 
+                                                    $manual_hour_counted= 0;
+                                                    if($count_manual_hours) {
+                                                        $total_duration =  $total_duration + (3600*$row['count_manual_hours']);
+                                                    } else {
+                                                         if($login && $logout) {
+                                                            echo date('G:i', $logout - $login);
+                                                            $duration = $logout - $login;
+                                                            $total_duration = $total_duration + $duration;
+                                                        }
+                                                    }
+                                                        
+                                                     ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $login ? '<div style="' . $presentcolor.'">' . $presentmsg  .'</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
+                                                    </td>
+                                                    <?php } ?>
+                                                </tr>
                              @php $i++; @endphp                                        
                         @endforeach
                     </tbody>

@@ -167,7 +167,7 @@ class ManageAttendanceController extends Controller {
         //$data['attendance_date'] = $attendance_date;
         $HrObj = new \App\Libraries\HrCommon();
 
-        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1` FROM ut_hr_employees WHERE show_attendance_report = 1 ORDER BY sort_order";
+        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1`, `in_time_supposed`, `out_time_supposed`  FROM ut_hr_employees WHERE show_attendance_report = 1 ORDER BY sort_order";
         $employeeList =  DB::select($sql);
 
         foreach ($employeeList as $key => $value) {            
@@ -183,6 +183,7 @@ class ManageAttendanceController extends Controller {
             $late_incoming = 0;
             $early_leave = 0;
             $total_time_present_in_a_month = 0;
+           
 
             foreach ($attendance_records  as $row) {
 
@@ -201,15 +202,15 @@ class ManageAttendanceController extends Controller {
                     //$total_time_present_in_a_month += 5*3600; // if did not logout then treat he was 5 hour in office.
                 }
 
-                //calculate late incoming
-                $inTimeSupposedTo = strtotime($row['attendance_date'] . ' 09:30:00');
+                //calculate late incoming   out_time_supposed
+                $inTimeSupposedTo = strtotime($row['attendance_date'] . ' ' . $row['in_time_supposed']);
                 $inTimeHeWas = strtotime($row['first_login']);
                 if($inTimeHeWas > $inTimeSupposedTo) {
                     $late_incoming++;
                 }
 
                 //calculate early leave.
-                $outTimeSupposedTo = strtotime($row['attendance_date'] . ' 17:30:00');
+                $outTimeSupposedTo = strtotime($row['attendance_date'] . ' ' .  $row['out_time_supposed']);
                 $outTimeHeWas = strtotime($row['last_logout']);
                 if($outTimeSupposedTo > $outTimeHeWas) {
                     $early_leave++;
@@ -293,6 +294,7 @@ class ManageAttendanceController extends Controller {
         $data['card_id'] = $request->employee_row_id;        
         //up to this done 11-15-2017.
         $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($request->employee_row_id, $request->date_from_attendance, $request->date_to_attendance);
+      //  dd($data['attendance_list'] );
         
 
         return view($this->viewFolderPath .  'staff_individual_report_view', ['data'=>$data] );
