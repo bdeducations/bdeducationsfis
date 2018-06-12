@@ -129,8 +129,8 @@ class ManageAttendanceController extends Controller {
     // used staff atendance report pdf        
     public function allStaffAttendanceMonthlyReportPdf(Request $request) {
         // show report generate options.
-        $per_day_hour = 9;
-        $per_day_more_1 = 10;
+        $per_day_hour = 6.5;
+        $per_day_more_1 = 6.5; //usually for office peon
         $data['people_under_per_day_more_1'] = [133, 134];
 
         $school_row_id = Auth::user()->id;
@@ -203,14 +203,14 @@ class ManageAttendanceController extends Controller {
                 }
 
                 //calculate late incoming   out_time_supposed
-                $inTimeSupposedTo = strtotime($row['attendance_date'] . ' ' . $row['in_time_supposed']);
+                $inTimeSupposedTo = strtotime($row['attendance_date'] . ' ' . $value->in_time_supposed);
                 $inTimeHeWas = strtotime($row['first_login']);
                 if($inTimeHeWas > $inTimeSupposedTo) {
                     $late_incoming++;
                 }
 
                 //calculate early leave.
-                $outTimeSupposedTo = strtotime($row['attendance_date'] . ' ' .  $row['out_time_supposed']);
+                $outTimeSupposedTo = strtotime($row['attendance_date'] . ' ' .  $value->out_time_supposed);
                 $outTimeHeWas = strtotime($row['last_logout']);
                 if($outTimeSupposedTo > $outTimeHeWas) {
                     $early_leave++;
