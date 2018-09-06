@@ -129,8 +129,8 @@ class ManageAttendanceController extends Controller {
     // used staff atendance report pdf        
     public function allStaffAttendanceMonthlyReportPdf(Request $request) {
         // show report generate options.
-        $per_day_hour = 6.5;
-        $per_day_more_1 = 6.5; //usually for office peon
+        $per_day_hour = 9;
+        $per_day_more_1 = 11; //usually for office peon
         $data['people_under_per_day_more_1'] = [133, 134];
 
         $school_row_id = Auth::user()->id;
