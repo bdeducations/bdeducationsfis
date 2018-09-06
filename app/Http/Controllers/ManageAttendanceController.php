@@ -379,7 +379,7 @@ class ManageAttendanceController extends Controller {
             
             if($request->count_manual_hours && $request->total_hour) {               
                     $updateData = ['card_id' => $request->staff_ids[$i], 'first_login'=>$inTimeFinal, 'last_logout'=>$outTimeFinal, 'attendance_date' => $date_of_attendance,
-                    'count_manual_hours' => $request->total_hour[$i] ,'updated_by'=> Auth::id()];
+                    'count_manual_hours' => $request->total_hour[$i] ,'updated_by'=> Auth::id(), 'updated_at' => date('Y-m-d H:i:s')];
                     DB::table('staff_attendance_records')->where([ ['card_id', $request->staff_ids[$i]], ['attendance_date', $date_of_attendance ] ])->update($updateData);
                  } 
             else{
