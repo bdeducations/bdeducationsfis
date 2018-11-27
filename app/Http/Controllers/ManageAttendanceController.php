@@ -51,12 +51,14 @@ class ManageAttendanceController extends Controller {
             $path = Input::file('import_file')->getRealPath();
             $data = Excel::load($path, function($reader) {
             })->get();
+            //dd($data);
 
             if(!empty($data) && $data->count()){
                 foreach ($data as $key => $value) { 
                     $id = (int) $value->id;
-                    $dateArr = explode('-', $value->date);
-                    $attendance_date = 2000 + $dateArr[2] . '-' . $dateArr[1] . '-' . $dateArr[0];
+                    $dateArr = explode('/', $value->date);
+                    
+                    $attendance_date = $dateArr[2] . '-' . $dateArr[0] . '-' . $dateArr[1];
                     $first_login = $attendance_date . ' ' . $value->first_in_time . ':' . '00';
                     $last_logout = $attendance_date . ' ' . $value->last_out_time . ':' . '00';
 
