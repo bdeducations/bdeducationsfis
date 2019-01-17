@@ -513,6 +513,8 @@ Route::post('/hr/sendSMS/send', 'SendSMSController@sendSMS');
 //Data Analysis
 Route::any('data-analysis/asset-report', 'DataAnalysisController@assetReport')->name('analysis-asset-report');
 
+Route::get('/manage-employee/activate-status/{id}/{status}', 'ManageEmployeeController@activeStatus');
+
 //.............................Common............................................
 
 Route::get('getDesignation/{department_row_id}/{current_designation_id?}', function ($department_row_id, $current_designation_id = 0) {

@@ -167,7 +167,7 @@ class ManageAttendanceController extends Controller {
         //$data['attendance_date'] = $attendance_date;
         $HrObj = new \App\Libraries\HrCommon();
 
-        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1`, `in_time_supposed`, `out_time_supposed`  FROM ut_hr_employees WHERE show_attendance_report = 1 ORDER BY sort_order";
+        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1`, `in_time_supposed`, `out_time_supposed`  FROM ut_hr_employees WHERE show_attendance_report = 1 AND active_status = 1 ORDER BY sort_order";
         $employeeList =  DB::select($sql);
 
         foreach ($employeeList as $key => $value) {            

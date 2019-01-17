@@ -112,7 +112,13 @@
                                                             <li><a href="{{ url('/') }}/manage-employee/{{ $row->employee_row_id }}/edit">Edit</a></li>
                                                             
                                                             <li><a href="{{ url('/') }}/manage-employee/{{ $row->employee_row_id }}/employeeDetailsPdf" target="_blank">PDF</a></li>
-                                                            <li><a href="#">Inactive</a></li>
+                                                            @if($row->active_status)
+                                                            <li><a href="{{ url('/') }}/manage-employee/activate-status/{{ $row->employee_row_id }}/0">Inactivate</a></li>
+                                                            @else
+                                                            <li><a href="{{ url('/') }}/manage-employee/activate-status/{{ $row->employee_row_id }}/1">Activate</a></li>
+                                                            @endif
+
+                                                            
                                                             <li><a href="{{ url('/') }}/hr/manage-employee/{{ $row->employee_row_id }}/download">Documents</a></li>
                                                         </ul>
                                                     </div>
@@ -156,7 +162,11 @@
                                                         <li><a href="{{ url('/') }}/manage-employee/{{ $row->employee_row_id }}/edit">Edit</a></li>
                                                         
                                                         <li><a href="{{ url('/') }}/manage-employee/{{ $row->employee_row_id }}/employeeDetailsPdf" target="_blank">PDF</a></li>
-                                                        <li><a href="#">Inactive</a></li>
+                                                        @if($row->active_status)
+                                                        <li><a href="{{ url('/') }}/manage-employee/activate-status/{{ $row->employee_row_id }}/0">Inactivate</a></li>
+                                                        @else
+                                                        <li><a href="{{ url('/') }}/manage-employee/activate-status/{{ $row->employee_row_id }}/1">Activate</a></li>
+                                                        @endif
                                                         <li><a href="{{ url('/') }}/hr/manage-employee/{{ $row->employee_row_id }}/download">Documents</a></li>
                                                     </ul>
                                                 </div>

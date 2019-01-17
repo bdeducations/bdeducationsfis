@@ -1013,4 +1013,12 @@ class ManageEmployeeController extends Controller
         Session::flash('success-message', 'Institution has been deleted successfully');
         return redirect('/hr/manage-institutions');
     }
+
+    public function activeStatus($employee_row_id, $active_status) {
+        $HrEmployeeObj = \App\Models\HrEmployee::find($employee_row_id);
+        $HrEmployeeObj->active_status = $active_status;
+        $HrEmployeeObj->save();
+        Session::flash('success-message', 'Active Status has been Updated successfully');
+        return redirect('/manage-employee');
+    }
 }
