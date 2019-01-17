@@ -271,6 +271,12 @@ function isEmployeeHoliday($emloyee_row_id, $date_of_attendance) {
         }
     }
 
+    if($emloyee_row_id == 148) {
+        if( date('l', strtotime($date_of_attendance)) == 'Monday' || date('l', strtotime($date_of_attendance)) == 'Wednesday' ) {
+            return true;
+        }
+    }
+
 
     return false;
 
