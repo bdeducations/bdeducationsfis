@@ -95,16 +95,20 @@
 <script src="{{ url('/')}}/public/adminlte/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+        
         $('#datepicker1').datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',
             todayHighlight: true,
+
+
         });
         $('#datepicker2').datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',
             todayHighlight: true,
         });
+
     });
 </script>
 @endsection

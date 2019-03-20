@@ -36,6 +36,9 @@
                                         <div>
                                             Attendance - From: <strong> {{ $data['date_from_attendance'] }}</strong>  To: <strong> {{ $data['date_to_attendance'] }}  </strong>
                                         </div>
+                                        <div>
+                                            <strong>Total demerit points : {{ $data['total_demerit'] }}</strong>
+                                        </div>
                                     </td>
                                      <td><a style="float:right;text-decoration: underline;" href="{{ url('/') }}/hr/attendance/staff-individual-report-pdf/{{$data['card_id']}}/{{ $data['date_from_attendance'] }}/{{ $data['date_to_attendance'] }}" target="_blank">Genarate PDF</a></td>
                                 </tr>

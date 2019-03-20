@@ -15,13 +15,10 @@
                             <h2 style="margin-bottom: 0px;"><u>Attendance Report</u></h2>
                             <h4 style="margin-top: 3px;margin-bottom:3px;">Name : {{ $data['person_info']->employee_name }}</h4>
                             <h4 style="margin-top: 0px;">Date :  {{ date('j-m-Y', strtotime($data['date_from_attendance'])) }}  To {{ date('j-m-Y', strtotime($data['date_to_attendance'])) }}</h4>
-                            
-                        </td>
-                        
+                            <h4 style="margin-top: 0px;"><strong>Total demerit points : {{ $data['total_demerit'] }}</strong></h4>
+                        </td> 
                     </tr>
                 </table>
-
-
             </div>
         </div>
         

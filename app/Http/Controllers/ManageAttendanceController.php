@@ -58,6 +58,20 @@ class ManageAttendanceController extends Controller {
                     $id = (int) $value->id;
                     $dateArr = explode('/', $value->date);
                     
+                    // attendance new rule
+                    $min_in_time = strtotime('08:45');
+                    $max_out_time = strtotime('18:15');
+                    $in_time = strtotime($value->first_in_time);
+                    $out_time = strtotime($value->last_out_time);
+                    if($in_time < $min_in_time)
+                    {
+                       $value->first_in_time =  '08:45';
+                    }
+                    if($out_time > $max_out_time)
+                    {
+                        $value->last_out_time = '18:15';
+                    }
+
                     $attendance_date = $dateArr[2] . '-' . $dateArr[0] . '-' . $dateArr[1];
                     $first_login = $attendance_date . ' ' . $value->first_in_time . ':' . '00';
                     $last_logout = $attendance_date . ' ' . $value->last_out_time . ':' . '00';
@@ -71,7 +85,8 @@ class ManageAttendanceController extends Controller {
                             DB::table('staff_attendance_records')->where([ ['card_id', $id], ['attendance_date', $attendance_date] ])->update(['first_login' =>$first_login,'last_logout' =>$last_logout, 'updated_by'=>$admin_row_id]);   
 
                         } else {
-                             $insertStaffRecords[] = ['card_id' => $id, 'attendance_date'=>$attendance_date, 'first_login' => $first_login, 'last_logout' =>$last_logout, 'created_by'=>$admin_row_id];
+                            //dd($first_login);
+                            $insertStaffRecords[] = ['card_id' => $id, 'attendance_date'=>$attendance_date, 'first_login' => $first_login, 'last_logout' =>$last_logout, 'created_by'=>$admin_row_id];
                         }
                        
                     } 

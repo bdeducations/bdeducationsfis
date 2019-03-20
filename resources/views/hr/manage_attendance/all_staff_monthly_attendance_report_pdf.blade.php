@@ -28,7 +28,7 @@
 
         <div class="pdfcontent" style="text-align:center; margin-top:15px">
            
-            <div class="main" style="padding: 10px 15px 20px 15px;width: 100%">
+            <div class="main" style="padding: 10px 0px 20px 0px;width: 100%">
                  <table class="table table-striped table-hover" cellpadding="4" cellspacing="0"  border="1" width="100%">
                   <thead>
                         <tr>
@@ -36,12 +36,13 @@
                             <th style="text-align: left;height: 30px;width:120px">Name</th>
                             <th style="text-align: left;height: 30px;width:30px">Present</th>
                             <th style="text-align: left;height: 30px;width:30px">Late Arrival</th>
-                            <th style="text-align: left;height: 30px;width:30px">Early Leave</th>
+                            <th style="text-align: left;height: 30px;width:25px">Early Leave</th>
+                            <th style="text-align: left;height: 30px;width:25px">Demerit point</th>
                             <th style="text-align: left;height: 30px;width:25px">Leave </th>
                             <th style="text-align: left;height: 30px;width:25px">Tour</th>
-                            <th style="text-align: left;height: 30px;width:75px">UnAuth. Leave</th>
-                            <th style="text-align: left;height: 30px;width:88px">Effective Office Time</th>
-                            <th style="text-align: left;height: 30px;width:85px">Total Office Time</th>
+                            <th style="text-align: left;height: 30px;width:45px">UnAuth.<br> Leave</th>
+                            <th style="text-align: left;height: 30px;width:68px">Effective Office<br> Time</th>
+                            <th style="text-align: left;height: 30px;width:60px">Total Office<br> Time</th>
                             <th style="text-align: left;height: 30px;">Comments</th>
                         </tr>
                     </thead>
@@ -52,8 +53,9 @@
                             <td style="width:10px">{{ $i }}</td>
                             <td>{{ $row['employee_name'] }}</td>
                             <td>{{ $row['present_days'] }}</td>                             
-                            <td style="width:62px">{{ $row['late_incoming'] }} </td>
-                            <td style="width:62px">{{ $row['early_leave'] }} </td>
+                            <td style="width:52px">{{ $row['late_incoming'] }} </td>
+                            <td style="width:52px">{{ $row['early_leave'] }} </td>
+                            <td style="width:57px">{{ $row['total_demerit'] }}</td>
                             <td>{{ $row['number_of_leave'] }}</td>
                             <td>{{ $row['number_of_tour'] }}</td> 
                             <td>{{ $row['unauthorized_leave'] }}</td>

@@ -4,10 +4,11 @@
 /storage
 /vendor
 /.idea
+.gitignore
 Homestead.json
 Homestead.yaml
-.env
 /public/adminlte
 /nbproject
 /nbproject/private/private.xml
 /nbproject/project.xml
+.env
