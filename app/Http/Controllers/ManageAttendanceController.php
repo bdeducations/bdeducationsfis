@@ -184,7 +184,7 @@ class ManageAttendanceController extends Controller {
         //$data['attendance_date'] = $attendance_date;
         $HrObj = new \App\Libraries\HrCommon();
 
-        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1`, `in_time_supposed`, `out_time_supposed`  FROM ut_hr_employees WHERE show_attendance_report = 1 AND active_status = 1 ORDER BY sort_order";
+        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1`, `in_time_supposed`, `out_time_supposed`  FROM ut_hr_employees WHERE show_attendance_report = 1 AND active_status = 1 ORDER BY employee_row_id";
         $employeeList =  DB::select($sql);
 
         foreach ($employeeList as $key => $value) {            
@@ -195,15 +195,32 @@ class ManageAttendanceController extends Controller {
             
             //get Attendace records for a month. it contains those record which i spresent, that has login-logout or login value at least.
             $attendance_records = $HrObj->getAttendancesByIdWithDateRange($value->employee_row_id, $start_date, $end_date, 1);
+            //dd($attendance_records);
             $arr['present_days'] = count($attendance_records);
             $arr['absent_days'] = $data['total_working_days_this_month'] - $arr['present_days'];
             $late_incoming = 0;
             $early_leave = 0;
             $total_time_present_in_a_month = 0;
            
-
+            $demerit_point_count = 0;
+            $total_demerit = 0;
             foreach ($attendance_records  as $row) {
-
+                //Demerit point count
+                // dd($row['first_login']);
+                $time = date("H:i:s",strtotime($row['first_login']));
+                $past_in_time = strtotime($time);
+                $should_be_in_time = strtotime('09:05');
+                if($past_in_time>$should_be_in_time){
+                    $demerit_point_count++;
+                }
+                else{
+                    $demerit_point_count = 0;
+                }
+                if($demerit_point_count ==3){
+                    $total_demerit++;
+                    $demerit_point_count = 0;
+                }
+                
                 // do not count device record if manual hour is counted.
                 if($row['count_manual_hours'] >0 || $row['count_manual_minutes']>0) {
                     $total_time_present_in_a_month += ($row['count_manual_hours']*3600 + $row['count_manual_minutes']*60); 
@@ -233,7 +250,8 @@ class ManageAttendanceController extends Controller {
                     $early_leave++;
                 }
             }
-
+            //dd($total_demerit);
+            $arr['total_demerit'] = $total_demerit;
             $arr['late_incoming'] = $late_incoming;
             $arr['early_leave'] = $early_leave;
             //$arr['total_time_present_in_a_month'] = $total_time_present_in_a_month; 
