@@ -63,11 +63,11 @@ class ManageAttendanceController extends Controller {
                     $max_out_time = strtotime('18:15');
                     $in_time = strtotime($value->first_in_time);
                     $out_time = strtotime($value->last_out_time);
-                    if($in_time < $min_in_time)
+                    if($in_time != '00:00' && $in_time < $min_in_time)
                     {
                        $value->first_in_time =  '08:45';
                     }
-                    if($out_time > $max_out_time)
+                    if($out_time != '00:00' && $out_time > $max_out_time)
                     {
                         $value->last_out_time = '18:15';
                     }
@@ -391,7 +391,7 @@ class ManageAttendanceController extends Controller {
         }
         //dd($total_demerit);
         $data['total_demerit']= $total_demerit;
-        
+
         $pdf = PDF::loadView($this->viewFolderPath . 'staff_individual_report_pdf', ['data' => $data]);
         return $pdf->stream($data['person_info']->employee_name . 'staff_individual_report.pdf');
 
