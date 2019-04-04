@@ -329,9 +329,32 @@ class ManageAttendanceController extends Controller {
         $data['card_id'] = $request->employee_row_id;        
         //up to this done 11-15-2017.
         $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($request->employee_row_id, $request->date_from_attendance, $request->date_to_attendance);
-      //  dd($data['attendance_list'] );
+        //dd($data['attendance_list'] );
+        $demerit_point_count = 0;
+        $total_demerit = 0;
+        foreach ($data['attendance_list']  as $row) {
+            //Demerit point count
+            //dd($row['first_login']);
+            if($row){
+               $time = date("H:i:s",strtotime($row['first_login']));
+                $past_in_time = strtotime($time);
+                $should_be_in_time = strtotime('09:05');
+                if($past_in_time>$should_be_in_time){
+                    $demerit_point_count++;
+                }
+                else{
+                    $demerit_point_count = 0;
+                }
+                if($demerit_point_count ==3){
+                    $total_demerit++;
+                    $demerit_point_count = 0;
+                } 
+            }
+            
+        }
+        //dd($total_demerit);
+        $data['total_demerit']= $total_demerit;
         
-
         return view($this->viewFolderPath .  'staff_individual_report_view', ['data'=>$data] );
     }
     // used, working
@@ -344,6 +367,31 @@ class ManageAttendanceController extends Controller {
         
         $data['attendance_list'] = $hr_obj->getAttendancesByIdWithDateRange($employee_row_id, $date_from_attendance,
             $date_to_attendance);
+        $demerit_point_count = 0;
+        $total_demerit = 0;
+        foreach ($data['attendance_list']  as $row) {
+            //Demerit point count
+            //dd($row['first_login']);
+            if($row){
+               $time = date("H:i:s",strtotime($row['first_login']));
+                $past_in_time = strtotime($time);
+                $should_be_in_time = strtotime('09:05');
+                if($past_in_time>$should_be_in_time){
+                    $demerit_point_count++;
+                }
+                else{
+                    $demerit_point_count = 0;
+                }
+                if($demerit_point_count ==3){
+                    $total_demerit++;
+                    $demerit_point_count = 0;
+                } 
+            }
+            
+        }
+        //dd($total_demerit);
+        $data['total_demerit']= $total_demerit;
+        
         $pdf = PDF::loadView($this->viewFolderPath . 'staff_individual_report_pdf', ['data' => $data]);
         return $pdf->stream($data['person_info']->employee_name . 'staff_individual_report.pdf');
 
