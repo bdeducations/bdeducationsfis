@@ -59,15 +59,16 @@ class ManageAttendanceController extends Controller {
                     $dateArr = explode('/', $value->date);
                     
                     // attendance new rule
-                    $min_in_time = strtotime('08:45');
+                    $min_in_time = strtotime('08:30');
                     $max_out_time = strtotime('18:15');
+                    $if_absent = strtotime('00:00');
                     $in_time = strtotime($value->first_in_time);
                     $out_time = strtotime($value->last_out_time);
-                    if($in_time != '00:00' && $in_time < $min_in_time)
+                    if($in_time != $if_absent && $in_time < $min_in_time)
                     {
-                       $value->first_in_time =  '08:45';
+                       $value->first_in_time =  '08:30';
                     }
-                    if($out_time != '00:00' && $out_time > $max_out_time)
+                    if($out_time != $if_absent && $out_time > $max_out_time)
                     {
                         $value->last_out_time = '18:15';
                     }
