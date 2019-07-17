@@ -125,7 +125,7 @@
                                 @endif 
                             </td>                            
                             <td style="width:70px">                             
-                                <?php echo $present ? '<div style="' . $presentcolor. '">' .$presentmsg . '</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?>
+                                <?php echo $present ? '<div style="' . $presentcolor. '">' .$presentmsg . '</div>' : '<div style="' . $absentcolor. '">' . $absentmsg . '</div>'; ?> 
                             </td>
                             <td style="width:100px"> </td>
                         </tr>

@@ -59,8 +59,8 @@ class ManageAttendanceController extends Controller {
                     $dateArr = explode('/', $value->date);
                     
                     // attendance new rule
-                    $min_in_time = strtotime('08:30');
-                    $max_out_time = strtotime('18:15');
+                    $min_in_time = strtotime('08:00');
+                    $max_out_time = strtotime('22:00');
                     $if_absent = strtotime('00:00');
                     $in_time = strtotime($value->first_in_time);
                     $out_time = strtotime($value->last_out_time);
@@ -132,7 +132,7 @@ class ManageAttendanceController extends Controller {
         $sql = "SELECT ut_hr_employees.`employee_row_id`, ut_hr_employees.`is_part_time`, ut_hr_employees.`employee_name`, ut_hr_employees.`contact_1`,ut_hr_employees.`in_time_supposed`, ut_hr_employees.`out_time_supposed` ,(SELECT first_login FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS first_login, (SELECT last_logout FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS last_logout FROM ut_hr_employees WHERE ut_hr_employees.show_attendance_report = 1 ORDER BY  ut_hr_employees.sort_order";      
 
         $data['staff_attendance_info'] =  DB::select($sql);
-
+        
         $pdf = PDF::loadView($this->viewFolderPath . 'staff_attendance_report_pdf_download', ['data' => $data]);
         return $pdf->stream($data['attendance_date'].'_staff_attendance_report.pdf');
         
