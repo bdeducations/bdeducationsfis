@@ -40,7 +40,7 @@ class ManageAttendanceController extends Controller {
     //used
     public function  sinkAttendanceRecordsFromCsvOption() {
         $data = array();        
-        return view($this->viewFolderPath .  'sink_attendance_csv', ['data'=>$data] );
+        return view($this->viewFolderPath .  'sink_attendance_csv', ['data'=>$data] );
     }
 
     //used
@@ -82,8 +82,7 @@ class ManageAttendanceController extends Controller {
                             if($value->first_in_time == 0)
                                 continue; /* no need to update, may be still he did not came office
                                or you are uploading previous csv of this day when he did not came*/
-
-                            DB::table('staff_attendance_records')->where([ ['card_id', $id], ['attendance_date', $attendance_date] ])->update(['first_login' =>$first_login,'last_logout' =>$last_logout, 'updated_by'=>$admin_row_id]);   
+                               continue;                              
 
                         } else {
                             //dd($first_login);
@@ -132,7 +131,7 @@ class ManageAttendanceController extends Controller {
         $sql = "SELECT ut_hr_employees.`employee_row_id`, ut_hr_employees.`is_part_time`, ut_hr_employees.`employee_name`, ut_hr_employees.`contact_1`,ut_hr_employees.`in_time_supposed`, ut_hr_employees.`out_time_supposed` ,(SELECT first_login FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS first_login, (SELECT last_logout FROM ut_staff_attendance_records WHERE ut_hr_employees.`employee_row_id` = ut_staff_attendance_records.card_id AND ut_staff_attendance_records.`attendance_date` = '$attendance_date' LIMIT 1) AS last_logout FROM ut_hr_employees WHERE ut_hr_employees.show_attendance_report = 1 ORDER BY  ut_hr_employees.sort_order";      
 
         $data['staff_attendance_info'] =  DB::select($sql);
-        
+        //dd($data['staff_attendance_info']);
         $pdf = PDF::loadView($this->viewFolderPath . 'staff_attendance_report_pdf_download', ['data' => $data]);
         return $pdf->stream($data['attendance_date'].'_staff_attendance_report.pdf');
         
@@ -185,7 +184,7 @@ class ManageAttendanceController extends Controller {
         //$data['attendance_date'] = $attendance_date;
         $HrObj = new \App\Libraries\HrCommon();
 
-        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1`, `in_time_supposed`, `out_time_supposed`  FROM ut_hr_employees WHERE show_attendance_report = 1 AND active_status = 1 ORDER BY employee_row_id";
+        $sql = "SELECT `employee_row_id`, `is_part_time`, `is_part_time`, `employee_name`, `contact_1`, `in_time_supposed`, `out_time_supposed`  FROM ut_hr_employees WHERE show_attendance_report = 1 AND active_status = 1 ORDER BY sort_order";
         $employeeList =  DB::select($sql);
 
         foreach ($employeeList as $key => $value) {            
@@ -210,7 +209,7 @@ class ManageAttendanceController extends Controller {
                 // dd($row['first_login']);
                 $time = date("H:i:s",strtotime($row['first_login']));
                 $past_in_time = strtotime($time);
-                $should_be_in_time = strtotime('09:05');
+                $should_be_in_time = strtotime('09:15');
                 if($past_in_time>$should_be_in_time){
                     $demerit_point_count++;
                 }
@@ -339,7 +338,7 @@ class ManageAttendanceController extends Controller {
             if($row){
                $time = date("H:i:s",strtotime($row['first_login']));
                 $past_in_time = strtotime($time);
-                $should_be_in_time = strtotime('09:05');
+                $should_be_in_time = strtotime('09:15');
                 if($past_in_time>$should_be_in_time){
                     $demerit_point_count++;
                 }

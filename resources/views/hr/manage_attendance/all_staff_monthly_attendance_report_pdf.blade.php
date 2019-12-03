@@ -73,7 +73,7 @@
                                     }
 
                                    
-                                    echo $diff > 0 ? '-'  : ($diff == 0 ? '' : '+');
+                                    echo $diff > 0 ? '-'  : ($diff <= 0 ? '' : '+');
                                     echo abs($diff);
                                     }
                                 @endphp 
